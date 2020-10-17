@@ -23,6 +23,7 @@ bin
 obj
 .vscode
 appsettings.json
+appsettings.development.json
 *.db
 
 npm-debug.log*
