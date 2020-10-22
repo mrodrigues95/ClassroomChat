@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft } from './../../shared/hooks/useIcon';
+import { Chevron } from '../../shared/icons';
 
 type Props = {
   title: string;
@@ -10,9 +10,9 @@ const AuthHeader = ({ title, description }: Props) => {
   return (
     <>
       <div className="flex">
-        <span className="flex-grow-0 p-3 border border-gray-200 rounded-full">
-          <ChevronLeft className="h-6 w-6" />
-        </span>
+        <button className="flex-grow-0 flex items-center p-3 border border-gray-200 rounded-full focus:outline-none hover:bg-gray-100 active:bg-gray-200 transition duration-150 ease-in-out">
+          <Chevron className="h-6 w-6" />
+        </button>
         <h2 className="flex-1 text-center self-start font-bold text-2xl">
           {title}
         </h2>

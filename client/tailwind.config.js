@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   future: {
     // removeDeprecatedGapUtilities: true,
@@ -5,8 +7,21 @@ module.exports = {
   },
   purge: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        primary: {
+          default: '#0D2488',
+          lighter: '#1431AF',
+          dark: '#061553'
+        },
+      },
+    },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'active'],
+  },
   plugins: [],
-}
+};
