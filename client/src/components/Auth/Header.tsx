@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chevron } from '../../shared/icons';
+import NavigationButton from './NavigationButton';
 
 type Props = {
   title: string;
@@ -10,14 +10,12 @@ const AuthHeader = ({ title, description }: Props) => {
   return (
     <>
       <div className="flex">
-        <button className="flex-grow-0 flex items-center p-3 border border-gray-200 rounded-full focus:outline-none hover:bg-gray-100 active:bg-gray-200 transition duration-150 ease-in-out">
-          <Chevron className="h-6 w-6" />
-        </button>
-        <h2 className="flex-1 text-center self-start font-bold text-2xl">
+        <NavigationButton className="hidden md:inline-flex" />
+        <h2 className="flex-1 text-center self-start font-bold text-2xl md:text-3xl">
           {title}
         </h2>
       </div>
-      <p className="mx-auto mb-16 text-gray-600 text-center">{description}</p>
+      <p className="inline-block mb-10 mt-2 text-gray-700 text-center sm:mt-4 md:mb-16 md:text-lg lg:text-xl">{description}</p>
     </>
   );
 };

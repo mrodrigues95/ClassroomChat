@@ -1,18 +1,18 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: keyof typeof VARIANTS;
-};
-
 const VARIANTS = {
   primary: {
-    base: 'border border-gray-300 bg-white text-black hover:bg-gray-100 active:bg-gray-200'
+    base: 'border border-gray-300 bg-white text-black hover:bg-gray-100 hover:border-gray-400 active:bg-gray-200 active:border-gray-500'
   },
   default: {
     base:
       'border border-transparent bg-primary text-white hover:bg-primary-lighter active:bg-primary-dark',
   },
+};
+
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: keyof typeof VARIANTS;
 };
 
 const Button = ({ variant = 'default', ...props }: Props) => {

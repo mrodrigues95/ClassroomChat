@@ -24,7 +24,7 @@ const Input = ({ label, action, children, ...props }: Props) => {
       {children}
       <input
         className={clsx(
-          'block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-xl text-black transition ease-in-out duration-300 focus:outline-none focus:shadow-outline',
+          'block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-black md:text-xl transition ease-in-out duration-300 focus:outline-none focus:shadow-outline',
           fontWeight
         )}
         onChange={(e) => handleOnChange(e)}

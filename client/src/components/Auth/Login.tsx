@@ -3,15 +3,16 @@ import Form from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
 import Header from './Header';
 import Button from './../ui/Button';
-import { Chevron, Mail, Lock } from '../../shared/icons';
+import { Chevron, Mail, Lock } from '../../shared/assets/icons';
+import Carousel from './Carousel';
 
 const Login = () => {
   return (
-    <main className="flex min-h-screen p-16">
-      <div className="hidden lg:block lg:w-1/2 px-16 border border-gray-300 rounded-3xl">
-        <p>Section 1</p>
+    <main className="flex min-h-screen xl:p-16">
+      <div className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
+        <Carousel />
       </div>
-      <div className="w-full lg:w-1/2 px-16">
+      <div className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
           <Header
             title="Login Now"
@@ -39,7 +40,7 @@ const Login = () => {
               </span>
             </Input>
             <div className="absolute bottom-0 inset-x-0">
-              <div className="mb-6">
+              <div className="mb-2 sm:mb-6">
                 <Button type="submit">
                   <span className="absolute right-0 inset-y-0 flex items-center pr-3">
                     <Chevron className="h-5 w-5 transform rotate-180" />
