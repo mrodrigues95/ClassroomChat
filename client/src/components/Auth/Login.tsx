@@ -1,16 +1,27 @@
 import React from 'react';
-import Form from './../ui/forms/Form';
+import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
 import Header from './Header';
 import Button from './../ui/Button';
-import { Chevron, Mail, Lock } from '../../shared/assets/icons';
 import Carousel from './Carousel';
+import { Chevron, Mail, Lock } from '../../shared/assets/icons';
+import { Collaboration } from '../../shared/assets/illustrations';
 
-const Login = () => {
+const Login = () => {  
+  const handleOnSubmit = (values: FormValues) => {
+    console.log('FORM SUBMITTED');
+    console.log(values);
+  };
+
   return (
     <main className="flex min-h-screen xl:p-16">
       <div className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
-        <Carousel />
+        <Carousel
+          caption="Connect With Classmates"
+          description="You can easily connect with classmates using our messaging platform."
+        >
+          <Collaboration className="w-8/12 mx-auto" />
+        </Carousel>
       </div>
       <div className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
@@ -19,24 +30,28 @@ const Login = () => {
             description="Please enter your information below in order to login to your
             account."
           />
-          <Form className="relative h-full">
+          <Form className="relative h-full" onSubmit={handleOnSubmit}>
             <Input
+              type="email"
               label="Email Address"
-              name="email_address"
+              name="emailAddress"
               placeholder="Enter email"
+              validation={{ required: true, pattern: /\S+@\S+\.\S+/ }}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <Mail className="h-8 w-8 text-black" />
+                <Mail className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
             <Input
+              type="password"
               label="Password"
+              altLabel="Forgot Password?"
               name="password"
-              action="Forgot Password?"
               placeholder="Enter password"
+              validation={{ required: true }}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <Lock className="h-8 w-8 text-black" />
+                <Lock className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
             <div className="absolute bottom-0 inset-x-0">

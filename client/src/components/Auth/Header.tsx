@@ -10,7 +10,7 @@ const AuthHeader = ({ title, description }: Props) => {
   return (
     <>
       <div className="flex">
-        <NavigationButton className="hidden md:inline-flex" />
+        <NavigationButton aria-label="Go back" className="hidden md:inline-flex" />
         <h2 className="flex-1 text-center self-start font-bold text-2xl md:text-3xl">
           {title}
         </h2>

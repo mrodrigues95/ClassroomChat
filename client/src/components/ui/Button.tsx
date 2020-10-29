@@ -11,9 +11,9 @@ const VARIANTS = {
   },
 };
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = {
   variant?: keyof typeof VARIANTS;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button = ({ variant = 'default', ...props }: Props) => {
   const variantStyles = VARIANTS[variant] || VARIANTS.default;

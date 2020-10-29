@@ -1,19 +1,25 @@
 import React from 'react';
-import NavigationButton from './NavigationButton';
-import { Collaboration } from './../../shared/assets/illustrations';
+import NavigationButton, { Direction } from './NavigationButton';
 
-const Carousel = () => {
+type Props = {
+  caption: String;
+  description: String;
+  children: React.ReactNode
+}
+
+// TODO: Add sliding functionality.
+const Carousel = ({ caption, description, children }: Props) => {
   return (
     <div className="flex flex-col justify-center items-center h-full">
       <div>
-        <Collaboration className="w-8/12 mx-auto" />
+        {children}
       </div>
       <div className="flex flex-col flex-1 -mt-16 w-full">
         <h2 className="text-center self-center font-bold text-3xl">
-          Connect With Classmates
+          {caption}
         </h2>
         <p className="mt-2 text-center text-gray-700 text-xl">
-          You can easily connect with classmates using our platform.
+          {description}
         </p>
         <div className="flex justify-center w-full mt-24 space-x-3">
           <span className="rounded-full h-2 w-2 bg-gray-300" />
@@ -22,9 +28,9 @@ const Carousel = () => {
         </div>
       </div>
       <div className="flex justify-center w-full">
-        <NavigationButton />
+        <NavigationButton aria-label="Previous slide" />
         <span className="pl-6" />
-        <NavigationButton direction="forward" />
+        <NavigationButton aria-label="Next slide" direction={Direction.RIGHT} />
       </div>
     </div>
   );
