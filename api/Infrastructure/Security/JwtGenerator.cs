@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Security {
@@ -16,26 +17,69 @@ namespace Infrastructure.Security {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string CreateToken(AppUser user) {
+        /// <summary>
+        /// Generates a JWT access token.
+        /// </summary>
+        public string GenerateAccessToken(AppUser user) {
             var claims = new List<Claim> {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             // Generate signing credentials.
-            // This will allow our server to validate the token without having to query the database.
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
 
             // Describe the token.
-            var tokenDescriptor = new SecurityTokenDescriptor {
+            var accessTokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
+                NotBefore = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = creds
             };
-            
+
             // Generate and create the token.
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var accessToken = tokenHandler.CreateToken(accessTokenDescriptor);
+            return tokenHandler.WriteToken(accessToken);
+        }
+
+        /// <summary>
+        /// Generates a JWT refresh token.
+        /// </summary>
+        public string GenerateRefreshToken() {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create()) {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        /// <summary>
+        /// Validates the access token and checks if the signing algorithm matches
+        /// the one we used to create the token.
+        /// </summary>
+        public ClaimsPrincipal GetPrincipalFromExpiredAccessToken(string accessToken) {
+            var accessTokenValidationParameters = new TokenValidationParameters {
+                ValidateAudience = false, // We may want to validate the audience and issuer.
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _key,
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+
+            var principal = tokenHandler.ValidateToken(accessToken, accessTokenValidationParameters,
+                out securityToken);
+
+            // Check if the security algorithm we used to sign the access token matches up with the
+            // request.
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid access token");
+
+            return principal;
         }
     }
 }

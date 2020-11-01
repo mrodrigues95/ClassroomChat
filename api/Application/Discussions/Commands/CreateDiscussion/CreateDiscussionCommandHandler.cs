@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Classrooms.Discussions {
     /// <summary>
-    /// Create a new discussion channel.
+    /// Creates a new discussion channel.
     /// </summary>
     public class CreateDiscussionCommandHandler : IRequestHandler<CreateDiscussionCommand> {
         private readonly DataContext _context;

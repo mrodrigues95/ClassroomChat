@@ -44,7 +44,6 @@ namespace Application.Classrooms {
             // Save changes to the database.
             var success = await _context.SaveChangesAsync() > 0;
 
-            // Return the final response.
             if (success)
                 return Unit.Value;
 

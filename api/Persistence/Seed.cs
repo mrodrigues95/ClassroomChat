@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Persistence {
     /// <summary>
-    /// Populate the database with data.
+    /// Populates the database with data.
     /// </summary>
     public class Seed {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager) {
@@ -18,21 +18,24 @@ namespace Persistence {
                         FirstName = "John",
                         LastName = "Doe",
                         UserName = "johndoe@test.com",
-                        Email = "johndoe@test.com"
+                        Email = "johndoe@test.com",
+                        RefreshToken = null
                     },
                     new AppUser {
                         Id = "b",
                         FirstName = "Jack",
                         LastName = "Black",
                         UserName = "jackblack@test.com",
-                        Email = "jackblack@test.com"
+                        Email = "jackblack@test.com",
+                        RefreshToken = null
                     },
                     new AppUser {
                         Id = "c",
                         FirstName = "Debbie",
                         LastName = "Ray",
                         UserName = "debbieray@test.com",
-                        Email = "debbieray@test.com"
+                        Email = "debbieray@test.com",
+                        RefreshToken = null
                     },
                 };
                 foreach (var user in users) {

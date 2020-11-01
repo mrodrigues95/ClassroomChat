@@ -32,27 +32,49 @@ namespace Application.User {
             if (await _context.Users.AnyAsync(x => x.Email == request.Email))
                 throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
 
+            var user = await CreateNewUser(request);
+
+            return new UserDto {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Token = _jwtGenerator.GenerateAccessToken(user),
+                RefreshToken = user.RefreshToken
+            };
+        }
+
+        private async Task<AppUser> CreateNewUser(SignupNewUserCommand request) {
+            // Create a new refresh token.
+            var refreshToken = new RefreshToken {
+                Token = _jwtGenerator.GenerateRefreshToken(),
+                ExpiryDate = DateTime.UtcNow.AddDays(2)
+            };
+            _context.RefreshTokens.Add(refreshToken);
+
+            // Create the user.
             var user = new AppUser {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 UserName = request.Email,
                 Email = request.Email,
+                RefreshToken = refreshToken.Token
             };
+            var createUser = await _userManager.CreateAsync(user, request.Password);
+            if (!createUser.Succeeded) throw new Exception("There was a problem creating the user.");
 
-            // Create the user.
-            var result = await _userManager.CreateAsync(user, request.Password);
+            // Create a new user refresh token.
+            var userRefreshToken = new UserRefreshToken {
+                AppUser = user,
+                RefreshToken = refreshToken
+            };
+            _context.UserRefreshTokens.Add(userRefreshToken);
 
-            if (result.Succeeded) {
-                return new UserDto {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Username = user.Email,
-                    Email = user.Email,
-                    Token = _jwtGenerator.CreateToken(user),
-                };
-            }
+            // Save changes to the database.
+            var success = await _context.SaveChangesAsync() > 0;
 
-            throw new Exception("There was a problem creating the user");
+            if (!success) throw new Exception("There was a problem saving changes.");
+
+            return user;
         }
     }
 }

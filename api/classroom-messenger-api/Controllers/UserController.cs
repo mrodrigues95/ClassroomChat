@@ -2,6 +2,7 @@
 using Application.User.Commands.SignupNewUser;
 using Application.User.Queries.GetCurrentUserDetail;
 using Application.User.Queries.LoginUser;
+using Application.User.Queries.RefreshUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,12 @@ namespace classroom_messenger_api.Controllers {
         [HttpPost("signup")]
         public async Task<ActionResult<UserDto>> Signup([FromBody] SignupNewUserCommand command) {
             return Ok(await _mediator.Send(command));
+        }
+
+        // POST api/user/refresh
+        [HttpPost("refresh")]
+        public async Task<ActionResult<UserDto>> Refresh([FromBody] RefreshUserCommand query) {
+            return Ok(await _mediator.Send(query));
         }
     }
 }

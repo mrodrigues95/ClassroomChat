@@ -17,7 +17,7 @@ const Input = ({ label, altLabel, validation, children, ...props }: Props) => {
   const error = getErrorMessage(props.name, form.errors);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 0) {
+    if (e.target.value) {
       setFontWeight('font-bold');
     } else {
       setFontWeight('font-normal');

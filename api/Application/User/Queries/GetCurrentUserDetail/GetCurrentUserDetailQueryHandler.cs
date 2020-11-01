@@ -29,9 +29,8 @@ namespace Application.User {
             return new UserDto {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Username = user.UserName,
                 Email = user.Email,
-                Token = _jwtGenerator.CreateToken(user)
+                Token = _jwtGenerator.GenerateAccessToken(user)
             };
         }
     }

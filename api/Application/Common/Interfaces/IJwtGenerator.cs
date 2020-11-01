@@ -1,7 +1,10 @@
 ﻿using Domain;
+using System.Security.Claims;
 
 namespace Application.Interfaces {
     public interface IJwtGenerator {
-        string CreateToken(AppUser user);
+        string GenerateAccessToken(AppUser user);
+        string GenerateRefreshToken();
+        ClaimsPrincipal GetPrincipalFromExpiredAccessToken(string accessToken);
     }
 }

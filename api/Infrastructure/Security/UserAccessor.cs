@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Infrastructure.Security {
     /// <summary>
-    /// Retrieve the current sessions username out of the JSON Web Token.
+    /// Retrieves the current sessions username from the access token.
     /// </summary>
     public class UserAccessor : IUserAccessor {
         private readonly IHttpContextAccessor _httpContextAccessor;

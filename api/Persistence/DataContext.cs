@@ -9,8 +9,10 @@ namespace Persistence {
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<Discussion> Discussions { get; set; }
         public DbSet<InviteLink> InviteLinks { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserClassroom> UserClassrooms { get; set; }
         public DbSet<UserInviteLink> UserInviteLinks { get; set; }
+        public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public DbSet<ClassroomDiscussion> ClassroomDiscussions { get; set; }
         public DbSet<DiscussionMessage> DiscussionMessages { get; set; }
 
@@ -57,6 +59,18 @@ namespace Persistence {
                 .HasOne(c => c.Classroom)
                 .WithMany(u => u.UserInviteLinks)
                 .HasForeignKey(c => c.ClassroomId);
+
+            // Configure the relationship between Users and Refresh Tokens.
+            builder.Entity<UserRefreshToken>(x => x.HasKey(ur =>
+                new { ur.AppUserId, ur.RefreshTokenId }));
+            builder.Entity<UserRefreshToken>()
+                .HasOne(u => u.AppUser)
+                .WithMany(r => r.UserRefreshTokens)
+                .HasForeignKey(u => u.AppUserId);
+            builder.Entity<UserRefreshToken>()
+                .HasOne(r => r.RefreshToken)
+                .WithMany(u => u.UserRefreshTokens)
+                .HasForeignKey(r => r.RefreshTokenId);
         }
     }
 }

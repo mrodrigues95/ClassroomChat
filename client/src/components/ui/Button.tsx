@@ -7,7 +7,7 @@ const VARIANTS = {
   },
   default: {
     base:
-      'border border-transparent bg-primary text-white hover:bg-primary-lighter active:bg-primary-dark',
+      'border border-transparent bg-primary text-white hover:bg-primary-light active:bg-primary-dark',
   },
 };
 

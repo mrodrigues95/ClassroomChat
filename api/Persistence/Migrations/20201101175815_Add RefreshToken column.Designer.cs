@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201101175815_Add RefreshToken column")]
+    partial class AddRefreshTokencolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,23 +189,6 @@ namespace Persistence.Migrations
                     b.ToTable("InviteLinks");
                 });
 
-            modelBuilder.Entity("Domain.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("Domain.UserClassroom", b =>
                 {
                     b.Property<string>("AppUserId")
@@ -243,21 +228,6 @@ namespace Persistence.Migrations
                     b.HasIndex("InviteLinkId");
 
                     b.ToTable("UserInviteLinks");
-                });
-
-            modelBuilder.Entity("Domain.UserRefreshToken", b =>
-                {
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RefreshTokenId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AppUserId", "RefreshTokenId");
-
-                    b.HasIndex("RefreshTokenId");
-
-                    b.ToTable("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -452,21 +422,6 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.InviteLink", "InviteLink")
                         .WithMany("UserInviteLinks")
                         .HasForeignKey("InviteLinkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.UserRefreshToken", b =>
-                {
-                    b.HasOne("Domain.AppUser", "AppUser")
-                        .WithMany("UserRefreshTokens")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.RefreshToken", "RefreshToken")
-                        .WithMany("UserRefreshTokens")
-                        .HasForeignKey("RefreshTokenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

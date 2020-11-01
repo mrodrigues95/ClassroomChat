@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { Chevron } from '../../shared/assets/icons';
+import { Chevron } from '../../../shared/assets/icons';
 import clsx from 'clsx';
 
 export enum Direction {

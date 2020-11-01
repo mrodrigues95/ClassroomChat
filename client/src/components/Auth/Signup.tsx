@@ -1,10 +1,10 @@
 import React from 'react';
 import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
-import Header from './Header';
+import Header from './components/Header';
 import Button from './../ui/Button';
 import { Mail, Lock } from '../../shared/assets/icons';
-import Carousel from './Carousel';
+import Carousel from './components/Carousel';
 import { Messaging } from '../../shared/assets/illustrations';
 
 const Signup = () => {

@@ -4,21 +4,25 @@ using Application.User.Queries.LoginUser;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Persistence;
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.User {
     /// <summary>
-    /// Logs a user into the application.
+    /// Login a user into the application.
     /// </summary>
     public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, UserDto> {
+        private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtGenerator _jwtGenerator;
 
-        public LoginUserQueryHandler(UserManager<AppUser> userManager, SignInManager<AppUser>
-            signInManager, IJwtGenerator jwtGenerator) {
+        public LoginUserQueryHandler(DataContext context, UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator) {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
@@ -31,6 +35,11 @@ namespace Application.User {
             if (user == null)
                 throw new RestException(HttpStatusCode.Unauthorized);
 
+            // Update the refresh token in the database.
+            user.RefreshToken = _jwtGenerator.GenerateRefreshToken();
+            var updateRefreshTokenSuccess = await _context.SaveChangesAsync() > 0;
+            if (!updateRefreshTokenSuccess) throw new Exception("There was a problem logging in the user.");
+
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
             // Check if the sign in was successful or not.
@@ -39,7 +48,8 @@ namespace Application.User {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
-                    Token = _jwtGenerator.CreateToken(user)
+                    Token = _jwtGenerator.GenerateAccessToken(user),
+                    RefreshToken = user.RefreshToken
                 };
             }
 

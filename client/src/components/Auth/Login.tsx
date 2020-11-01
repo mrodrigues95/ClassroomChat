@@ -1,9 +1,9 @@
 import React from 'react';
 import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
-import Header from './Header';
+import Header from './components/Header';
 import Button from './../ui/Button';
-import Carousel from './Carousel';
+import Carousel from './components/Carousel';
 import { Chevron, Mail, Lock } from '../../shared/assets/icons';
 import { Collaboration } from '../../shared/assets/illustrations';
 
@@ -32,7 +32,6 @@ const Login = () => {
           />
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
             <Input
-              type="email"
               label="Email Address"
               name="emailAddress"
               placeholder="Enter email"

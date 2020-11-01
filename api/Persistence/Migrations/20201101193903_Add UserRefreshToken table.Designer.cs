@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201101193903_Add UserRefreshToken table")]
+    partial class AddUserRefreshTokentable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,14 +191,10 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.RefreshToken", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -250,7 +248,7 @@ namespace Persistence.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RefreshTokenId")
+                    b.Property<string>("RefreshTokenId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("AppUserId", "RefreshTokenId");
