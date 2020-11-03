@@ -8,6 +8,7 @@ namespace Domain {
         public DateTime ExpiryDate { get; set; }
         public bool ExpireAfterFirstUse { get; set; }
         public int Hits { get; set; }
+
         public virtual ICollection<UserInviteLink> UserInviteLinks { get; set; }
     }
 }

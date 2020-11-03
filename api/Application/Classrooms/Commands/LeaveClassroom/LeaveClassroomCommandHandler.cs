@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Classrooms {
     /// <summary>
-    /// Allows a user to leave a classroom they are currently a part of.
+    /// Allows a user to leave any classroom they are currently a part of.
     /// </summary>
     public class LeaveClassroomCommandHandler : IRequestHandler<LeaveClassroomCommand> {
         private readonly DataContext _context;

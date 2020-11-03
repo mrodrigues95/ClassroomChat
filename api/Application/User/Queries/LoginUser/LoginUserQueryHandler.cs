@@ -31,25 +31,33 @@ namespace Application.User {
         public async Task<UserDto> Handle(LoginUserQuery request, CancellationToken cancellationToken) {
             var user = await _userManager.FindByEmailAsync(request.Email);
 
-            // User was not found.
-            if (user == null)
-                throw new RestException(HttpStatusCode.Unauthorized);
+            if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
 
-            // Update the refresh token in the database.
-            user.RefreshToken = _jwtGenerator.GenerateRefreshToken();
-            var updateRefreshTokenSuccess = await _context.SaveChangesAsync() > 0;
-            if (!updateRefreshTokenSuccess) throw new Exception("There was a problem logging in the user.");
+            // Create a new refresh token and user refresh token.
+            var refreshToken = new RefreshToken {
+                Token = _jwtGenerator.GenerateRefreshToken(),
+                ExpiryDate = DateTime.UtcNow.AddDays(2)
+            };
+            _context.RefreshTokens.Add(refreshToken);
+            var userRefreshToken = new UserRefreshToken {
+                AppUser = user,
+                RefreshToken = refreshToken
+            };
+            _context.UserRefreshTokens.Add(userRefreshToken);
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            var createRefreshTokenSuccess = await _context.SaveChangesAsync() > 0;
+            if (!createRefreshTokenSuccess) throw new Exception("There was a problem logging in the user.");
+
+            var loginUser = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
             // Check if the sign in was successful or not.
-            if (result.Succeeded) {
+            if (loginUser.Succeeded) {
                 return new UserDto {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
-                    Token = _jwtGenerator.GenerateAccessToken(user),
-                    RefreshToken = user.RefreshToken
+                    AccessToken = _jwtGenerator.GenerateAccessToken(user),
+                    RefreshToken = refreshToken.Token
                 };
             }
 

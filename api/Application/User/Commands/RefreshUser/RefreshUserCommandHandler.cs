@@ -30,38 +30,48 @@ namespace Application.User.Queries.RefreshUser {
             var principal = _jwtGenerator.GetPrincipalFromExpiredAccessToken(request.AccessToken);
             var user = await _userManager.FindByNameAsync(principal.Identity.Name);
 
+            if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
+
+            return await ProcessRefreshToken(request, user);
+        }
+
+        private async Task<UserDto> ProcessRefreshToken(RefreshUserCommand request, AppUser user) {
+            // Get the token that's stored in the database.
+            var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x =>
+                x.Token == request.RefreshToken);
+
             // Check if the refresh token matches the one stored against the user.
-            if (user == null || user.RefreshToken != request.RefreshToken)
+            if (storedRefreshToken?.Token != request.RefreshToken
+                    || storedRefreshToken?.ExpiryDate < DateTime.Now)
                 throw new RestException(HttpStatusCode.Unauthorized);
 
             // Delete the previous refresh token.
-            var refreshToken = await _context.RefreshTokens
-                .SingleOrDefaultAsync(x => x.Token == request.RefreshToken);
-            _context.RefreshTokens.Remove(refreshToken);
+            _context.RefreshTokens.Remove(storedRefreshToken);
 
             // Generate new tokens.
-            var newAccessToken = _jwtGenerator.GenerateAccessToken(user);
             var newRefreshToken = new RefreshToken {
                 Token = _jwtGenerator.GenerateRefreshToken(),
                 ExpiryDate = DateTime.UtcNow.AddDays(2)
             };
-            _context.RefreshTokens.Add(refreshToken);
-            
+            _context.RefreshTokens.Add(newRefreshToken);
+            var userRefreshToken = new UserRefreshToken {
+                AppUser = user,
+                RefreshToken = newRefreshToken
+            };
+            _context.UserRefreshTokens.Add(userRefreshToken);
+
             // Save changes to the database.
             var success = await _context.SaveChangesAsync() > 0;
 
-            // Return the updated user.
-            if (success) {
-                return new UserDto {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    Token = newAccessToken,
-                    RefreshToken = user.RefreshToken
-                };
-            }
+            if (!success) throw new Exception("There was a problem refreshing the user.");
 
-            throw new Exception("There was a problem refreshing the user.");
+            return new UserDto {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                AccessToken = _jwtGenerator.GenerateAccessToken(user),
+                RefreshToken = newRefreshToken.Token
+            };
         }
     }
 }

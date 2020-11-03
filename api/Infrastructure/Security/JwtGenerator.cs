@@ -43,7 +43,7 @@ namespace Infrastructure.Security {
         }
 
         /// <summary>
-        /// Generates a JWT refresh token.
+        /// Generates a refresh token that can be used alongside a JWT access token.
         /// </summary>
         public string GenerateRefreshToken() {
             var randomNumber = new byte[32];

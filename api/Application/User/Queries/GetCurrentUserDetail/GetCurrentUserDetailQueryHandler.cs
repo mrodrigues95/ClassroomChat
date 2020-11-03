@@ -30,7 +30,7 @@ namespace Application.User {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Token = _jwtGenerator.GenerateAccessToken(user)
+                AccessToken = _jwtGenerator.GenerateAccessToken(user)
             };
         }
     }
