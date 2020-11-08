@@ -1,5 +1,5 @@
+using Application.Auth;
 using Application.Interfaces;
-using Application.User;
 using AutoMapper;
 using classroom_messenger_api.Middleware;
 using classroom_messenger_api.SignalR;
@@ -53,7 +53,10 @@ namespace classroom_messenger_api {
             })
                 .AddFluentValidation(cfg => {
                     cfg.RegisterValidatorsFromAssemblyContaining<LoginUserQueryHandler>();
-                });
+                })
+                .AddNewtonsoftJson(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });           
 
             // Configure ASP.NET Identity.
             var builder = services.AddIdentityCore<AppUser>();
@@ -83,7 +86,7 @@ namespace classroom_messenger_api {
                         }
                     };
                 });
-            services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IJwtManager, JwtManager>();
             services.AddScoped<IUserAccessor, UserAccessor>();
         }
 

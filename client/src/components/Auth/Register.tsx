@@ -1,13 +1,13 @@
 import React from 'react';
-import Form, { FormValues } from './../ui/forms/Form';
-import Input from './../ui/forms/Input';
+import Form, { FormValues } from '../ui/forms/Form';
+import Input from '../ui/forms/Input';
 import Header from './components/Header';
-import Button from './../ui/Button';
+import Button from '../ui/Button';
 import { Mail, Lock } from '../../shared/assets/icons';
 import Carousel from './components/Carousel';
 import { Messaging } from '../../shared/assets/illustrations';
 
-const Signup = () => {
+const Register = () => {
   const handleOnSubmit = (values: FormValues) => {
     console.log('FORM SUBMITTED');
     console.log(values);
@@ -32,7 +32,7 @@ const Signup = () => {
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
             <Input
               label="Email Address"
-              name="emailAddress"
+              name="email"
               placeholder="Enter email"
               validation={{ required: true, pattern: /\S+@\S+\.\S+/ }}
             >
@@ -72,4 +72,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;

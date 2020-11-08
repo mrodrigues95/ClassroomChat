@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -10,22 +11,23 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Security {
-    public class JwtGenerator : IJwtGenerator {
+    public class JwtManager : IJwtManager {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SymmetricSecurityKey _key;
 
-        public JwtGenerator(IConfiguration config) {
+        public JwtManager(IConfiguration config, IHttpContextAccessor httpContextAccessor) {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
         /// Generates a JWT access token.
         /// </summary>
-        public string GenerateAccessToken(AppUser user) {
+        public string GenerateJWTAccessToken(AppUser user) {
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 
-            // Generate signing credentials.
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
 
             // Describe the token.
@@ -57,7 +59,9 @@ namespace Infrastructure.Security {
         /// Validates the access token and checks if the signing algorithm matches
         /// the one we used to create the token.
         /// </summary>
-        public ClaimsPrincipal GetPrincipalFromExpiredAccessToken(string accessToken) {
+        public ClaimsPrincipal GetPrincipalFromExpiredAccessToken(string accessTokenString) {
+            if (string.IsNullOrEmpty(accessTokenString)) return null;
+
             var accessTokenValidationParameters = new TokenValidationParameters {
                 ValidateAudience = false, // We may want to validate the audience and issuer.
                 ValidateIssuer = false,
@@ -67,19 +71,49 @@ namespace Infrastructure.Security {
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
 
-            var principal = tokenHandler.ValidateToken(accessToken, accessTokenValidationParameters,
-                out securityToken);
+            var principal = tokenHandler.ValidateToken(accessTokenString, accessTokenValidationParameters,
+                out SecurityToken securityToken);
 
             // Check if the security algorithm we used to sign the access token matches up with the
             // request.
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(
                 SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid access token");
+                throw new SecurityTokenException("Invalid access token.");
 
             return principal;
+        }
+
+        /// <summary>
+        /// Gets the expiration date in UTC for the given JWT access token.
+        /// </summary>
+        public DateTime GetJWTAccessTokenExpirationDate(string accessTokenString) {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadToken(accessTokenString);
+            var tokenExpirationDate = token.ValidTo;
+
+            if (tokenExpirationDate == DateTime.MinValue) throw new Exception("Could not get exp claim from token.");
+
+            return tokenExpirationDate;
+        }
+
+        /// <summary>
+        /// Gets the refresh token that is stored in cookies. Returns null if no cookie is found.
+        /// </summary>
+        public string GetHttpCookieRefreshToken() {
+            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refresh_token", out var refreshToken)) {
+                return null;
+            }
+            return refreshToken;
+        }
+
+        /// <summary>
+        /// Sets the refresh token to the response cookies.
+        /// </summary>
+        public void SetHttpCookieRefreshToken(string refreshToken) {
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", refreshToken,
+                new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
         }
     }
 }

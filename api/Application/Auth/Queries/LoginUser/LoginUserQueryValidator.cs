@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.User.Queries.LoginUser {
+namespace Application.Auth.Queries.LoginUser {
     public class LoginUserQueryValidator : AbstractValidator<LoginUserQuery> {
         public LoginUserQueryValidator() {
             RuleFor(x => x.Email).NotEmpty();

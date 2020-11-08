@@ -4,9 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 
 namespace Infrastructure.Security {
-    /// <summary>
-    /// Retrieves the current sessions username from the access token.
-    /// </summary>
     public class UserAccessor : IUserAccessor {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

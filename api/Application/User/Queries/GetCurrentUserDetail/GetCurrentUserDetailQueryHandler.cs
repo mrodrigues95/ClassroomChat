@@ -12,13 +12,10 @@ namespace Application.User {
     /// </summary>
     public class GetCurrentUserDetailQueryHandler : IRequestHandler<GetCurrentUserDetailQuery, UserDto> {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IJwtGenerator _jwtGenerator;
         private readonly IUserAccessor _userAccessor;
 
-        public GetCurrentUserDetailQueryHandler(UserManager<AppUser> userManager, IJwtGenerator jwtGenerator,
-            IUserAccessor userAccessor) {
+        public GetCurrentUserDetailQueryHandler(UserManager<AppUser> userManager, IUserAccessor userAccessor) {
             _userManager = userManager;
-            _jwtGenerator = jwtGenerator;
             _userAccessor = userAccessor;
         }
 
@@ -30,7 +27,6 @@ namespace Application.User {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                AccessToken = _jwtGenerator.GenerateAccessToken(user)
             };
         }
     }

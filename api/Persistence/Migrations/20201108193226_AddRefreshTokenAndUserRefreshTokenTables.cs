@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class AddUserRefreshTokentable : Migration
+    public partial class AddRefreshTokenAndUserRefreshTokenTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,8 +11,9 @@ namespace Persistence.Migrations
                 name: "RefreshTokens",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    ExpiryDate = table.Column<DateTime>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Token = table.Column<string>(nullable: true),
+                    ExpiresAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,7 +25,7 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     AppUserId = table.Column<string>(nullable: false),
-                    RefreshTokenId = table.Column<string>(nullable: false)
+                    RefreshTokenId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

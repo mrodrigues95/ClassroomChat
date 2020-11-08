@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201101175815_Add RefreshToken column")]
-    partial class AddRefreshTokencolumn
+    [Migration("20201108193226_AddRefreshTokenAndUserRefreshTokenTables")]
+    partial class AddRefreshTokenAndUserRefreshTokenTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,9 +65,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
@@ -189,6 +186,23 @@ namespace Persistence.Migrations
                     b.ToTable("InviteLinks");
                 });
 
+            modelBuilder.Entity("Domain.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Domain.UserClassroom", b =>
                 {
                     b.Property<string>("AppUserId")
@@ -228,6 +242,21 @@ namespace Persistence.Migrations
                     b.HasIndex("InviteLinkId");
 
                     b.ToTable("UserInviteLinks");
+                });
+
+            modelBuilder.Entity("Domain.UserRefreshToken", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RefreshTokenId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AppUserId", "RefreshTokenId");
+
+                    b.HasIndex("RefreshTokenId");
+
+                    b.ToTable("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -422,6 +451,21 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.InviteLink", "InviteLink")
                         .WithMany("UserInviteLinks")
                         .HasForeignKey("InviteLinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.UserRefreshToken", b =>
+                {
+                    b.HasOne("Domain.AppUser", "AppUser")
+                        .WithMany("UserRefreshTokens")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.RefreshToken", "RefreshToken")
+                        .WithMany("UserRefreshTokens")
+                        .HasForeignKey("RefreshTokenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

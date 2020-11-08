@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
 import Header from './components/Header';
@@ -6,11 +6,13 @@ import Button from './../ui/Button';
 import Carousel from './components/Carousel';
 import { Chevron, Mail, Lock } from '../../shared/assets/icons';
 import { Collaboration } from '../../shared/assets/illustrations';
+import { AuthContext } from '../../shared/hooks/useAuth';
 
-const Login = () => {  
-  const handleOnSubmit = (values: FormValues) => {
-    console.log('FORM SUBMITTED');
-    console.log(values);
+const Login = () => {
+  const auth = useContext(AuthContext);
+
+  const handleOnSubmit = async (values: FormValues) => {
+    auth?.login(values.email, values.password);
   };
 
   return (
@@ -33,7 +35,7 @@ const Login = () => {
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
             <Input
               label="Email Address"
-              name="emailAddress"
+              name="email"
               placeholder="Enter email"
               validation={{ required: true, pattern: /\S+@\S+\.\S+/ }}
             >

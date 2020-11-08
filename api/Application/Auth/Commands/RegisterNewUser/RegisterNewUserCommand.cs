@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿using Application.Common.Dtos;
+using MediatR;
 
-namespace Application.User.Commands.SignupNewUser {
-    public class SignupNewUserCommand : IRequest<UserDto> {
+namespace Application.Auth.Commands.RegisterNewUser {
+    public class RegisterNewUserCommand : IRequest<UserAndTokenDto> {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }

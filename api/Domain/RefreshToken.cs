@@ -6,7 +6,7 @@ namespace Domain {
     public class RefreshToken {
         public Guid Id { get; set; }
         public string Token { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime ExpiresAt { get; set; }
 
         public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; }
     }
