@@ -1,5 +1,5 @@
 ﻿using Application.Classrooms.Commands.CreateClassroom;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

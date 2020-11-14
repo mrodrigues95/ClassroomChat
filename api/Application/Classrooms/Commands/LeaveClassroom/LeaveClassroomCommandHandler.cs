@@ -1,6 +1,6 @@
 ﻿using Application.Classrooms.Commands.LeaveClassroom;
+using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;

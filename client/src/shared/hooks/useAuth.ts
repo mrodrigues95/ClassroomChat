@@ -40,7 +40,7 @@ const useAuth = () => {
   const refreshToken = useCallback(async () => {
     const {
       data: { user, ...rest },
-    } = await axios.get<UserAndTokenResponse>('user/refresh');
+    } = await axios.get<UserAndTokenResponse>('auth/refresh');
 
     setUser(user);
     setToken(rest);
@@ -61,7 +61,7 @@ const useAuth = () => {
       'storage',
       async (event: WindowEventMap['storage']) => {
         if (event.key === AuthEvent.LOGOUT && isAuthenticated()) {
-          await clearToken(false);
+          clearToken(false);
           setUser(null);
         } else if (event.key === AuthEvent.LOGIN) {
           refreshToken();
@@ -72,16 +72,15 @@ const useAuth = () => {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const { data: user } = await axios.post<UserAndTokenResponse>(
-        'user/login',
-        {
-          email,
-          password,
-        }
-      );
+      const {
+        data: { user, ...rest },
+      } = await axios.post<UserAndTokenResponse>('auth/login', {
+        email,
+        password,
+      });
 
-      setToken({ accessToken: user.accessToken });
-      setUser(user.user);
+      setUser(user);
+      setToken(rest);
 
       // Fire an event to let all tabs know they should login.
       window.localStorage.setItem(AuthEvent.LOGIN, new Date().toISOString());
@@ -90,14 +89,11 @@ const useAuth = () => {
   );
 
   const logout = useCallback(() => {
-    clearToken().finally(() => {
-      setUser(null);
-      // TODO: We need to navigate back to the home screen.
-      // history.push('/auth');
+    clearToken();
+    setUser(null);
 
-      // Fire an event to logout from all tabs.
-      window.localStorage.setItem(AuthEvent.LOGOUT, new Date().toISOString());
-    });
+    // Fire an event to logout from all tabs.
+    window.localStorage.setItem(AuthEvent.LOGOUT, new Date().toISOString());
   }, [clearToken]);
 
   const register = useCallback(

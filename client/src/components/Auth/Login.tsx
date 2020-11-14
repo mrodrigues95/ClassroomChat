@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
 import Header from './components/Header';
@@ -9,10 +10,11 @@ import { Collaboration } from '../../shared/assets/illustrations';
 import { AuthContext } from '../../shared/hooks/useAuth';
 
 const Login = () => {
-  const auth = useContext(AuthContext);
+  const navigateTo = useNavigate();
+  const { login } = useContext(AuthContext)!;
 
   const handleOnSubmit = async (values: FormValues) => {
-    auth?.login(values.email, values.password);
+    login(values.email, values.password).then(() => navigateTo('/home'));
   };
 
   return (

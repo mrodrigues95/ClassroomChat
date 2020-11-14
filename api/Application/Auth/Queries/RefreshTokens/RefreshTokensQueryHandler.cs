@@ -1,6 +1,6 @@
 ﻿using Application.Common.Dtos;
+using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Interfaces;
 using Application.User;
 using Domain;
 using MediatR;
@@ -17,16 +17,18 @@ namespace Application.Auth.Queries.RefreshTokens {
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtManager _jwtManager;
+        private readonly IHttpContextManager _httpContextManager;
 
         public RefreshTokensQueryHandler(DataContext context, UserManager<AppUser> userManager,
-            IJwtManager jwtManager) {
+            IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _jwtManager = jwtManager;
+            _httpContextManager = httpContextManager;
         }
 
         public async Task<UserAndTokenDto> Handle(RefreshTokensQuery request, CancellationToken cancellationToken) {
-            var principal = _jwtManager.GetPrincipalFromExpiredAccessToken(request.AccessToken);
+            var principal = _jwtManager.GetPrincipalFromExpiredAccessToken(_httpContextManager.GetJWT());
 
             var authenticatedRefreshToken = await AuthenticateRefreshToken();
 
@@ -47,15 +49,18 @@ namespace Application.Auth.Queries.RefreshTokens {
         }
 
         private async Task<RefreshToken> AuthenticateRefreshToken() {
-            var refreshToken = _jwtManager.GetHttpCookieRefreshToken();
+            var refreshToken = _httpContextManager.GetHttpCookieRefreshToken();
 
-            if (string.IsNullOrEmpty(refreshToken)) throw new Exception("Invalid refresh token.");
+            if (string.IsNullOrEmpty(refreshToken)) {
+                throw new RestException(HttpStatusCode.Unauthorized, new { RefreshToken = "Invalid or expired refresh token." });
+            }
 
             var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x =>
                 x.Token == refreshToken);
 
-            if (storedRefreshToken?.Token != refreshToken || storedRefreshToken?.ExpiresAt < DateTime.Now)
+            if (storedRefreshToken?.Token != refreshToken || storedRefreshToken?.ExpiresAt < DateTime.Now) {
                 throw new RestException(HttpStatusCode.Unauthorized, new { RefreshToken = "Invalid or expired refresh token." });
+            }
 
             return storedRefreshToken;
         }
@@ -82,8 +87,8 @@ namespace Application.Auth.Queries.RefreshTokens {
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");
 
-            // We need to set the new refresh token cookie.
-            _jwtManager.SetHttpCookieRefreshToken(newRefreshToken.Token);
+            // We need to set the refresh token cookie.
+            _httpContextManager.SetHttpCookieRefreshToken(newRefreshToken.Token);
 
             return CreateUserAndTokenDto(user);
         }

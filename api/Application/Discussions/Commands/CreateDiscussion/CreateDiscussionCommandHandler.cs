@@ -1,5 +1,5 @@
-﻿using Application.Discussions.Commands;
-using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Discussions.Commands;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,5 @@
 ﻿using Application.Classrooms.Queries.GetClassroomsList;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;

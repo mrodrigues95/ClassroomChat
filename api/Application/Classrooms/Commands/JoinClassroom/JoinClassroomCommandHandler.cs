@@ -1,6 +1,6 @@
 ﻿using Application.Classrooms.Commands.JoinClassroom;
+using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

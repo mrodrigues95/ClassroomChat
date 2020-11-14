@@ -1,7 +1,7 @@
 ﻿using Application.Auth.Commands.RegisterNewUser;
 using Application.Common.Dtos;
+using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Interfaces;
 using Application.User;
 using Domain;
 using MediatR;
@@ -15,18 +15,20 @@ using System.Threading.Tasks;
 
 namespace Application.Auth {
     /// <summary>
-    /// Registers a new user with the application.
+    /// Registers a new user with Identity.
     /// </summary>
     public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, UserAndTokenDto> {
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtManager _jwtManager;
+        private readonly IHttpContextManager _httpContextManager;
 
         public RegisterNewUserCommandHandler(DataContext context, UserManager<AppUser> userManager,
-            IJwtManager jwtManager) {
+            IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _jwtManager = jwtManager;
+            _httpContextManager = httpContextManager;
         }
 
         public async Task<UserAndTokenDto> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken) {
@@ -72,7 +74,7 @@ namespace Application.Auth {
         }
 
         private UserAndTokenDto FinishRegister(AppUser user, RefreshToken refreshToken) {
-            _jwtManager.SetHttpCookieRefreshToken(refreshToken.Token);
+            _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
             var accessToken = _jwtManager.GenerateJWTAccessToken(user);
 
             var userDto = new UserDto {

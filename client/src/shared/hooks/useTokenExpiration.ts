@@ -13,7 +13,7 @@ const useTokenExpiration = (onTokenRefreshRequired: Function) => {
         onTokenRefreshRequired();
       }, triggerAfterMs);
     }
-
+    
     return () => {
       window.clearTimeout(clearAutomaticRefresh.current);
     };

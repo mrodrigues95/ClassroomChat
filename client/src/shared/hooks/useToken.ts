@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
-import decode from 'jwt-decode';
 import Axios, { AxiosRequestConfig } from 'axios';
 import { configure } from 'axios-hooks';
+import Cookies from 'js-cookie';
 import useTokenExpiration from './useTokenExpiration';
 import { User } from './useAuth';
 
@@ -15,51 +15,48 @@ export type UserAndTokenResponse = {
 
 type TokenResponse = {
   accessToken: string;
-  tokenExpiration?: string;
-};
-
-const getTokenExpirationDate = (accessToken: string) => {
-  let token: any = decode(accessToken);
-  return new Date(token.exp * 1000);
+  expiresAt: Date;
 };
 
 const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
-  const currentAccessToken = useRef<string>();
+  const jwtAccessToken = useRef<string>();
   const { clearAutomaticTokenRefresh, setTokenExpiration } = useTokenExpiration(
     onRefreshRequired
   );
 
   const setToken = useCallback(
-    ({ accessToken }: TokenResponse) => {
-      currentAccessToken.current = accessToken;
-      const expirationDate = getTokenExpirationDate(accessToken);
+    ({ accessToken, expiresAt }: TokenResponse) => {
+      jwtAccessToken.current = accessToken;
+      const expirationDate = new Date(expiresAt);
       setTokenExpiration(expirationDate);
     },
     [setTokenExpiration]
   );
 
   const isAuthenticated = useCallback(() => {
-    return !!currentAccessToken.current;
+    return !!jwtAccessToken.current;
   }, []);
 
   const clearToken = useCallback(
-    (shouldClearCookie: boolean = true) => {
-      const clearRefreshTokenCookie = shouldClearCookie
-        ? axios.get('logout')
-        : Promise.resolve();
+    (shouldClearRefreshTokenCookie: boolean = true) => {
+      // This can be false if we are comming from a different tab.
+      // In that case, we do not want to clear the refresh token cookie.
+      if (shouldClearRefreshTokenCookie) {
+        Cookies.remove('refresh_token');
+      }
 
-      return clearRefreshTokenCookie.finally(() => {
-        currentAccessToken.current = '';
-        clearAutomaticTokenRefresh();
-      });
+      jwtAccessToken.current = '';
+      clearAutomaticTokenRefresh();
     },
     [clearAutomaticTokenRefresh]
   );
 
   useEffect(() => {
+    axios.defaults.withCredentials = true;
+
     axios.interceptors.request.use(
       (config: AxiosRequestConfig): AxiosRequestConfig => {
-        config.headers.authorization = `Bearer ${currentAccessToken.current}`;
+        config.headers.authorization = `Bearer ${jwtAccessToken.current}`;
         return config;
       }
     );
@@ -67,7 +64,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
     axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response.status === 401 && currentAccessToken.current) {
+        if (error.response.status === 401 && jwtAccessToken.current) {
           clearToken();
           onTokenInvalid();
         }

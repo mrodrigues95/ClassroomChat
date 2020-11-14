@@ -1,7 +1,7 @@
 ﻿using Application.Auth.Queries.LoginUser;
 using Application.Common.Dtos;
+using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Interfaces;
 using Application.User;
 using Domain;
 using MediatR;
@@ -21,13 +21,15 @@ namespace Application.Auth {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtManager _jwtManager;
+        private readonly IHttpContextManager _httpContextManager;
 
         public LoginUserQueryHandler(DataContext context, UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, IJwtManager jwtManager) {
+            SignInManager<AppUser> signInManager, IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtManager = jwtManager;
+            _httpContextManager = httpContextManager;
         }
 
         public async Task<UserAndTokenDto> Handle(LoginUserQuery request, CancellationToken cancellationToken) {
@@ -61,7 +63,7 @@ namespace Application.Auth {
         }
 
         private UserAndTokenDto FinishLogin(AppUser user, RefreshToken refreshToken) {
-            _jwtManager.SetHttpCookieRefreshToken(refreshToken.Token);
+            _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
             var accessToken = _jwtManager.GenerateJWTAccessToken(user);
 
             var userDto = new UserDto {

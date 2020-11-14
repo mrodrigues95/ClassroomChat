@@ -1,5 +1,5 @@
 using Application.Auth;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using AutoMapper;
 using classroom_messenger_api.Middleware;
 using classroom_messenger_api.SignalR;
@@ -88,6 +88,7 @@ namespace classroom_messenger_api {
                 });
             services.AddScoped<IJwtManager, JwtManager>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IHttpContextManager, HttpContextManager>();
         }
 
         // Configure the HTTP request pipeline.

@@ -2,7 +2,6 @@
 using Application.Auth.Queries.LoginUser;
 using Application.Auth.Queries.RefreshTokens;
 using Application.Common.Dtos;
-using Application.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,8 +34,8 @@ namespace classroom_messenger_api.Controllers {
         // GET api/auth/refresh
         [AllowAnonymous]
         [HttpGet("refresh")]
-        public async Task<ActionResult<UserAndTokenDto>> RefreshTokens([FromBody] RefreshTokensQuery query) {
-            return Ok(await _mediator.Send(query));
+        public async Task<ActionResult<UserAndTokenDto>> RefreshTokens() {
+            return Ok(await _mediator.Send(new RefreshTokensQuery()));
         }
     }
 }

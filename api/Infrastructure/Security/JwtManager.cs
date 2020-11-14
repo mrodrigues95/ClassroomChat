@@ -1,6 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
 using Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -12,12 +11,10 @@ using System.Text;
 
 namespace Infrastructure.Security {
     public class JwtManager : IJwtManager {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SymmetricSecurityKey _key;
 
-        public JwtManager(IConfiguration config, IHttpContextAccessor httpContextAccessor) {
+        public JwtManager(IConfiguration config) {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
-            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -96,24 +93,6 @@ namespace Infrastructure.Security {
             if (tokenExpirationDate == DateTime.MinValue) throw new Exception("Could not get exp claim from token.");
 
             return tokenExpirationDate;
-        }
-
-        /// <summary>
-        /// Gets the refresh token that is stored in cookies. Returns null if no cookie is found.
-        /// </summary>
-        public string GetHttpCookieRefreshToken() {
-            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refresh_token", out var refreshToken)) {
-                return null;
-            }
-            return refreshToken;
-        }
-
-        /// <summary>
-        /// Sets the refresh token to the response cookies.
-        /// </summary>
-        public void SetHttpCookieRefreshToken(string refreshToken) {
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", refreshToken,
-                new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
         }
     }
 }

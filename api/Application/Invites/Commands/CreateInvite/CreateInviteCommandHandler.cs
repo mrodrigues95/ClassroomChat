@@ -1,5 +1,5 @@
-﻿using Application.Errors;
-using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Errors;
 using Application.Invites.Commands;
 using AutoMapper;
 using CSharpVitamins;
