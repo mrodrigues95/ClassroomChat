@@ -64,18 +64,17 @@ namespace Application.Auth {
 
         private UserAndTokenDto FinishLogin(AppUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
-            var accessToken = _jwtManager.GenerateJWTAccessToken(user);
+            var accessToken = _jwtManager.GenerateJWT(user);
 
             var userDto = new UserDto {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Name = user.Name,
                 Email = user.Email
             };
 
             return new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
-                ExpiresAt = _jwtManager.GetJWTAccessTokenExpirationDate(accessToken),
+                ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
             };
         }
     }

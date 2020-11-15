@@ -6,7 +6,7 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { AuthEvent } from '../constants';
+import { AuthEvent } from '../constants/events';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 
 export type User = {
@@ -15,10 +15,9 @@ export type User = {
 } & UserBase;
 
 type UserBase = {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  password?: string;
+  password: string;
 };
 
 type AuthContextType = {
@@ -34,13 +33,16 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [waitingForToken, setWaitingForToken] = useState(true);
 
   const onTokenInvalid = () => setUser(null);
 
   const refreshToken = useCallback(async () => {
     const {
       data: { user, ...rest },
-    } = await axios.get<UserAndTokenResponse>('auth/refresh');
+    } = await axios
+      .get<UserAndTokenResponse>('auth/refresh')
+      .finally(() => setWaitingForToken(false));
 
     setUser(user);
     setToken(rest);
@@ -101,7 +103,7 @@ const useAuth = () => {
       const {
         data: { user, ...rest },
       } = await axios.post<UserAndTokenResponse>(
-        'user/register',
+        'auth/register',
         userToRegister
       );
       setUser(user);
@@ -117,6 +119,7 @@ const useAuth = () => {
     login,
     logout,
     refreshToken,
+    waitingForToken,
   };
 };
 

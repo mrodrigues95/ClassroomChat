@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { Chevron } from '../../../shared/assets/icons';
+import { ChevronIcon } from '../../../shared/assets/icons';
 import clsx from 'clsx';
 
 export enum Direction {
@@ -21,9 +21,9 @@ const NavigationButton = ({ direction, className, ...props }: Props) => {
       {...props}
     >
       {direction === Direction.RIGHT ? (
-        <Chevron className="h-6 w-6 transform rotate-180" />
+        <ChevronIcon className="h-6 w-6 transform rotate-180" />
       ) : (
-        <Chevron className="h-6 w-6" />
+        <ChevronIcon className="h-6 w-6" />
       )}
     </button>
   );

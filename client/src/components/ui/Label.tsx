@@ -2,16 +2,16 @@ import React from 'react';
 import clsx from 'clsx';
 
 type Props = {
-  error?: string | undefined;
+  errorMessage?: string | undefined;
   children: React.ReactNode;
 };
 
-const Label = ({ error, children }: Props) => {
+const Label = ({ errorMessage, children }: Props) => {
   return (
     <label
       className={clsx(
-        'block w-full text-md text-gray-700 tracking-wide',
-        typeof error !== 'undefined' && 'font-bold uppercase text-red-600'
+        'block w-full text-md text-gray-700 tracking-wide font-semibold',
+        typeof errorMessage !== 'undefined' && 'font-bold uppercase text-red-600'
       )}
     >
       {children}

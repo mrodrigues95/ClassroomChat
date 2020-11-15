@@ -4,19 +4,19 @@ import Label from './Label';
 type Props = {
   label: string;
   altLabel: string;
-  error?: string | undefined;
+  errorMessage?: string | undefined;
   children: React.ReactNode;
 };
 
-const AltLabel = ({ label, altLabel, error, children }: Props) => {
+const AltLabel = ({ label, altLabel, errorMessage, children }: Props) => {
   return (
-    <Label error={error}>
+    <Label errorMessage={errorMessage}>
       <div className="flex justify-between">
         <div>
           <span>{label}</span>
-          {typeof error !== 'undefined' && (
+          {typeof errorMessage !== 'undefined' && (
             <span className="ml-1 text-xs italic font-bold normal-case">
-              - This field is required
+              {errorMessage}
             </span>
           )}
         </div>

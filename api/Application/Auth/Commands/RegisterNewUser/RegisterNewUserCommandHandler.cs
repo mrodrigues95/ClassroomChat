@@ -43,8 +43,7 @@ namespace Application.Auth {
 
         private async Task<AppUser> CreateNewUser(RegisterNewUserCommand request) {
             var newUser = new AppUser {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
+                Name = request.Name,
                 UserName = request.Email,
                 Email = request.Email
             };
@@ -75,18 +74,17 @@ namespace Application.Auth {
 
         private UserAndTokenDto FinishRegister(AppUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
-            var accessToken = _jwtManager.GenerateJWTAccessToken(user);
+            var accessToken = _jwtManager.GenerateJWT(user);
 
             var userDto = new UserDto {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Name = user.Name,
                 Email = user.Email
             };
 
             return new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
-                ExpiresAt = _jwtManager.GetJWTAccessTokenExpirationDate(accessToken),
+                ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
             };
         }
     }

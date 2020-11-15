@@ -2,6 +2,7 @@ import React, { FormHTMLAttributes } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 export type FormValues = {
+  name: string;
   email: string;
   password: string;
 };
@@ -12,7 +13,7 @@ type Props = {
 } & Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'>;
 
 const Form = ({ onSubmit, children, ...props }: Props) => {
-  const methods = useForm<FormValues>({ mode: 'onChange' });
+  const methods = useForm<FormValues>();
 
   return (
     <FormProvider {...methods}>

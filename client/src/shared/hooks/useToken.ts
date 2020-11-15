@@ -19,14 +19,14 @@ type TokenResponse = {
 };
 
 const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
-  const jwtAccessToken = useRef<string>();
+  const jwt = useRef<string>();
   const { clearAutomaticTokenRefresh, setTokenExpiration } = useTokenExpiration(
     onRefreshRequired
   );
 
   const setToken = useCallback(
     ({ accessToken, expiresAt }: TokenResponse) => {
-      jwtAccessToken.current = accessToken;
+      jwt.current = accessToken;
       const expirationDate = new Date(expiresAt);
       setTokenExpiration(expirationDate);
     },
@@ -34,7 +34,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
   );
 
   const isAuthenticated = useCallback(() => {
-    return !!jwtAccessToken.current;
+    return !!jwt.current;
   }, []);
 
   const clearToken = useCallback(
@@ -45,7 +45,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
         Cookies.remove('refresh_token');
       }
 
-      jwtAccessToken.current = '';
+      jwt.current = '';
       clearAutomaticTokenRefresh();
     },
     [clearAutomaticTokenRefresh]
@@ -56,7 +56,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
 
     axios.interceptors.request.use(
       (config: AxiosRequestConfig): AxiosRequestConfig => {
-        config.headers.authorization = `Bearer ${jwtAccessToken.current}`;
+        config.headers.authorization = `Bearer ${jwt.current}`;
         return config;
       }
     );
@@ -64,7 +64,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
     axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response.status === 401 && jwtAccessToken.current) {
+        if (error.response.status === 401 && jwt.current) {
           clearToken();
           onTokenInvalid();
         }

@@ -5,23 +5,23 @@ import AltLabel from './../AltLabel';
 type Props = {
   label: string;
   altLabel?: string;
-  error?: string | undefined;
+  errorMessage?: string | undefined;
   children: React.ReactNode;
 };
 
-const FormItem = ({ label, altLabel, error, children }: Props) => {
+const FormItem = ({ label, altLabel, errorMessage, children }: Props) => {
   return (
     <>
       {altLabel ? (
-        <AltLabel label={label} altLabel={altLabel} error={error}>
+        <AltLabel label={label} altLabel={altLabel} errorMessage={errorMessage}>
           {children}
         </AltLabel>
       ) : (
-        <Label error={error}>
+        <Label errorMessage={errorMessage}>
           {label}
-          {typeof error !== 'undefined' && (
+          {typeof errorMessage !== 'undefined' && (
             <span className="ml-1 text-xs italic font-bold normal-case">
-              - This field is required
+              {errorMessage}
             </span>
           )}
           <div className="relative mt-3 mb-6">{children}</div>

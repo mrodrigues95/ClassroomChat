@@ -17,10 +17,7 @@ namespace Infrastructure.Security {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        /// <summary>
-        /// Generates a JWT access token.
-        /// </summary>
-        public string GenerateJWTAccessToken(AppUser user) {
+        public string GenerateJWT(AppUser user) {
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName)
             };
@@ -41,9 +38,6 @@ namespace Infrastructure.Security {
             return tokenHandler.WriteToken(accessToken);
         }
 
-        /// <summary>
-        /// Generates a refresh token that can be used alongside a JWT access token.
-        /// </summary>
         public string GenerateRefreshToken() {
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create()) {
@@ -52,11 +46,7 @@ namespace Infrastructure.Security {
             }
         }
 
-        /// <summary>
-        /// Validates the access token and checks if the signing algorithm matches
-        /// the one we used to create the token.
-        /// </summary>
-        public ClaimsPrincipal GetPrincipalFromExpiredAccessToken(string accessTokenString) {
+        public ClaimsPrincipal GetPrincipalFromExpiredJWT(string accessTokenString) {
             if (string.IsNullOrEmpty(accessTokenString)) return null;
 
             var accessTokenValidationParameters = new TokenValidationParameters {
@@ -82,10 +72,7 @@ namespace Infrastructure.Security {
             return principal;
         }
 
-        /// <summary>
-        /// Gets the expiration date in UTC for the given JWT access token.
-        /// </summary>
-        public DateTime GetJWTAccessTokenExpirationDate(string accessTokenString) {
+        public DateTime GetJWTExpirationDate(string accessTokenString) {
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.ReadToken(accessTokenString);
             var tokenExpirationDate = token.ValidTo;

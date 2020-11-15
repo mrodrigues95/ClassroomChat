@@ -24,8 +24,7 @@ namespace Application.User {
             var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
 
             return new UserDto {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Name = user.Name,
                 Email = user.Email,
             };
         }

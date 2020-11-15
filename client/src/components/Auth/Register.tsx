@@ -1,16 +1,42 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Form, { FormValues } from '../ui/forms/Form';
 import Input from '../ui/forms/Input';
 import Header from './components/Header';
 import Button from '../ui/Button';
-import { Mail, Lock } from '../../shared/assets/icons';
+import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
 import Carousel from './components/Carousel';
 import { Messaging } from '../../shared/assets/illustrations';
+import { AuthContext } from '../../shared/hooks/useAuth';
+import Spinner from './../ui/Spinner';
+import { RegistrationError } from '../../shared/constants/validation';
+
+type ApiRegistrationErrors = {
+  Name?: string[];
+  Email?: string[];
+  Password?: string[];
+};
 
 const Register = () => {
-  const handleOnSubmit = (values: FormValues) => {
-    console.log('FORM SUBMITTED');
-    console.log(values);
+  const navigateTo = useNavigate();
+  const { register } = useContext(AuthContext)!;
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [apiErrors, setApiErrors] = useState<ApiRegistrationErrors>({});
+
+  const handleOnSubmit = async (values: FormValues) => {
+    setIsRegistering(true);
+
+    try {
+      await register({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+      navigateTo('/home');
+    } catch (e) {
+      setApiErrors(e.response.data.errors);
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -31,13 +57,32 @@ const Register = () => {
           />
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
             <Input
+              label="Name"
+              name="name"
+              placeholder="Enter name"
+              validation={{ required: true }}
+              error={
+                apiErrors?.Name ? RegistrationError.INVALID_NAME : undefined
+              }
+            >
+              <span className="absolute left-0 inset-y-0 flex items-center pl-4">
+                <IdentityIcon
+                  className="h-8 w-8 text-black"
+                  aria-hidden={true}
+                />
+              </span>
+            </Input>
+            <Input
               label="Email Address"
               name="email"
               placeholder="Enter email"
               validation={{ required: true, pattern: /\S+@\S+\.\S+/ }}
+              error={
+                apiErrors?.Email ? RegistrationError.INVALID_EMAIL : undefined
+              }
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <Mail className="h-8 w-8 text-black" aria-hidden={true} />
+                <MailIcon className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
             <Input
@@ -46,9 +91,14 @@ const Register = () => {
               name="password"
               placeholder="Enter password"
               validation={{ required: true }}
+              error={
+                apiErrors?.Password
+                  ? RegistrationError.INVALID_PASSWORD
+                  : undefined
+              }
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <Lock className="h-8 w-8 text-black" aria-hidden={true} />
+                <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
             <Input
@@ -59,11 +109,19 @@ const Register = () => {
               validation={{ required: true }}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <Lock className="h-8 w-8 text-black" aria-hidden={true} />
+                <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
             <div className="absolute bottom-0 inset-x-0">
-              <Button type="submit">Create Account</Button>
+              <Button type="submit" disabled={isRegistering}>
+                {isRegistering ? (
+                  <>
+                    <Spinner>Creating your account...</Spinner>
+                  </>
+                ) : (
+                  <>Create Account</>
+                )}
+              </Button>
             </div>
           </Form>
         </div>

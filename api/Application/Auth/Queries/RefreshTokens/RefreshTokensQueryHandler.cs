@@ -28,7 +28,7 @@ namespace Application.Auth.Queries.RefreshTokens {
         }
 
         public async Task<UserAndTokenDto> Handle(RefreshTokensQuery request, CancellationToken cancellationToken) {
-            var principal = _jwtManager.GetPrincipalFromExpiredAccessToken(_httpContextManager.GetJWT());
+            var principal = _jwtManager.GetPrincipalFromExpiredJWT(_httpContextManager.GetJWT());
 
             var authenticatedRefreshToken = await AuthenticateRefreshToken();
 
@@ -94,18 +94,17 @@ namespace Application.Auth.Queries.RefreshTokens {
         }
 
         private UserAndTokenDto CreateUserAndTokenDto(AppUser user) {
-            var accessToken = _jwtManager.GenerateJWTAccessToken(user);
+            var accessToken = _jwtManager.GenerateJWT(user);
 
             var userDto = new UserDto {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Name = user.Name,
                 Email = user.Email
             };
 
             return new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
-                ExpiresAt = _jwtManager.GetJWTAccessTokenExpirationDate(accessToken),
+                ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
             };
         }
     }

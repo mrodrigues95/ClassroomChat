@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain {
     public class AppUser : IdentityUser {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; }
         public virtual ICollection<UserClassroom> UserClassrooms { get; set; }

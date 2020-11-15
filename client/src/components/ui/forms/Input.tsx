@@ -2,19 +2,36 @@ import React, { InputHTMLAttributes, useState } from 'react';
 import clsx from 'clsx';
 import FormItem from './FormItem';
 import { useFormContext, ValidationRules } from 'react-hook-form';
-import getErrorMessage from './../utils/getErrorMessage';
+import getElementError from './../utils/getElementError';
+import {
+  RegistrationError,
+  FormError,
+  LoginError,
+} from '../../../shared/constants/validation';
 
 type Props = {
   label: string;
   altLabel?: string;
+  error?: LoginError | FormError | RegistrationError;
   validation?: ValidationRules;
   children?: React.ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const Input = ({ label, altLabel, validation, children, ...props }: Props) => {
+const Input = ({
+  label,
+  altLabel,
+  error,
+  validation,
+  children,
+  ...props
+}: Props) => {
   const form = useFormContext();
   const [fontWeight, setFontWeight] = useState('');
-  const error = getErrorMessage(props.name, form.errors);
+  const errorMessage = getElementError({
+    name: props.name,
+    error: error,
+    errors: form.errors,
+  });
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
@@ -25,11 +42,11 @@ const Input = ({ label, altLabel, validation, children, ...props }: Props) => {
   };
 
   return (
-    <FormItem label={label} altLabel={altLabel} error={error}>
+    <FormItem label={label} altLabel={altLabel} errorMessage={errorMessage}>
       {children}
       <input
         className={clsx(
-          'block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-black md:text-xl transition ease-in-out duration-300 focus:outline-none focus:shadow-outline',
+          'block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-black md:text-xl items-center transition ease-in-out duration-300 focus:outline-none focus:shadow-outline',
           fontWeight
         )}
         ref={validation ? form.register(validation) : form.register}
