@@ -14,7 +14,7 @@ const Carousel = ({ caption, description, children }: Props) => {
       <div>
         {children}
       </div>
-      <div className="flex flex-col flex-1 -mt-16 w-full">
+      <article className="flex flex-col flex-1 -mt-16 w-full">
         <h2 className="text-center self-center font-bold text-3xl">
           {caption}
         </h2>
@@ -26,7 +26,7 @@ const Carousel = ({ caption, description, children }: Props) => {
           <span className="rounded-full h-2 w-5 bg-blue-400" />
           <span className="rounded-full h-2 w-2 bg-gray-300" />
         </div>
-      </div>
+      </article>
       <div className="flex justify-center w-full">
         <NavigationButton aria-label="Previous slide" />
         <span className="pl-6" />

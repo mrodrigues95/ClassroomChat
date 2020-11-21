@@ -14,7 +14,7 @@ const getErrorMessage = ({ name, errors }: Error) => {
 
   if (error.message) return error.message;
 
-  return FormError.GENERIC_ERROR;
+  return FormError.FIELD_REQUIRED;
 };
 
 const getElementError = ({ name, error, errors }: Error) => {

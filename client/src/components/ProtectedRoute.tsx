@@ -19,7 +19,7 @@ function RouteElement({
   const { user } = useContext(AuthContext)!;
 
   if (user && unprotected) {
-    return <Navigate to="/" />;
+    return <Navigate to="/home" />;
   }
 
   if (!user && !unprotected) {

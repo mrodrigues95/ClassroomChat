@@ -2,14 +2,17 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormValues } from '../ui/forms/Form';
 import Input from '../ui/forms/Input';
-import Header from './components/Header';
+import AuthHeader from './components/AuthHeader';
 import Button from '../ui/Button';
 import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
 import Carousel from './components/Carousel';
 import { Messaging } from '../../shared/assets/illustrations';
 import { AuthContext } from '../../shared/hooks/useAuth';
 import Spinner from './../ui/Spinner';
-import { RegistrationError } from '../../shared/constants/validation';
+import {
+  RegistrationError,
+  FormError,
+} from '../../shared/constants/validation';
 
 type ApiRegistrationErrors = {
   Name?: string[];
@@ -18,13 +21,13 @@ type ApiRegistrationErrors = {
 };
 
 const Register = () => {
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
   const { register } = useContext(AuthContext)!;
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [apiErrors, setApiErrors] = useState<ApiRegistrationErrors>({});
 
   const handleOnSubmit = async (values: FormValues) => {
-    setIsRegistering(true);
+    setWaitingForResponse(true);
 
     try {
       await register({
@@ -32,26 +35,26 @@ const Register = () => {
         email: values.email,
         password: values.password,
       });
-      navigateTo('/home');
+      navigate('/home');
     } catch (e) {
       setApiErrors(e.response.data.errors);
-      setIsRegistering(false);
+      setWaitingForResponse(false);
     }
   };
 
   return (
     <main className="flex min-h-screen xl:p-16">
-      <div className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
+      <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Message Your Classmates"
           description="Classroom Chat makes it easy to stay updated on the latest classroom information."
         >
           <Messaging className="w-8/12 mx-auto" />
         </Carousel>
-      </div>
-      <div className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
+      </section>
+      <section className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
-          <Header
+          <AuthHeader
             title="Sign Up Now"
             description="Please provide us with this information in order to create your account."
           />
@@ -61,9 +64,7 @@ const Register = () => {
               name="name"
               placeholder="Enter name"
               validation={{ required: true }}
-              error={
-                apiErrors?.Name ? RegistrationError.INVALID_NAME : undefined
-              }
+              error={apiErrors.Name ? FormError.FIELD_REQUIRED : undefined}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
                 <IdentityIcon
@@ -78,7 +79,11 @@ const Register = () => {
               placeholder="Enter email"
               validation={{ required: true, pattern: /\S+@\S+\.\S+/ }}
               error={
-                apiErrors?.Email ? RegistrationError.INVALID_EMAIL : undefined
+                apiErrors.Email
+                  ? apiErrors.Email.includes('Email already exists.')
+                    ? RegistrationError.EMAIL_ALREADY_EXISTS
+                    : RegistrationError.INVALID_EMAIL
+                  : undefined
               }
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
@@ -92,7 +97,7 @@ const Register = () => {
               placeholder="Enter password"
               validation={{ required: true }}
               error={
-                apiErrors?.Password
+                apiErrors.Password
                   ? RegistrationError.INVALID_PASSWORD
                   : undefined
               }
@@ -101,20 +106,9 @@ const Register = () => {
                 <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
               </span>
             </Input>
-            <Input
-              type="password"
-              label="Confirm Password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              validation={{ required: true }}
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
-              </span>
-            </Input>
             <div className="absolute bottom-0 inset-x-0">
-              <Button type="submit" disabled={isRegistering}>
-                {isRegistering ? (
+              <Button type="submit" disabled={waitingForResponse}>
+                {waitingForResponse ? (
                   <>
                     <Spinner>Creating your account...</Spinner>
                   </>
@@ -125,7 +119,7 @@ const Register = () => {
             </div>
           </Form>
         </div>
-      </div>
+      </section>
     </main>
   );
 };

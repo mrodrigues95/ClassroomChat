@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Form, { FormValues } from './../ui/forms/Form';
 import Input from './../ui/forms/Input';
-import Header from './components/Header';
+import AuthHeader from './components/AuthHeader';
 import Button from './../ui/Button';
 import Carousel from './components/Carousel';
 import { ChevronIcon, MailIcon, LockIcon } from '../../shared/assets/icons';
@@ -12,37 +12,37 @@ import { LoginError } from '../../shared/constants/validation';
 import Spinner from '../ui/Spinner';
 
 const Login = () => {
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
   const { login } = useContext(AuthContext)!;
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [onLoginFailed, setOnLoginFailed] = useState(false);
 
   const handleOnSubmit = async (values: FormValues) => {
-    setIsLoggingIn(true);
+    setWaitingForResponse(true);
     setOnLoginFailed(false);
 
     try {
       await login(values.email, values.password);
-      navigateTo('/home');
+      navigate('/home');
     } catch (e) {
-      setIsLoggingIn(false);
+      setWaitingForResponse(false);
       setOnLoginFailed(true);
     }
   };
 
   return (
     <main className="flex min-h-screen xl:p-16">
-      <div className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
+      <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Connect With Classmates"
           description="You can easily connect with classmates using our messaging platform."
         >
           <Collaboration className="w-8/12 mx-auto" />
         </Carousel>
-      </div>
-      <div className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
+      </section>
+      <section className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
-          <Header
+          <AuthHeader
             title="Login Now"
             description="Please enter your information below in order to login to your
             account."
@@ -74,8 +74,8 @@ const Login = () => {
             </Input>
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
-                <Button type="submit" disabled={isLoggingIn}>
-                  {isLoggingIn ? (
+                <Button type="submit" disabled={waitingForResponse}>
+                  {waitingForResponse ? (
                     <Spinner>Logging in...</Spinner>
                   ) : (
                     <>
@@ -103,7 +103,7 @@ const Login = () => {
             </div>
           </Form>
         </div>
-      </div>
+      </section>
     </main>
   );
 };

@@ -3,6 +3,7 @@ import { ChevronIcon } from '../../../shared/assets/icons';
 import clsx from 'clsx';
 
 export enum Direction {
+  LEFT,
   RIGHT,
 }
 
@@ -11,7 +12,11 @@ type Props = {
   className?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const NavigationButton = ({ direction, className, ...props }: Props) => {
+const NavigationButton = ({
+  direction = Direction.LEFT,
+  className,
+  ...props
+}: Props) => {
   return (
     <button
       className={clsx(

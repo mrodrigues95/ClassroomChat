@@ -42,7 +42,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
       // This can be false if we are comming from a different tab.
       // In that case, we do not want to clear the refresh token cookie.
       if (shouldClearRefreshTokenCookie) {
-        Cookies.remove('refresh_token');
+        Cookies.remove('refresh_token', { domain: 'localhost' });
       }
 
       jwt.current = '';
