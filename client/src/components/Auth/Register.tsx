@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form, { FormValues } from '../ui/forms/Form';
-import Input from '../ui/forms/Input';
+import FormInput from '../ui/forms/FormInput';
 import AuthHeader from './components/AuthHeader';
 import Button from '../ui/Button';
 import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
@@ -52,14 +52,14 @@ const Register = () => {
           <Messaging className="w-8/12 mx-auto" />
         </Carousel>
       </section>
-      <section className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
+      <section className="w-full xl:w-1/2 p-3 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
           <AuthHeader
             title="Sign Up Now"
             description="Please provide us with this information in order to create your account."
           />
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
-            <Input
+            <FormInput
               label="Name"
               name="name"
               placeholder="Enter name"
@@ -67,13 +67,10 @@ const Register = () => {
               error={apiErrors.Name ? FormError.FIELD_REQUIRED : undefined}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <IdentityIcon
-                  className="h-8 w-8 text-black"
-                  aria-hidden={true}
-                />
+                <IdentityIcon className="h-8 w-8 text-black" />
               </span>
-            </Input>
-            <Input
+            </FormInput>
+            <FormInput
               label="Email Address"
               name="email"
               placeholder="Enter email"
@@ -87,10 +84,10 @@ const Register = () => {
               }
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <MailIcon className="h-8 w-8 text-black" aria-hidden={true} />
+                <MailIcon className="h-8 w-8 text-black" />
               </span>
-            </Input>
-            <Input
+            </FormInput>
+            <FormInput
               type="password"
               label="Password"
               name="password"
@@ -103,11 +100,11 @@ const Register = () => {
               }
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
+                <LockIcon className="h-8 w-8 text-black" />
               </span>
-            </Input>
+            </FormInput>
             <div className="absolute bottom-0 inset-x-0">
-              <Button type="submit" disabled={waitingForResponse}>
+              <Button type="submit" disabled={waitingForResponse} fullWidth>
                 {waitingForResponse ? (
                   <>
                     <Spinner>Creating your account...</Spinner>

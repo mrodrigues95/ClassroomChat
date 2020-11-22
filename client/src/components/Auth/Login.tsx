@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Form, { FormValues } from './../ui/forms/Form';
-import Input from './../ui/forms/Input';
+import FormInput from '../ui/forms/FormInput';
 import AuthHeader from './components/AuthHeader';
 import Button from './../ui/Button';
 import Carousel from './components/Carousel';
@@ -40,7 +40,7 @@ const Login = () => {
           <Collaboration className="w-8/12 mx-auto" />
         </Carousel>
       </section>
-      <section className="w-full xl:w-1/2 p-4 md:p-10 xl:pr-0">
+      <section className="w-full xl:w-1/2 p-3 md:p-10 xl:pr-0">
         <div className="flex flex-col h-full">
           <AuthHeader
             title="Login Now"
@@ -48,7 +48,7 @@ const Login = () => {
             account."
           />
           <Form className="relative h-full" onSubmit={handleOnSubmit}>
-            <Input
+            <FormInput
               label="Email Address"
               name="email"
               placeholder="Enter email"
@@ -56,10 +56,10 @@ const Login = () => {
               error={onLoginFailed ? LoginError.INVALID_LOGIN : undefined}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <MailIcon className="h-8 w-8 text-black" aria-hidden={true} />
+                <MailIcon className="h-8 w-8 text-black" />
               </span>
-            </Input>
-            <Input
+            </FormInput>
+            <FormInput
               type="password"
               label="Password"
               altLabel="Forgot Password?"
@@ -69,12 +69,12 @@ const Login = () => {
               error={onLoginFailed ? LoginError.INVALID_LOGIN : undefined}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                <LockIcon className="h-8 w-8 text-black" aria-hidden={true} />
+                <LockIcon className="h-8 w-8 text-black" />
               </span>
-            </Input>
+            </FormInput>
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
-                <Button type="submit" disabled={waitingForResponse}>
+                <Button type="submit" disabled={waitingForResponse} fullWidth>
                   {waitingForResponse ? (
                     <Spinner>Logging in...</Spinner>
                   ) : (
@@ -93,10 +93,7 @@ const Login = () => {
                   border border-gray-300 bg-white text-black hover:bg-gray-100 hover:border-gray-400 active:bg-gray-200 active:border-gray-500"
               >
                 <span className="absolute right-0 inset-y-0 flex items-center pr-3">
-                  <ChevronIcon
-                    className="h-5 w-5 transform rotate-180"
-                    aria-hidden={true}
-                  />
+                  <ChevronIcon className="h-5 w-5 transform rotate-180" />
                 </span>
                 Register
               </Link>

@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
       },
+      boxShadow: {
+        container: '0px 4px 30px 0px rgba(0,0,0,0.06)',
+      },
       colors: {
         primary: {
           default: '#0D2488',

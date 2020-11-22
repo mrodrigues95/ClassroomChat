@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import {
   HomeIcon,
@@ -11,83 +11,59 @@ import VerticalNav, { VerticalNavItem } from '../ui/VerticalNav';
 import ActivityFeed from './ActivityFeed';
 import Logout from './Logout';
 
-const SidebarContainer = ({ children }: { children: React.ReactNode }) => {
+const SidebarContainer = ({
+  className,
+  navigation,
+  children,
+}: {
+  className?: string;
+  navigation?: boolean;
+  children: React.ReactNode;
+}) => {
   return (
-    <div className="w-full p-5 mb-8 rounded-3xl text-gray-700 font-medium border border-gray-300 bg-white">
+    <div
+      className={clsx(
+        'w-full p-3 rounded-3xl text-gray-700 font-medium lg:p-5 lg:mb-8 xl:border border-gray-300 bg-white',
+        navigation && 'border',
+        className
+      )}
+    >
       {children}
     </div>
   );
 };
 
 const Sidebar = () => {
-  const [selectedItem, setSelectedItem] = useState('');
-
-  const changeIconColour = (selectedItem: string) => {
-    setSelectedItem(selectedItem);
-  };
-
   return (
-    <aside className="sticky flex flex-col max-w-xs">
-      <SidebarContainer>
+    <aside className="hidden sticky md:flex flex-col max-w-xs">
+      <SidebarContainer className="mt-2 mb-10">
         <ProfileInfo />
       </SidebarContainer>
-      <SidebarContainer>
+      <SidebarContainer navigation>
         <VerticalNav>
           <VerticalNavItem
             to="/home"
-            icon={
-              <HomeIcon
-                className={clsx(
-                  'mr-3',
-                  selectedItem === '/home' && 'text-white'
-                )}
-              />
-            }
+            icon={<HomeIcon className="mx-auto xl:mr-3 xl:ml-0" />}
             label="Home"
-            cb={changeIconColour}
           />
           <VerticalNavItem
             to="/messages"
-            icon={
-              <MessagesIcon
-                className={clsx(
-                  'mr-3',
-                  selectedItem === '/messages' && 'text-white'
-                )}
-              />
-            }
+            icon={<MessagesIcon className="mx-auto xl:mr-3 xl:ml-0" />}
             label="Messages"
-            cb={changeIconColour}
           />
           <VerticalNavItem
             to="/classrooms"
-            icon={
-              <ClassroomsIcon
-                className={clsx(
-                  'mr-3',
-                  selectedItem === '/classrooms' && 'text-white'
-                )}
-              />
-            }
+            icon={<ClassroomsIcon className="mx-auto xl:mr-3 xl:ml-0" />}
             label="Classrooms"
-            cb={changeIconColour}
           />
           <VerticalNavItem
             to="/calender"
-            icon={
-              <CalenderIcon
-                className={clsx(
-                  'mr-3',
-                  selectedItem === '/calender' && 'text-white'
-                )}
-              />
-            }
+            icon={<CalenderIcon className="mx-auto xl:mr-3 xl:ml-0" />}
             label="Calender"
-            cb={changeIconColour}
           />
         </VerticalNav>
       </SidebarContainer>
-      <SidebarContainer>
+      <SidebarContainer className="hidden xl:block">
         <ActivityFeed />
       </SidebarContainer>
       <div className="mt-auto">

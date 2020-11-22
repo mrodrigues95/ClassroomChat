@@ -2,7 +2,7 @@ import React, { InputHTMLAttributes, useState } from 'react';
 import clsx from 'clsx';
 import FormItem from './FormItem';
 import { useFormContext, ValidationRules } from 'react-hook-form';
-import getElementError from './../utils/getElementError';
+import getElementError from '../utils/getElementError';
 import {
   RegistrationError,
   FormError,
@@ -17,7 +17,7 @@ type Props = {
   children?: React.ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const Input = ({
+const FormInput = ({
   label,
   altLabel,
   error,
@@ -57,4 +57,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default FormInput;
