@@ -2,6 +2,8 @@ import React from 'react';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './../Discussion/DiscussionContainer';
 import MessageContainer from './../ui/messages/MessageContainer';
+import Message from '../ui/messages/Message';
+import MessageDate from '../ui/messages/MessageDate';
 
 const Home = () => {
   return (
@@ -9,7 +11,31 @@ const Home = () => {
       <Sidebar />
       <DiscussionContainer title="C# Fundamentals">
         <MessageContainer>
-          <div>Test</div>
+          <MessageDate />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
+          <Message />
         </MessageContainer>
       </DiscussionContainer>
     </div>

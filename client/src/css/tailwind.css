@@ -4,3 +4,12 @@
 
 @tailwind utilities;
 
+.placeholder-medium::-webkit-input-placeholder {
+  font-weight: 500;
+}
+.placeholder-medium::-moz-placeholder {
+  font-weight: 500;
+}
+.placeholder-medium::-ms-input-placeholder {
+  font-weight: 500;
+}

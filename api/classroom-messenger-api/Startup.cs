@@ -86,6 +86,7 @@ namespace classroom_messenger_api {
                         }
                     };
                 });
+
             services.AddScoped<IJwtManager, JwtManager>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IHttpContextManager, HttpContextManager>();

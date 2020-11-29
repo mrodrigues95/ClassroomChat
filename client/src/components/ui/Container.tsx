@@ -1,7 +1,7 @@
 import React from 'react';
-import { NotificationsIcon, SearchIcon } from '../../shared/assets/icons';
+import { NotificationsIcon } from '../../shared/assets/icons';
 import Button from './Button';
-import Input from './Input';
+import Search from './Search';
 
 type Props = {
   title?: string;
@@ -9,19 +9,16 @@ type Props = {
 };
 
 export const ContainerBody = ({ children }: Props) => {
-  return <section className="flex-1">{children}</section>;
+  return <section className="relative flex-1">{children}</section>;
 };
 
 export const ContainerHeader = ({ title, children }: Props) => {
   return (
     <section className="flex flex-col justify-between mb-3 lg:mb-6">
       <div className="flex items-center justify-between mb-2">
-        {title && <h1 className="font-bold text-4xl">{title}</h1>}
-        <div className="relative flex items-center w-2/5">
-          <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-            <SearchIcon className="h-5 w-5" />
-          </span>
-          <Input placeholder="Search" />
+        {title && <h1 className="font-bold text-4xl truncate">{title}</h1>}
+        <div className="flex justify-end items-center w-3/5">
+          <Search placeholder="Search" />
           <Button
             variant="primary"
             className="rounded-full ml-3"
@@ -37,7 +34,11 @@ export const ContainerHeader = ({ title, children }: Props) => {
 };
 
 const Container = ({ children }: Props) => {
-  return <main className="flex flex-col flex-1 w-full pl-4 lg:pl-8 xl:pl-12">{children}</main>;
+  return (
+    <main className="flex flex-col flex-1 w-full pl-4 lg:pl-8 xl:pl-12">
+      {children}
+    </main>
+  );
 };
 
 export default Container;

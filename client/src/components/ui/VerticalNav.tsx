@@ -8,7 +8,7 @@ type Props = {
   label: string;
 };
 
-export const VerticalNavItem = ({ to, icon, label }: Props) => {
+export const VerticalNavItem = ({ to, icon, label, ...props }: Props) => {
   const location = useLocation();
   const toLocation = useResolvedPath(to);
 
@@ -21,6 +21,7 @@ export const VerticalNavItem = ({ to, icon, label }: Props) => {
         'w-full flex items-center p-3 rounded-xl cursor-pointer',
         selected ? 'bg-primary text-white' : 'hover:bg-blue-100'
       )}
+      {...props}
     >
       {icon}
       <span className="hidden xl:inline-block">{label}</span>

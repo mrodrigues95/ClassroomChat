@@ -50,11 +50,11 @@ namespace Application.Auth {
                 ExpiresAt = DateTime.UtcNow.AddDays(2)
             };
             _context.RefreshTokens.Add(refreshToken);
-            var uRefreshToken = new UserRefreshToken {
+            var userRefreshToken = new UserRefreshToken {
                 AppUser = user,
                 RefreshToken = refreshToken
             };
-            _context.UserRefreshTokens.Add(uRefreshToken);
+            _context.UserRefreshTokens.Add(userRefreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");

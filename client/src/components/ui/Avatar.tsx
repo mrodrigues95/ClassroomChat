@@ -13,7 +13,8 @@ const Avatar = ({ url, className, imgClassName, ...props }: Props) => {
       <img
         className={clsx('h-10 w-10 rounded-full bg-cover', imgClassName)}
         src={url}
-        alt="User Avatar"
+        alt=""
+        aria-hidden={true}
         {...props}
       />
     </div>

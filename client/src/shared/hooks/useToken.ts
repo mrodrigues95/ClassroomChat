@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
 import Axios, { AxiosRequestConfig } from 'axios';
 import { configure } from 'axios-hooks';
-import Cookies from 'js-cookie';
+import * as Cookies from 'js-cookie';
 import useTokenExpiration from './useTokenExpiration';
 import { User } from './useAuth';
 
@@ -39,7 +39,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
 
   const clearToken = useCallback(
     (shouldClearRefreshTokenCookie: boolean = true) => {
-      // This can be false if we are comming from a different tab.
+      // This can be false if we are coming from a different tab.
       // In that case, we do not want to clear the refresh token cookie.
       if (shouldClearRefreshTokenCookie) {
         Cookies.remove('refresh_token', { domain: 'localhost' });

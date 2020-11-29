@@ -9,7 +9,7 @@ namespace Application.Common.Interfaces {
     /// </summary>
     public interface IJwtManager {
         /// <summary>
-        /// Gets the JWT access token string from the HTTP context authorization header.
+        /// Generates a JSON Web Token.
         /// </summary>
         string GenerateJWT(AppUser user);
         /// <summary>
