@@ -3,7 +3,7 @@ import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './../Discussion/DiscussionContainer';
 import MessageContainer from './../ui/messages/MessageContainer';
 import Message from '../ui/messages/Message';
-import MessageDate from '../ui/messages/MessageDate';
+import MessageDivider from '../ui/messages/MessageDivider';
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
       <Sidebar />
       <DiscussionContainer title="C# Fundamentals">
         <MessageContainer>
-          <MessageDate />
+          <MessageDivider />
           <Message />
           <Message />
           <Message />

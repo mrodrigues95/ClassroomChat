@@ -48,16 +48,16 @@ const Sidebar = () => {
             aria-label="Go to home"
           />
           <VerticalNavItem
-            to="/messages"
-            icon={<MessagesIcon className="mx-auto xl:mr-3 xl:ml-0" />}
-            label="Messages"
-            aria-label="Go to messages"
-          />
-          <VerticalNavItem
             to="/classrooms"
             icon={<ClassroomsIcon className="mx-auto xl:mr-3 xl:ml-0" />}
             label="Classrooms"
             aria-label="View classrooms"
+          />
+          <VerticalNavItem
+            to="/messages"
+            icon={<MessagesIcon className="mx-auto xl:mr-3 xl:ml-0" />}
+            label="Messages"
+            aria-label="Go to messages"
           />
           <VerticalNavItem
             to="/calender"

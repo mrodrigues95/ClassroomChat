@@ -8,6 +8,10 @@ module.exports = {
   purge: [],
   theme: {
     extend: {
+      inset: {
+        '-2': '-2px',
+        'full': '100%'
+      },
       fontFamily: {
         sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
       },

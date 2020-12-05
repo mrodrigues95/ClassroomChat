@@ -1,5 +1,6 @@
 import React from 'react';
-import NavigationButton, { Direction } from './NavigationButton';
+import { Direction } from '../../../shared/constants/common';
+import NavigationButton from './NavigationButton';
 
 type Props = {
   caption: String;

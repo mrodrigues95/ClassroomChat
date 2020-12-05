@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MessageDate = () => {
+const MessageDivider = () => {
   return (
     <div className="relative">
       <div className="absolute inset-0 flex items-center">
@@ -15,4 +15,4 @@ const MessageDate = () => {
   );
 };
 
-export default MessageDate;
+export default MessageDivider;

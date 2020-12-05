@@ -35,7 +35,7 @@ const FormInput = ({
     <FormItem label={label} altLabel={altLabel} errorMessage={errorMessage}>
       {children}
       <input
-        className="block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-black font-bold md:text-xl items-center placeholder-normal transition ease-in-out duration-300 focus:outline-none focus:shadow-outline"
+        className="block w-full py-2 pr-2 pl-16 h-16 border border-gray-300 rounded-2xl text-black font-bold md:text-xl items-center placeholder-medium transition ease-in-out duration-300 focus:outline-none focus:shadow-outline"
         ref={validation ? form.register(validation) : form.register}
         {...props}
       />

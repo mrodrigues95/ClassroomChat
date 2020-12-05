@@ -1,5 +1,5 @@
 export enum AuthEvent {
-  LOGIN = 'Login',
-  LOGOUT = 'Logout',
-  SIGNUP = 'Signup',
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+  SIGNUP = 'SIGNUP',
 }
