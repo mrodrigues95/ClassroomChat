@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       inset: {
         '-2': '-2px',
-        'full': '100%'
+        full: '100%',
       },
       fontFamily: {
         sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
@@ -29,6 +29,7 @@ module.exports = {
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'active'],
+    divideWidth: ['responsive'],
   },
   plugins: [],
 };

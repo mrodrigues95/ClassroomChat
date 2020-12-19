@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from './../ui/Button';
-import { AuthContext } from '../../shared/hooks/useAuth';
+import Button from './../../ui/Button';
+import { AuthContext } from '../../../shared/hooks/useAuth';
 
 const Logout = () => {
   const navigate = useNavigate();

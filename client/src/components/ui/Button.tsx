@@ -4,11 +4,11 @@ import clsx from 'clsx';
 const VARIANTS = {
   primary: {
     base:
-      'border border-gray-300 bg-white text-black hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
+      'border border-gray-300 bg-white text-black focus:bg-gray-200 hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
   },
   default: {
     base:
-      'border border-transparent bg-primary text-white hover:bg-primary-light active:bg-primary-dark',
+      'border border-transparent bg-primary text-white focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
   },
 };
 

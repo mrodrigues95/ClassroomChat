@@ -6,10 +6,11 @@ import {
   ClassroomsIcon,
   CalenderIcon,
 } from '../../shared/assets/icons';
-import ProfileInfo from './ProfileInfo';
+import ProfileInfo from './components/ProfileInfo';
 import VerticalNav, { VerticalNavItem } from '../ui/VerticalNav';
-import ActivityFeed from './ActivityFeed';
-import Logout from './Logout';
+import ActivityFeed from './components/ActivityFeed';
+import Logout from './components/Logout';
+import ClassroomsMenu from './components/ClassroomsMenu';
 
 const SidebarContainer = ({
   className,
@@ -35,7 +36,7 @@ const SidebarContainer = ({
 
 const Sidebar = () => {
   return (
-    <aside className="hidden sticky md:flex flex-col max-w-xs">
+    <aside className="hidden md:flex flex-col max-w-xs">
       <SidebarContainer className="mt-2 mb-10">
         <ProfileInfo />
       </SidebarContainer>
@@ -47,11 +48,14 @@ const Sidebar = () => {
             label="Home"
             aria-label="Go to home"
           />
-          <VerticalNavItem
-            to="/classrooms"
-            icon={<ClassroomsIcon className="mx-auto xl:mr-3 xl:ml-0" />}
-            label="Classrooms"
-            aria-label="View classrooms"
+          <ClassroomsMenu
+            menuButton={
+              <VerticalNavItem
+                icon={<ClassroomsIcon className="mx-auto xl:mr-3 xl:ml-0" />}
+                label="Classrooms"
+                aria-label="View classrooms"
+              />
+            }
           />
           <VerticalNavItem
             to="/messages"

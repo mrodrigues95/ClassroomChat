@@ -1,7 +1,7 @@
 import React from 'react';
-import { ChevronIcon } from '../../shared/assets/icons';
-import Avatar from '../ui/Avatar';
-import Button from '../ui/Button';
+import { ChevronIcon } from '../../../shared/assets/icons';
+import Avatar from '../../ui/Avatar';
+import Button from '../../ui/Button';
 
 const ProfileInfo = () => {
   return (

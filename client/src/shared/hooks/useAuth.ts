@@ -7,18 +7,8 @@ import {
   SetStateAction,
 } from 'react';
 import { AuthEvent } from '../constants/events';
+import { User, UserBase } from '../types';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
-
-export type User = {
-  id?: string;
-  role?: 'student' | 'faculty';
-} & UserBase;
-
-type UserBase = {
-  name: string;
-  email: string;
-  password: string;
-};
 
 type AuthContextType = {
   user: User | null;

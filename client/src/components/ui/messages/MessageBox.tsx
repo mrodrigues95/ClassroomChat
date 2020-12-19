@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import {
   EmojiHappyIcon,
   PaperClipIcon,
@@ -8,10 +9,16 @@ import TextArea from './../TextArea';
 
 const MessageBox = () => {
   const [message, setMessage] = useState('');
+  const [focused, setFocused] = useState(false);
 
   return (
-    <div className="px-3 pb-3 bg-white">
-      <div className="flex items-center justify-between h-full p-3 border border-gray-300 rounded-md">
+    <div className="z-10 px-3 pb-3 bg-white">
+      <div
+        className={clsx(
+          'flex items-center justify-between h-full p-3 border rounded-md transition ease-in-out duration-150',
+          focused ? 'border-transparent shadow-outline' : 'border-gray-300'
+        )}
+      >
         <div className="flex flex-1 items-center">
           <button
             type="button"
@@ -23,7 +30,10 @@ const MessageBox = () => {
           <TextArea
             placeholder="Write your message..."
             value={message}
+            aria-label="Enter message"
             onChange={(e) => setMessage(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
           />
         </div>
         <div className="flex items-center ml-8">
