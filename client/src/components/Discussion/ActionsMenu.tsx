@@ -10,29 +10,29 @@ import Tooltip from './../ui/Tooltip';
 const ActionsMenu = () => {
   return (
     <div className="flex items-center space-x-2">
-      <Tooltip message="Calender" placement="top">
+      <Tooltip message="Calender" placement="top-center">
         <Button
           variant="primary"
           className="rounded-sm px-2 py-2 border-none"
-          aria-labelledby="tooltip-label"
+          aria-describedby="cc-tooltip"
         >
           <CalenderIcon className="h-8 w-8" />
         </Button>
       </Tooltip>
-      <Tooltip message="Attachments" placement="top">
+      <Tooltip message="Attachments" placement="top-center">
         <Button
           variant="primary"
           className="rounded-sm px-2 py-2 border-none"
-          aria-labelledby="tooltip-label"
+          aria-describedby="cc-tooltip"
         >
           <AttachmentsIcon className="h-8 w-8" />
         </Button>
       </Tooltip>
-      <Tooltip message="Settings" placement="top">
+      <Tooltip message="Settings" placement="top-center">
         <Button
           variant="primary"
           className="rounded-sm px-2 py-2 border-none"
-          aria-labelledby="tooltip-label"
+          aria-describedby="cc-tooltip"
         >
           <SettingsIcon className="h-8 w-8" />
         </Button>

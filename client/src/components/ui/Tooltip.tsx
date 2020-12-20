@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import { Placement } from '@popperjs/core';
-import usePopper from './../../shared/hooks/usePopper';
-import Portal from './utils/Portal';
+import React, { ReactNode, useState } from 'react';
+import { Arrow, useLayer } from 'react-laag';
+import { PlacementType } from 'react-laag/dist/PlacementType';
+import ResizeObserver from 'resize-observer-polyfill';
 
 type Props = {
   message: string;
-  placement: Placement;
+  placement: PlacementType;
+  children: ReactNode;
   delay?: number;
-  children: React.ReactNode;
 };
 
 const Tooltip = ({ message, placement, delay, children }: Props) => {
-  let timeout: NodeJS.Timeout;
   const [active, setActive] = useState(false);
-  const [trigger, container] = usePopper({
+  const { renderLayer, triggerProps, layerProps, arrowProps } = useLayer({
+    isOpen: active,
     placement: placement,
-    modifiers: [{ name: 'offset', options: { offset: [0, 10] } }],
+    triggerOffset: 15,
+    ResizeObserver,
   });
+
+  let timeout: NodeJS.Timeout;
 
   const showTooltip = () => {
     timeout = setTimeout(() => {
@@ -30,22 +33,24 @@ const Tooltip = ({ message, placement, delay, children }: Props) => {
   };
 
   return (
-    <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip} ref={trigger}>
-      {active && (
-        <Portal>
-          <div
-            id="tooltip"
-            className="flex items-center justify-center px-2 py-1 font-medium whitespace-no-wrap bg-black text-white text-xs rounded-md"
-            ref={container}
-          >
-            <div id="arrow" data-popper-arrow></div>
-            <span id="tooltip-label" role="tooltip">
-              {message}
-            </span>
-          </div>
-        </Portal>
-      )}
+    <div
+      onMouseEnter={showTooltip}
+      onMouseLeave={hideTooltip}
+      {...triggerProps}
+    >
       {children}
+      {active &&
+        renderLayer(
+          <div
+            id="cc-tooltip"
+            role="tooltip"
+            className="flex items-center justify-center px-2 py-1 font-medium whitespace-no-wrap bg-black text-white text-xs rounded-md"
+            {...layerProps}
+          >
+            {message}
+            <Arrow size={5} backgroundColor="#000000" {...arrowProps} />
+          </div>
+        )}
     </div>
   );
 };

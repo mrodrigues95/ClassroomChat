@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Arrow, useLayer } from 'react-laag';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
 import clsx from 'clsx';
@@ -46,6 +47,14 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     stateReducer: stateReducer,
   });
 
+  // React-laag config.
+  const { renderLayer, triggerProps, layerProps } = useLayer({
+    isOpen: isOpen,
+    arrowOffset: 4,
+    placement: 'right-start',
+    ResizeObserver,
+  });
+
   const setClassroomsMenu = () => {
     setItems(classrooms);
     setStateReducer(() => getStateReducer('classrooms'));
@@ -60,14 +69,6 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     if (!isOpen) reset();
   }, [isOpen, reset]);
 
-  // React-laag config.
-  const { renderLayer, triggerProps, layerProps, arrowProps } = useLayer({
-    isOpen: isOpen,
-    arrowOffset: 4,
-    placement: 'right-center',
-    ResizeObserver,
-  });
-
   return (
     <>
       {React.cloneElement(menuButton, {
@@ -75,34 +76,38 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
         ...getToggleButtonProps({ ref: triggerProps.ref }),
       })}
       {renderLayer(
-        <ul
-          className={clsx(
-            'p-2 w-64 ml-8 bg-white font-medium border border-gray-200 rounded-md shadow-lg outline-none list-none',
-            isOpen ? 'block' : 'hidden'
-          )}
-          {...layerProps}
-          {...getMenuProps({ ref: layerProps.ref })}
-        >
-          {isOpen && (
-            <>
-              {(items as Item[]).map((item: Item, index: number) => (
-                <li
-                  className={clsx(
-                    'block w-full px-4 py-2 text-sm leading-5 rounded-md text-left cursor-pointer truncate',
-                    highlightedIndex === index
-                      ? 'bg-blue-100 text-gray-900'
-                      : 'text-gray-700'
-                  )}
-                  key={index}
-                  {...getItemProps({ item: item, index })}
-                >
-                  {item.name}
-                </li>
-              ))}
-            </>
-          )}
-          <Arrow {...arrowProps} />
-        </ul>
+        <AnimatePresence>
+          <ul
+            className={clsx('w-64 ml-8 outline-none font-medium list-none')}
+            {...layerProps}
+            {...getMenuProps({ ref: layerProps.ref })}
+          >
+            {isOpen && (
+              <motion.div
+                initial={{ scale: 0.75 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.75 }}
+                transition={{ duration: 0.1, ease: 'easeOut' }}
+                className={clsx(
+                  'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200'
+                )}
+              >
+                {(items as Item[]).map((item: Item, index: number) => (
+                  <li
+                    className={clsx(
+                      'block w-full px-4 py-2 text-sm leading-5 text-black rounded-md text-left cursor-pointer truncate',
+                      highlightedIndex === index && 'bg-blue-100'
+                    )}
+                    key={index}
+                    {...getItemProps({ item: item, index })}
+                  >
+                    {item.name}
+                  </li>
+                ))}
+              </motion.div>
+            )}
+          </ul>
+        </AnimatePresence>
       )}
     </>
   );
