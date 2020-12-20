@@ -7,7 +7,7 @@ import MessageDivider from '../ui/messages/MessageDivider';
 
 const Home = () => {
   return (
-    <div className="flex flex-1 p-3 lg:p-10">
+    <div className="flex flex-1 sm:p-3 lg:p-10">
       <Sidebar />
       <DiscussionContainer title="C# Fundamentals">
         <MessageContainer>

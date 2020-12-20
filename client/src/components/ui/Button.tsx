@@ -4,7 +4,7 @@ import clsx from 'clsx';
 const VARIANTS = {
   primary: {
     base:
-      'border border-gray-300 bg-white text-black focus:bg-gray-200 hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
+      'bg-white text-black sm:border sm:border-gray-300 focus:bg-gray-200 hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
   },
   default: {
     base:
@@ -30,7 +30,7 @@ const Button = ({
     <button
       type="button"
       className={clsx(
-        'relative inline-flex items-center justify-center p-4 rounded-xl font-bold focus:outline-none transition duration-150 ease-in-out',
+        'relative inline-flex items-center justify-center p-2 rounded-xl font-bold focus:outline-none transition duration-150 ease-in-out',
         variantStyles.base,
         props.disabled && 'cursor-not-allowed',
         fullWidth && 'w-full',

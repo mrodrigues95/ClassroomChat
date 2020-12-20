@@ -28,7 +28,7 @@ const MessageBox = () => {
             <EmojiHappyIcon className="h-5 w-5 text-gray-600 hover:text-gray-500" />
           </button>
           <TextArea
-            placeholder="Write your message..."
+            placeholder="Message..."
             value={message}
             aria-label="Enter message"
             onChange={(e) => setMessage(e.target.value)}

@@ -36,7 +36,7 @@ const SidebarContainer = ({
 
 const Sidebar = () => {
   return (
-    <aside className="hidden md:flex flex-col max-w-xs">
+    <aside className="hidden md:flex flex-col max-w-xs mr-3 lg:mr-8 xl:mr-10">
       <SidebarContainer className="mt-2 mb-10">
         <ProfileInfo />
       </SidebarContainer>
