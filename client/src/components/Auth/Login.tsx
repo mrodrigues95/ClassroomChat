@@ -74,7 +74,7 @@ const Login = () => {
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
-                <Button type="submit" disabled={waitingForResponse} fullWidth>
+                <Button className="p-4" type="submit" disabled={waitingForResponse} fullWidth>
                   {waitingForResponse ? (
                     <Spinner>Logging in...</Spinner>
                   ) : (

@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLayer } from 'react-laag';
+import { mergeRefs, useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
 import clsx from 'clsx';
@@ -22,6 +22,7 @@ const discussions: Discussion[] = [
 export type Item = Classroom | Discussion;
 
 const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
+  const focusRef = useRef<HTMLButtonElement>(null);
   const [items, setItems] = useState<Item[]>(classrooms);
   const [stateReducer, setStateReducer] = useState(() =>
     getStateReducer('classrooms')
@@ -42,6 +43,16 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
         setDiscussionsMenu();
       } else {
         setClassroomsMenu();
+      }
+    },
+    onIsOpenChange: (changes) => {
+      // This ensures that the trigger is focused when the menu
+      // is closed via outside click.
+      if (
+        changes.type === useSelect.stateChangeTypes.MenuBlur &&
+        !changes.isOpen
+      ) {
+        focusRef.current?.focus();
       }
     },
     stateReducer: stateReducer,
@@ -73,7 +84,7 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     <>
       {React.cloneElement(menuButton, {
         ...triggerProps,
-        ...getToggleButtonProps({ ref: triggerProps.ref }),
+        ...getToggleButtonProps({ ref: mergeRefs(triggerProps.ref, focusRef) }),
       })}
       {renderLayer(
         <AnimatePresence>
@@ -84,9 +95,9 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
           >
             {isOpen && (
               <motion.div
-                initial={{ scale: 0.75 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.75 }}
+                initial={{ x: 40 }}
+                animate={{ x: 0 }}
+                exit={{ x: 40 }}
                 transition={{ duration: 0.1, ease: 'easeOut' }}
                 className={clsx(
                   'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200'

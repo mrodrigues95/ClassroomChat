@@ -104,7 +104,7 @@ const Register = () => {
               </span>
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
-              <Button type="submit" disabled={waitingForResponse} fullWidth>
+              <Button className="p-4" type="submit" disabled={waitingForResponse} fullWidth>
                 {waitingForResponse ? (
                   <>
                     <Spinner>Creating your account...</Spinner>
