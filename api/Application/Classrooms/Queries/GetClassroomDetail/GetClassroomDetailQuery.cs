@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Common.Dtos;
+using MediatR;
 using System;
 
 namespace Application.Classrooms.Queries.GetClassroomDetail {

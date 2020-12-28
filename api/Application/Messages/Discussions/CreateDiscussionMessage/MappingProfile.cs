@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Domain;
+using Domain.Entities;
 
 namespace Application.Messages.Discussions {
     public class MappingProfile : Profile {
         public MappingProfile() {
-            CreateMap<DiscussionMessage, DiscussionMessageDto>()
-                .ForMember(d => d.Email, o => o.MapFrom(s => s.Author.Email))
-                .ForMember(d => d.Name, o => o.MapFrom(s => s.Author.Name));
+            CreateMap<Message, DiscussionMessageDto>()
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.CreatedBy.Email))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.CreatedBy.Name));
         }
     }
 }

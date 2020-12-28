@@ -1,8 +1,8 @@
 using System;
-using Domain;
+using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,21 +10,20 @@ using Persistence;
 
 namespace classroom_messenger_api {
     public class Program {
-        public static void Main(string[] args) {
+        public static async Task Main(string[] args) {
             var host = CreateHostBuilder(args).Build();
 
-            // Create the database if it doesn't already exist.
             using (var scope = host.Services.CreateScope()) {
                 var services = scope.ServiceProvider;
-
+                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try {
-                    var context = services.GetRequiredService<DataContext>();
-                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                    context.Database.Migrate();
-                    Seed.SeedData(context, userManager).Wait();
+                    var context = services.GetRequiredService<ApplicationContext>();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+                    await ApplicationContextSeed.SeedDataAsync(context, userManager, loggerFactory);
                 } catch (Exception ex) {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occured during migration");
+                    var logger = loggerFactory.CreateLogger<Program>();
+                    logger.LogError(ex, "An error occured while seeding the database.");
                 }
             }
 

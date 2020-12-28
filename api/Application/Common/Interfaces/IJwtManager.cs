@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using System;
 using System.Security.Claims;
 
@@ -11,7 +11,7 @@ namespace Application.Common.Interfaces {
         /// <summary>
         /// Generates a JSON Web Token.
         /// </summary>
-        string GenerateJWT(AppUser user);
+        string GenerateJWT(ApplicationUser user);
         /// <summary>
         /// Generates a refresh token that can be used alongside a JSON Web Token for
         /// re-authenticating a user on the client.

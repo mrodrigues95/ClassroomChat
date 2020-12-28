@@ -1,9 +1,9 @@
-﻿using Application.Classrooms;
-using Application.Classrooms.Commands.CreateClassroom;
+﻿using Application.Classrooms.Commands.CreateClassroom;
 using Application.Classrooms.Commands.JoinClassroom;
 using Application.Classrooms.Commands.LeaveClassroom;
 using Application.Classrooms.Queries.GetClassroomDetail;
 using Application.Classrooms.Queries.GetClassroomsList;
+using Application.Common.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

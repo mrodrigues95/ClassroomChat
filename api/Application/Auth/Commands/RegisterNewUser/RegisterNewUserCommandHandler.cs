@@ -3,11 +3,10 @@ using Application.Common.Dtos;
 using Application.Common.Interfaces;
 using Application.Errors;
 using Application.User;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System;
 using System.Net;
 using System.Threading;
@@ -18,12 +17,12 @@ namespace Application.Auth {
     /// Registers a new user with Identity.
     /// </summary>
     public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, UserAndTokenDto> {
-        private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly Persistence.ApplicationContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
-        public RegisterNewUserCommandHandler(DataContext context, UserManager<AppUser> userManager,
+        public RegisterNewUserCommandHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
             IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
@@ -41,8 +40,8 @@ namespace Application.Auth {
             return FinishRegister(newUser, refreshToken);
         }
 
-        private async Task<AppUser> CreateNewUser(RegisterNewUserCommand request) {
-            var newUser = new AppUser {
+        private async Task<ApplicationUser> CreateNewUser(RegisterNewUserCommand request) {
+            var newUser = new ApplicationUser {
                 Name = request.Name,
                 UserName = request.Email,
                 Email = request.Email
@@ -54,25 +53,20 @@ namespace Application.Auth {
             return newUser;
         }
 
-        private async Task<RefreshToken> CreateAndSaveRefreshToken(AppUser user) {
+        private async Task<RefreshToken> CreateAndSaveRefreshToken(ApplicationUser user) {
             var refreshToken = new RefreshToken {
                 Token = _jwtManager.GenerateRefreshToken(),
-                ExpiresAt = DateTime.UtcNow.AddDays(2)
+                ApplicationUser = user
             };
             _context.RefreshTokens.Add(refreshToken);
-            var uRefreshToken = new UserRefreshToken {
-                AppUser = user,
-                RefreshToken = refreshToken
-            };
-            _context.UserRefreshTokens.Add(uRefreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");
 
-            return refreshToken; ;
+            return refreshToken;
         }
 
-        private UserAndTokenDto FinishRegister(AppUser user, RefreshToken refreshToken) {
+        private UserAndTokenDto FinishRegister(ApplicationUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
             var accessToken = _jwtManager.GenerateJWT(user);
 

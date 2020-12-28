@@ -1,9 +1,8 @@
 ﻿using Application.Classrooms.Commands.CreateClassroom;
 using Application.Common.Interfaces;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,39 +12,33 @@ namespace Application.Classrooms {
     /// Creates a new classroom server.
     /// </summary>
     public class CreateClassroomCommandHandler : IRequestHandler<CreateClassroomCommand> {
-        private readonly DataContext _context;
+        private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
 
-        public CreateClassroomCommandHandler(DataContext context, IUserAccessor userAccessor) {
+        public CreateClassroomCommandHandler(Persistence.ApplicationContext context, IUserAccessor userAccessor) {
             _context = context;
             _userAccessor = userAccessor;
         }
 
         public async Task<Unit> Handle(CreateClassroomCommand request, CancellationToken cancellationToken) {
-            // Create a new entry in the Classroom table.
-            var classroom = new Classroom {
-                Id = request.Id,
-                Name = request.Name,
-            };
-            _context.Classrooms.Add(classroom);
-
-            // Get the currently authorized user.
             var user = await _context.Users.SingleOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetCurrentUsername());
 
-            // Create a new entry in the UserClassroom table.
-            var student = new UserClassroom {
-                AppUser = user,
-                Classroom = classroom,
-                IsCreator = true
+            // Create the classroom.
+            var classroom = new Classroom {
+                Id = request.Id,
+                Name = request.Name,
+                DiscussionsCount = 0,
+                CreatedBy = user
             };
-            _context.UserClassrooms.Add(student);
+            _context.Classrooms.Add(classroom);
 
-            // Save changes to the database.
+            var student = new ApplicationUserClassroom(user.Id, classroom.Id, true, user, classroom);
+            _context.ApplicationUserClassrooms.Add(student);
+
             var success = await _context.SaveChangesAsync() > 0;
 
-            if (success)
-                return Unit.Value;
+            if (success) return Unit.Value;
 
             throw new Exception("There was a problem saving changes.");
         }

@@ -3,7 +3,7 @@ using Application.Common.Dtos;
 using Application.Common.Interfaces;
 using Application.Errors;
 using Application.User;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
@@ -17,14 +17,14 @@ namespace Application.Auth {
     /// Login a user into the application.
     /// </summary>
     public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, UserAndTokenDto> {
-        private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly ApplicationContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IJwtManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
-        public LoginUserQueryHandler(DataContext context, UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, IJwtManager jwtManager, IHttpContextManager httpContextManager) {
+        public LoginUserQueryHandler(ApplicationContext context, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager, IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,17 +44,12 @@ namespace Application.Auth {
             return FinishLogin(user, refreshToken);
         }
 
-        private async Task<RefreshToken> CreateAndSaveRefreshToken(AppUser user) {
+        private async Task<RefreshToken> CreateAndSaveRefreshToken(ApplicationUser user) {
             var refreshToken = new RefreshToken {
                 Token = _jwtManager.GenerateRefreshToken(),
-                ExpiresAt = DateTime.UtcNow.AddDays(2)
+                ApplicationUser = user
             };
             _context.RefreshTokens.Add(refreshToken);
-            var userRefreshToken = new UserRefreshToken {
-                AppUser = user,
-                RefreshToken = refreshToken
-            };
-            _context.UserRefreshTokens.Add(userRefreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");
@@ -62,7 +57,7 @@ namespace Application.Auth {
             return refreshToken;
         }
 
-        private UserAndTokenDto FinishLogin(AppUser user, RefreshToken refreshToken) {
+        private UserAndTokenDto FinishLogin(ApplicationUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
             var accessToken = _jwtManager.GenerateJWT(user);
 

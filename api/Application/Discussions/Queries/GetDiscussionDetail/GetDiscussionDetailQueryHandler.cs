@@ -1,7 +1,7 @@
 ﻿using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Errors;
 using AutoMapper;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Persistence;
 using System.Net;
@@ -13,10 +13,10 @@ namespace Application.Classrooms.Discussions {
     /// Get the details of a given discussion.
     /// </summary>
     public class GetDiscussionDetailQueryHandler : IRequestHandler<GetDiscussionDetailQuery, DiscussionDto> {
-        private readonly DataContext _context;
+        private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
 
-        public GetDiscussionDetailQueryHandler(DataContext context, IMapper mapper) {
+        public GetDiscussionDetailQueryHandler(ApplicationContext context, IMapper mapper) {
             _context = context;
             _mapper = mapper;
         }

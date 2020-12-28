@@ -1,7 +1,8 @@
 ﻿using Application.Classrooms.Queries.GetClassroomDetail;
+using Application.Common.Dtos;
 using Application.Errors;
 using AutoMapper;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Persistence;
 using System.Net;
@@ -14,18 +15,17 @@ namespace Application.Classrooms {
     /// Get the details of a given classroom.
     /// </summary>
     public class GetClassroomDetailQueryHandler : IRequestHandler<GetClassroomDetailQuery, ClassroomDto> {
-        private readonly DataContext _context;
+        private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
 
-        public GetClassroomDetailQueryHandler(DataContext context, IMapper mapper) {
+        public GetClassroomDetailQueryHandler(ApplicationContext context, IMapper mapper) {
             _context = context;
             _mapper = mapper;
         }
 
         public async Task<ClassroomDto> Handle(GetClassroomDetailQuery request, CancellationToken cancellationToken) {
             // Get the classroom.
-            var classroom = await _context.Classrooms
-                .FindAsync(request.Id);
+            var classroom = await _context.Classrooms.FindAsync(request.Id);
 
             // No classroom was found with the given id.
             if (classroom == null)

@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.User.Queries.GetCurrentUserDetail;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
@@ -11,10 +11,10 @@ namespace Application.User {
     /// Gets the credentials of the current user that is logged in and authenticated.
     /// </summary>
     public class GetCurrentUserDetailQueryHandler : IRequestHandler<GetCurrentUserDetailQuery, UserDto> {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserAccessor _userAccessor;
 
-        public GetCurrentUserDetailQueryHandler(UserManager<AppUser> userManager, IUserAccessor userAccessor) {
+        public GetCurrentUserDetailQueryHandler(UserManager<ApplicationUser> userManager, IUserAccessor userAccessor) {
             _userManager = userManager;
             _userAccessor = userAccessor;
         }

@@ -2,11 +2,10 @@
 using Application.Common.Interfaces;
 using Application.Errors;
 using Application.User;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System;
 using System.Net;
 using System.Threading;
@@ -14,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace Application.Auth.Queries.RefreshTokens {
     public class RefreshTokensQueryHandler : IRequestHandler<RefreshTokensQuery, UserAndTokenDto> {
-        private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly Persistence.ApplicationContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
-        public RefreshTokensQueryHandler(DataContext context, UserManager<AppUser> userManager,
+        public RefreshTokensQueryHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
             IJwtManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
@@ -36,7 +35,7 @@ namespace Application.Auth.Queries.RefreshTokens {
             // We save the token in memory on the client side which means there will be scenarios
             // where we don't have the access token. For this reason we may need to execute
             // extra steps to retrieve the user.
-            AppUser user;
+            ApplicationUser user;
             if (principal != null) {
                 user = await _userManager.FindByNameAsync(principal.Identity.Name);
             } else {
@@ -58,31 +57,26 @@ namespace Application.Auth.Queries.RefreshTokens {
             var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x =>
                 x.Token == refreshToken);
 
-            if (storedRefreshToken?.Token != refreshToken || storedRefreshToken?.ExpiresAt < DateTime.Now) {
+            if (storedRefreshToken?.Token != refreshToken || storedRefreshToken.IsExpired) {
                 throw new RestException(HttpStatusCode.Unauthorized, new { RefreshToken = "Invalid or expired refresh token." });
             }
 
             return storedRefreshToken;
         }
-        private async Task<AppUser> GetUserFromAuthenticatedRefreshToken(RefreshToken refreshToken) {
-            var userRefreshToken = await _context.UserRefreshTokens.SingleOrDefaultAsync(x =>
-                x.RefreshTokenId == refreshToken.Id);
-            return await _userManager.FindByIdAsync(userRefreshToken.AppUserId);
+        private async Task<ApplicationUser> GetUserFromAuthenticatedRefreshToken(RefreshToken refreshToken) {
+            var user = await _context.ApplicationUsers.SingleOrDefaultAsync(x =>
+                x == refreshToken.ApplicationUser);
+            return await _userManager.FindByIdAsync(user.Id);
         }
 
-        private async Task<UserAndTokenDto> UpdateAndSaveRefreshToken(AppUser user, RefreshToken refreshToken) {
+        private async Task<UserAndTokenDto> UpdateAndSaveRefreshToken(ApplicationUser user, RefreshToken refreshToken) {
             _context.RefreshTokens.Remove(refreshToken);
 
             var newRefreshToken = new RefreshToken {
                 Token = _jwtManager.GenerateRefreshToken(),
-                ExpiresAt = DateTime.UtcNow.AddDays(2)
+                ApplicationUser = user,
             };
             _context.RefreshTokens.Add(newRefreshToken);
-            var newUserRefreshToken = new UserRefreshToken {
-                AppUser = user,
-                RefreshToken = newRefreshToken
-            };
-            _context.UserRefreshTokens.Add(newUserRefreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");
@@ -93,7 +87,7 @@ namespace Application.Auth.Queries.RefreshTokens {
             return CreateUserAndTokenDto(user);
         }
 
-        private UserAndTokenDto CreateUserAndTokenDto(AppUser user) {
+        private UserAndTokenDto CreateUserAndTokenDto(ApplicationUser user) {
             var accessToken = _jwtManager.GenerateJWT(user);
 
             var userDto = new UserDto {

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Domain;
+using Domain.Entities;
 
 namespace Application.Invites {
     public class MappingProfile : Profile {

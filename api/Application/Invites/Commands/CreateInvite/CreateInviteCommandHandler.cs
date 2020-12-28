@@ -3,10 +3,9 @@ using Application.Errors;
 using Application.Invites.Commands;
 using AutoMapper;
 using CSharpVitamins;
-using Domain;
+using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System;
 using System.Net;
 using System.Threading;
@@ -17,11 +16,11 @@ namespace Application.Invites {
     /// Generates a new unique invite link for a given classroom.
     /// </summary>
     public class CreateInviteCommandHandler : IRequestHandler<CreateInviteCommand, InviteLinkDto> {
-        private readonly DataContext _context;
+        private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
         private readonly IMapper _mapper;
 
-        public CreateInviteCommandHandler(DataContext context, IUserAccessor userAccessor, IMapper mapper) {
+        public CreateInviteCommandHandler(Persistence.ApplicationContext context, IUserAccessor userAccessor, IMapper mapper) {
             _context = context;
             _userAccessor = userAccessor;
             _mapper = mapper;
@@ -49,15 +48,6 @@ namespace Application.Invites {
                 Hits = 0
             };
             _context.InviteLinks.Add(link);
-
-            // Create a new entry in the UserInviteLink table.
-            var userInviteLink = new UserInviteLink {
-                AppUser = user,
-                Classroom = classroom,
-                InviteLink = link,
-                CreatedAt = DateTime.Now
-            };
-            _context.UserInviteLinks.Add(userInviteLink);
 
             var linkToReturn = _mapper.Map<InviteLink, InviteLinkDto>(link);
 

@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using classroom_messenger_api.Middleware;
 using classroom_messenger_api.SignalR;
-using Domain;
+using Domain.Entities;
 using FluentValidation.AspNetCore;
 using Infrastructure.Security;
 using MediatR;
@@ -30,15 +30,37 @@ namespace classroom_messenger_api {
 
         public IConfiguration Configuration { get; }
 
-        // Add your services.
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddDbContext<DataContext>(opt => {
+        public void ConfigureDevelopmentServices(IServiceCollection services) {
+            // Use In-Memory database.
+            //ConfigureInMemoryDatabases(services);
+
+            // Use real database.
+            ConfigureProductionServices(services);
+        }
+
+        private void ConfigureInMemoryDatabases(IServiceCollection services) {
+            services.AddDbContext<ApplicationContext>(opt =>
+                opt.UseInMemoryDatabase("ClassroomChat"));
+
+            ConfigureServices(services);
+        }
+
+        private void ConfigureProductionServices(IServiceCollection services) {
+            services.AddDbContext<ApplicationContext>(opt => {
                 opt.UseLazyLoadingProxies();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            ConfigureServices(services);
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services) {
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy", policy => {
-                    policy.AllowAnyHeader().AllowAnyMethod()
+                    policy
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
                         .WithOrigins("http://localhost:3000")
                         .AllowCredentials();
                 });
@@ -58,11 +80,11 @@ namespace classroom_messenger_api {
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });           
 
-            // Configure ASP.NET Identity.
-            var builder = services.AddIdentityCore<AppUser>();
+            // Configure Identity.
+            var builder = services.AddIdentityCore<ApplicationUser>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
-            identityBuilder.AddEntityFrameworkStores<DataContext>();
-            identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+            identityBuilder.AddEntityFrameworkStores<Persistence.ApplicationContext>();
+            identityBuilder.AddSignInManager<SignInManager<ApplicationUser>>();
 
             // Enable authentication.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
@@ -92,7 +114,7 @@ namespace classroom_messenger_api {
             services.AddScoped<IHttpContextManager, HttpContextManager>();
         }
 
-        // Configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             app.UseMiddleware<ErrorHandlingMiddleware>();
             if (env.IsDevelopment()) {
@@ -103,6 +125,7 @@ namespace classroom_messenger_api {
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
+                
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
                 endpoints.MapHub<DiscussionHub>("/chat");

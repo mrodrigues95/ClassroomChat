@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Domain;
+using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +17,7 @@ namespace Infrastructure.Security {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string GenerateJWT(AppUser user) {
+        public string GenerateJWT(ApplicationUser user) {
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName)
             };
