@@ -6,8 +6,8 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { AuthEvent } from '../constants/events';
-import { User, UserBase } from '../types';
+import { AuthEvent } from '../../constants/events';
+import { User, UserBase } from '../../types';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 
 type AuthContextType = {

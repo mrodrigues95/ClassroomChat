@@ -7,6 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,15 +17,15 @@ using System.Threading.Tasks;
 namespace Application.Classrooms {
 
     /// <summary>
-    /// Get a list of classrooms that the user is a part of.
+    /// Gets a list of classrooms that the user is part of.
     /// </summary>
     public class GetClassroomsListQueryHandler : IRequestHandler<GetClassroomsListQuery, ClassroomsListDto> {
-        private readonly Persistence.ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserAccessor _userAccessor;
 
-        public GetClassroomsListQueryHandler(Persistence.ApplicationContext context, IMapper mapper, 
+        public GetClassroomsListQueryHandler(ApplicationContext context, IMapper mapper, 
             UserManager<ApplicationUser> userManager, IUserAccessor userAccessor) {
             _context = context;
             _mapper = mapper;

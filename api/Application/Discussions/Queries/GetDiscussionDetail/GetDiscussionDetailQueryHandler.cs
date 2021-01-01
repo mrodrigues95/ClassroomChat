@@ -1,4 +1,5 @@
-﻿using Application.Discussions.Queries.GetDiscussionDetail;
+﻿using Application.Common.Dtos;
+using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Errors;
 using AutoMapper;
 using Domain.Entities;

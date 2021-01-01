@@ -6,24 +6,16 @@ import ResizeObserver from 'resize-observer-polyfill';
 import clsx from 'clsx';
 import { Classroom, Discussion } from '../../../shared/types';
 import getStateReducer from './../../ui/utils/getStateReducer';
-
-const classrooms: Classroom[] = [
-  { id: 1, name: 'C#', discussionsCount: 1 },
-  { id: 2, name: 'F#', discussionsCount: 2 },
-  { id: 3, name: 'Networking', discussionsCount: 2 },
-];
-
-const discussions: Discussion[] = [
-  { id: 1, classroomId: 1, name: 'Test One' },
-  { id: 2, classroomId: 2, name: 'Test Two' },
-  { id: 3, classroomId: 3, name: 'Test Three' },
-];
+import useClassrooms from '../../../shared/hooks/data/useClassrooms';
+import Spinner from './../../ui/Spinner';
+import { ErrorIcon } from '../../../shared/assets/icons';
 
 export type Item = Classroom | Discussion;
 
 const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
+  const { data, isLoading, isError, refetch } = useClassrooms();
   const focusRef = useRef<HTMLButtonElement>(null);
-  const [items, setItems] = useState<Item[]>(classrooms);
+  const [items, setItems] = useState<Item[] | null>(null);
   const [stateReducer, setStateReducer] = useState(() =>
     getStateReducer('classrooms')
   );
@@ -37,10 +29,10 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     getItemProps,
     reset,
   } = useSelect<Item>({
-    items: items,
+    items: items ?? [],
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem?.hasOwnProperty('discussionsCount')) {
-        setDiscussionsMenu();
+        setDiscussionsMenu(selectedItem as Classroom);
       } else {
         setClassroomsMenu();
       }
@@ -67,18 +59,33 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   });
 
   const setClassroomsMenu = () => {
-    setItems(classrooms);
+    if (!data) return;
+    setItems(data.classrooms as Classroom[]);
     setStateReducer(() => getStateReducer('classrooms'));
   };
 
-  const setDiscussionsMenu = () => {
-    setItems(discussions);
+  // TODO: Handle a classroom that has no discussions.
+  // TODO: Handle a user that has no classrooms.
+  const setDiscussionsMenu = (selectedClassroom: Classroom) => {
+    if (
+      !Array.isArray(selectedClassroom.discussions) ||
+      !selectedClassroom.discussions.length
+    ) {
+      console.log("This classroom doesn't have any discussions.");
+      return;
+    }
+    setItems(selectedClassroom.discussions);
     setStateReducer(() => getStateReducer());
   };
 
   useEffect(() => {
     if (!isOpen) reset();
-  }, [isOpen, reset]);
+    if (isOpen && !items) refetch();
+  }, [isOpen, reset, refetch, items]);
+
+  useEffect(() => {
+    if (data) setItems(data.classrooms);
+  }, [data]);
 
   return (
     <>
@@ -103,18 +110,33 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                   'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200'
                 )}
               >
-                {(items as Item[]).map((item: Item, index: number) => (
-                  <li
-                    className={clsx(
-                      'block w-full px-4 py-2 text-sm leading-5 text-black rounded-md text-left cursor-pointer truncate',
-                      highlightedIndex === index && 'bg-blue-100'
-                    )}
-                    key={index}
-                    {...getItemProps({ item: item, index })}
-                  >
-                    {item.name}
+                {isLoading ? (
+                  <li className="flex items-center justify-center h-8">
+                    <Spinner className="h-5 w-5 mr-2 text-primary-dark" />
                   </li>
-                ))}
+                ) : isError ? (
+                  <li className="flex items-center h-8">
+                    <ErrorIcon className="w-6 h-6 text-red-600 mr-2" />
+                    Error loading classrooms.
+                  </li>
+                ) : items ? (
+                  <>
+                    {(items as Item[]).map((item: Item, index: number) => (
+                      <li
+                        className={clsx(
+                          'block w-full px-4 py-2 text-sm leading-5 text-black rounded-md text-left cursor-pointer truncate',
+                          highlightedIndex === index && 'bg-blue-100'
+                        )}
+                        key={index}
+                        {...getItemProps({ item: item, index })}
+                      >
+                        {item.name}
+                      </li>
+                    ))}
+                  </>
+                ) : (
+                  <li>No classrooms found...</li>
+                )}
               </motion.div>
             )}
           </ul>

@@ -7,7 +7,7 @@ import Button from './../ui/Button';
 import Carousel from './components/Carousel';
 import { ChevronIcon, MailIcon, LockIcon } from '../../shared/assets/icons';
 import { Collaboration } from '../../shared/assets/illustrations';
-import { AuthContext } from '../../shared/hooks/useAuth';
+import { AuthContext } from '../../shared/hooks/auth/useAuth';
 import { LoginError } from '../../shared/constants/validation';
 import Spinner from '../ui/Spinner';
 

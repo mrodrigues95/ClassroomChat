@@ -18,5 +18,6 @@ export type Discussion = {
 export type Classroom = {
   id: number;
   name: string;
+  discussions?: Discussion[];
   discussionsCount: number;
 };

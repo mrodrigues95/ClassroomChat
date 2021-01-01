@@ -20,8 +20,8 @@ namespace classroom_messenger_api.Controllers {
             _mediator = mediator;
         }
 
-        // GET api/classroom
-        [HttpGet]
+        // GET api/classroom/list
+        [HttpGet("list")]
         public async Task<ActionResult<ClassroomsListDto>> GetAll() {
             return Ok(await _mediator.Send(new GetClassroomsListQuery()));
         }

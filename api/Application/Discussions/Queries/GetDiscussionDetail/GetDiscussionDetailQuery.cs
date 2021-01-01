@@ -1,4 +1,4 @@
-﻿using Application.Classrooms.Discussions;
+﻿using Application.Common.Dtos;
 using MediatR;
 using System;
 

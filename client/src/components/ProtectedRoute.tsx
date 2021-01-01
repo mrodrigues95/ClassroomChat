@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext } from 'react';
 import { Route, useLocation, Navigate } from 'react-router-dom';
-import { AuthContext } from '../shared/hooks/useAuth';
+import { AuthContext } from '../shared/hooks/auth/useAuth';
 
 type Props = {
   path: string;

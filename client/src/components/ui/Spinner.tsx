@@ -1,10 +1,19 @@
 import React from 'react';
+import clsx from 'clsx';
 import { LoadingIcon } from '../../shared/assets/icons';
 
-const Spinner = ({ children }: { children: React.ReactNode }) => {
+const Spinner = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) => {
   return (
     <div className="inline-flex items-center">
-      <LoadingIcon />
+      <LoadingIcon
+        className={clsx('animate-spin', className ?? 'h-5 w-5 mr-2 text-white')}
+      />
       {children}
     </div>
   );

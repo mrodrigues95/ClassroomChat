@@ -7,7 +7,7 @@ import Button from '../ui/Button';
 import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
 import Carousel from './components/Carousel';
 import { Messaging } from '../../shared/assets/illustrations';
-import { AuthContext } from '../../shared/hooks/useAuth';
+import { AuthContext } from '../../shared/hooks/auth/useAuth';
 import Spinner from './../ui/Spinner';
 import {
   RegistrationError,

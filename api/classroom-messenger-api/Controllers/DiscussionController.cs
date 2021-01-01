@@ -1,4 +1,4 @@
-﻿using Application.Classrooms.Discussions;
+﻿using Application.Common.Dtos;
 using Application.Discussions.Commands;
 using Application.Discussions.Queries.GetDiscussionDetail;
 using MediatR;

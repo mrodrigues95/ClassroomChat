@@ -32,7 +32,6 @@ namespace Persistence {
                 }
 
                 if (!await context.ApplicationUserClassrooms.AnyAsync()) {
-                    var auClassrooms = GetPreConfiguredApplicationUserClassrooms(context);
                     await context.ApplicationUserClassrooms.AddRangeAsync(GetPreConfiguredApplicationUserClassrooms(context));
                     await context.SaveChangesAsync();
                 }
@@ -88,6 +87,8 @@ namespace Persistence {
             static IEnumerable<ApplicationUserClassroom> GetPreConfiguredApplicationUserClassrooms(ApplicationContext context) {
                 return new List<ApplicationUserClassroom>() {
                     new ApplicationUserClassroom(GetApplicationUser(context, 0).Id, GetClassroom(context, 0).Id, true, GetApplicationUser(context, 0), GetClassroom(context, 0)),
+                    new ApplicationUserClassroom(GetApplicationUser(context, 0).Id, GetClassroom(context, 1).Id, true, GetApplicationUser(context, 0), GetClassroom(context, 1)),
+                    new ApplicationUserClassroom(GetApplicationUser(context, 0).Id, GetClassroom(context, 2).Id, true, GetApplicationUser(context, 0), GetClassroom(context, 2)),
                     new ApplicationUserClassroom(GetApplicationUser(context, 1).Id, GetClassroom(context, 1).Id, true, GetApplicationUser(context, 1), GetClassroom(context, 1)),
                     new ApplicationUserClassroom(GetApplicationUser(context, 2).Id, GetClassroom(context, 2).Id, false, GetApplicationUser(context, 2), GetClassroom(context, 2)),
                 };
