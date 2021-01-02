@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { Classroom } from '../../types';
 import { axios } from './../auth/useToken';
 
-export type GetClassroomsResponse = {
+type GetClassroomsResponse = {
   classrooms: Classroom[];
   classroomsCount: number;
 };

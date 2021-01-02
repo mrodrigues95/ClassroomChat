@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import useAuth, { AuthContext } from './shared/hooks/auth/useAuth';
 import Home from './components/Home/index';
 import ProtectedRoute from './components/ProtectedRoute';
+import Discussion from './components/Discussion/index';
 
 const App = () => {
   const auth = useAuth();
@@ -22,6 +23,7 @@ const App = () => {
           <Layout>
             <Routes>
               <ProtectedRoute path="/home" element={<Home />} />
+              <ProtectedRoute path="/discussion/:uuid" element={<Discussion />} />
               <ProtectedRoute path="/auth/*" element={<Auth />} unprotected />
             </Routes>
           </Layout>

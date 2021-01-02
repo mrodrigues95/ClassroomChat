@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { mergeRefs, useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
@@ -9,10 +10,12 @@ import getStateReducer from './../../ui/utils/getStateReducer';
 import useClassrooms from '../../../shared/hooks/data/useClassrooms';
 import Spinner from './../../ui/Spinner';
 import { ErrorIcon } from '../../../shared/assets/icons';
+import { isClassroom, isDiscussion } from './../../../shared/typeguards';
 
 export type Item = Classroom | Discussion;
 
 const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
+  const navigate = useNavigate();
   const { data, isLoading, isError, refetch } = useClassrooms();
   const focusRef = useRef<HTMLButtonElement>(null);
   const [items, setItems] = useState<Item[] | null>(null);
@@ -28,10 +31,11 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     highlightedIndex,
     getItemProps,
     reset,
+    selectedItem,
   } = useSelect<Item>({
     items: items ?? [],
     onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem?.hasOwnProperty('discussionsCount')) {
+      if (isClassroom(selectedItem)) {
         setDiscussionsMenu(selectedItem as Classroom);
       } else {
         setClassroomsMenu();
@@ -87,6 +91,12 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     if (data) setItems(data.classrooms);
   }, [data]);
 
+  useEffect(() => {
+    if (isDiscussion(selectedItem)) {
+      navigate(`/discussion/${selectedItem.id}`);
+    }
+  }, [selectedItem, navigate]);
+
   return (
     <>
       {React.cloneElement(menuButton, {
@@ -124,8 +134,9 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                     {(items as Item[]).map((item: Item, index: number) => (
                       <li
                         className={clsx(
-                          'block w-full px-4 py-2 text-sm leading-5 text-black rounded-md text-left cursor-pointer truncate',
-                          highlightedIndex === index && 'bg-blue-100'
+                          'flex w-full px-4 py-2 text-sm font-semibold leading-5 text-gray-700 rounded-md text-left cursor-pointer truncate',
+                          highlightedIndex === index &&
+                            'text-gray-900 bg-gray-200'
                         )}
                         key={index}
                         {...getItemProps({ item: item, index })}
