@@ -10,7 +10,7 @@ import ProfileInfo from './components/ProfileInfo';
 import VerticalNav, { VerticalNavItem } from '../ui/VerticalNav';
 import ActivityFeed from './components/ActivityFeed';
 import Logout from './components/Logout';
-import ClassroomsMenu from './components/ClassroomsMenu';
+import ClassroomsMenu from '../ui/classrooms/ClassroomMenu';
 
 const SidebarContainer = ({
   className,
@@ -54,6 +54,7 @@ const Sidebar = () => {
                 icon={<ClassroomsIcon className="mx-auto xl:mr-3 xl:ml-0" />}
                 label="Classrooms"
                 aria-label="View classrooms"
+                classroomMenuButton
               />
             }
           />

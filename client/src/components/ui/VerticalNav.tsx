@@ -5,16 +5,25 @@ import LinkOrButton from './LinkOrButton';
 
 type Props = {
   to?: string;
+  classroomMenuButton?: boolean;
   icon: React.ReactElement;
   label: string;
 } & HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>;
 
 export const VerticalNavItem = forwardRef<HTMLButtonElement, Props>(
-  ({ to, icon, label, ...props }, ref) => {
+  ({ to, classroomMenuButton = false, icon, label, ...props }, ref) => {
     const location = useLocation();
     const toLocation = useResolvedPath(to || '/_');
 
-    const selected = location.pathname === toLocation.pathname;
+    let selected = false;
+
+    // Set the classrooms menu button to a selected state if the user
+    // is viewing a discussion.
+    if (classroomMenuButton && !to) {
+      selected = location.pathname.includes('/discussion/');
+    } else {
+      selected = location.pathname === toLocation.pathname;
+    }
 
     return (
       <LinkOrButton

@@ -6,11 +6,13 @@ import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
 import clsx from 'clsx';
 import { Classroom, Discussion } from '../../../shared/types';
-import getStateReducer from './../../ui/utils/getStateReducer';
+import getStateReducer from '../utils/getStateReducer';
 import useClassrooms from '../../../shared/hooks/data/useClassrooms';
-import Spinner from './../../ui/Spinner';
-import { ErrorIcon } from '../../../shared/assets/icons';
-import { isClassroom, isDiscussion } from './../../../shared/typeguards';
+import Spinner from '../Spinner';
+import { ErrorIcon, UserAddIcon } from '../../../shared/assets/icons';
+import { isClassroom, isDiscussion } from '../../../shared/typeguards';
+import ClassroomMenuItems from './ClassroomMenuItems';
+import ClassroomMenuItem from './ClassroomMenuItem';
 
 export type Item = Classroom | Discussion;
 
@@ -97,6 +99,7 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     }
   }, [selectedItem, navigate]);
 
+  // TODO: Truncate list items.
   return (
     <>
       {React.cloneElement(menuButton, {
@@ -105,10 +108,9 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
       })}
       {renderLayer(
         <AnimatePresence>
-          <ul
-            className={clsx('w-64 ml-8 outline-none font-medium list-none')}
-            {...layerProps}
-            {...getMenuProps({ ref: layerProps.ref })}
+          <ClassroomMenuItems
+            layerProps={layerProps}
+            getMenuProps={getMenuProps}
           >
             {isOpen && (
               <motion.div
@@ -132,25 +134,29 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                 ) : items ? (
                   <>
                     {(items as Item[]).map((item: Item, index: number) => (
-                      <li
-                        className={clsx(
-                          'flex w-full px-4 py-2 text-sm font-semibold leading-5 text-gray-700 rounded-md text-left cursor-pointer truncate',
-                          highlightedIndex === index &&
-                            'text-gray-900 bg-gray-200'
-                        )}
-                        key={index}
-                        {...getItemProps({ item: item, index })}
+                      <ClassroomMenuItem
+                        item={item}
+                        index={index}
+                        highlightedIndex={highlightedIndex}
+                        getItemProps={getItemProps}
                       >
                         {item.name}
-                      </li>
+                      </ClassroomMenuItem>
                     ))}
                   </>
                 ) : (
                   <li>No classrooms found...</li>
                 )}
+                {/* <li
+                  className="flex w-full px-4 py-2 text-sm leading-5 font-semibold text-green-600 rounded-md text-left cursor-pointer truncate hover:bg-green-500 hover:text-white"
+                  {...getItemProps}
+                >
+                  <UserAddIcon className="inline-block w-5 h-5 mr-2" /> Join a
+                  classroom
+                </li> */}
               </motion.div>
             )}
-          </ul>
+          </ClassroomMenuItems>
         </AnimatePresence>
       )}
     </>
