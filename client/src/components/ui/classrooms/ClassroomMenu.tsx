@@ -9,14 +9,29 @@ import { Classroom, Discussion } from '../../../shared/types';
 import getStateReducer from '../utils/getStateReducer';
 import useClassrooms from '../../../shared/hooks/data/useClassrooms';
 import Spinner from '../Spinner';
-import { ErrorIcon, UserAddIcon } from '../../../shared/assets/icons';
+import { ErrorIcon } from '../../../shared/assets/icons';
 import { isClassroom, isDiscussion } from '../../../shared/typeguards';
 import ClassroomMenuItems from './ClassroomMenuItems';
-import ClassroomMenuItem from './ClassroomMenuItem';
+import ClassroomMenuItem, { MenuVariant } from './ClassroomMenuItem';
+import getMenuActions from '../utils/getMenuActions';
+import { isMenuAction } from './../../../shared/typeguards';
 
-export type Item = Classroom | Discussion;
+const ClassroomMenuHeader = ({ title }: { title: string }) => {
+  return (
+    <div className="px-4 py-2 text-sm font-bold border-b mb-2">{title}</div>
+  );
+};
 
-const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
+export type MenuAction = {
+  name: string;
+  type: 'join-classroom' | 'leave-classroom';
+  variant: MenuVariant;
+  icon?: ReactElement;
+};
+
+export type Item = Classroom | Discussion | MenuAction;
+
+const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch } = useClassrooms();
   const focusRef = useRef<HTMLButtonElement>(null);
@@ -66,12 +81,11 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
 
   const setClassroomsMenu = () => {
     if (!data) return;
-    setItems(data.classrooms as Classroom[]);
+    setItems([...data.classrooms, ...getMenuActions('classroom')]);
     setStateReducer(() => getStateReducer('classrooms'));
   };
 
   // TODO: Handle a classroom that has no discussions.
-  // TODO: Handle a user that has no classrooms.
   const setDiscussionsMenu = (selectedClassroom: Classroom) => {
     if (
       !Array.isArray(selectedClassroom.discussions) ||
@@ -80,7 +94,10 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
       console.log("This classroom doesn't have any discussions.");
       return;
     }
-    setItems(selectedClassroom.discussions);
+    setItems([
+      ...selectedClassroom.discussions,
+      ...getMenuActions('discussion'),
+    ]);
     setStateReducer(() => getStateReducer());
   };
 
@@ -90,7 +107,9 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   }, [isOpen, reset, refetch, items]);
 
   useEffect(() => {
-    if (data) setItems(data.classrooms);
+    if (data) {
+      setItems([...data.classrooms, ...getMenuActions('classroom')]);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -100,6 +119,8 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   }, [selectedItem, navigate]);
 
   // TODO: Truncate list items.
+  // TODO: Make menu groups.
+  // TODO: Handle a user that has no classrooms.
   return (
     <>
       {React.cloneElement(menuButton, {
@@ -119,7 +140,7 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                 exit={{ x: 40 }}
                 transition={{ duration: 0.1, ease: 'easeOut' }}
                 className={clsx(
-                  'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200'
+                  'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200 space-y-1'
                 )}
               >
                 {isLoading ? (
@@ -133,13 +154,21 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                   </li>
                 ) : items ? (
                   <>
+                    <ClassroomMenuHeader
+                      title={
+                        isClassroom(items[0]) ? 'Classrooms' : 'Discussions'
+                      }
+                    />
                     {(items as Item[]).map((item: Item, index: number) => (
                       <ClassroomMenuItem
+                        key={index}
                         item={item}
+                        isHighlighted={highlightedIndex === index}
+                        variant={isMenuAction(item) ? item.variant : 'default'}
                         index={index}
-                        highlightedIndex={highlightedIndex}
                         getItemProps={getItemProps}
                       >
+                        {isMenuAction(item) && item.icon}
                         {item.name}
                       </ClassroomMenuItem>
                     ))}
@@ -147,13 +176,6 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                 ) : (
                   <li>No classrooms found...</li>
                 )}
-                {/* <li
-                  className="flex w-full px-4 py-2 text-sm leading-5 font-semibold text-green-600 rounded-md text-left cursor-pointer truncate hover:bg-green-500 hover:text-white"
-                  {...getItemProps}
-                >
-                  <UserAddIcon className="inline-block w-5 h-5 mr-2" /> Join a
-                  classroom
-                </li> */}
               </motion.div>
             )}
           </ClassroomMenuItems>
@@ -163,4 +185,4 @@ const ClassroomsMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   );
 };
 
-export default ClassroomsMenu;
+export default ClassroomMenu;
