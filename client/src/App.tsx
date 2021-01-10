@@ -8,13 +8,18 @@ import Home from './components/Home/index';
 import ProtectedRoute from './components/ProtectedRoute';
 import Discussion from './components/Discussion/index';
 import FourOhFour from './components/Auth/404';
+import Loading from './components/Loading';
 
 const App = () => {
   const auth = useAuth();
   const queryClient = new QueryClient();
 
   if (auth.waitingForToken) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
   }
 
   return (
