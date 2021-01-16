@@ -31,7 +31,7 @@ const Login = () => {
   };
 
   return (
-    <main className="flex min-h-screen xl:p-16">
+    <main className="flex flex-1 w-full">
       <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Connect With Classmates"
@@ -74,7 +74,12 @@ const Login = () => {
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
-                <Button className="p-4" type="submit" disabled={waitingForResponse} fullWidth>
+                <Button
+                  className="p-4"
+                  type="submit"
+                  disabled={waitingForResponse}
+                  fullWidth
+                >
                   {waitingForResponse ? (
                     <Spinner>Logging in...</Spinner>
                   ) : (

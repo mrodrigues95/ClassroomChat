@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { ChevronIcon } from '../../../shared/assets/icons';
-import { Direction } from '../../../shared/constants/common';
+import { Direction } from '../../../shared/types';
 
 type Props = {
   direction?: Direction;
@@ -9,7 +9,7 @@ type Props = {
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const NavigationButton = ({
-  direction = Direction.LEFT,
+  direction = 'left',
   className,
   ...props
 }: Props) => {
@@ -21,7 +21,7 @@ const NavigationButton = ({
       )}
       {...props}
     >
-      {direction === Direction.RIGHT ? (
+      {direction === 'right' ? (
         <ChevronIcon className="h-6 w-6 transform rotate-180" />
       ) : (
         <ChevronIcon className="h-6 w-6" />

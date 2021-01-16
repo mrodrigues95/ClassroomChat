@@ -1,9 +1,11 @@
-﻿using Application.Errors;
+﻿using Application.Common.Interfaces;
+using Application.Errors;
 using Application.Messages.Discussions.CreateDiscussionMessage;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 using System;
 using System.Net;
 using System.Threading;
@@ -14,40 +16,34 @@ namespace Application.Messages.Discussions {
     /// Creates a new discussion message.
     /// </summary>
     public class CreateDiscussionMessageCommandHandler : IRequestHandler<CreateDiscussionMessageCommand, DiscussionMessageDto> {
-        private readonly Persistence.ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserAccessor _userAccessor;
 
-        public CreateDiscussionMessageCommandHandler(Persistence.ApplicationContext context, IMapper mapper) {
+        public CreateDiscussionMessageCommandHandler(ApplicationContext context, IMapper mapper, IUserAccessor userAccessor) {
             _context = context;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<DiscussionMessageDto> Handle(CreateDiscussionMessageCommand request, CancellationToken cancellationToken) {
-            // Get the discussion this message belongs to.
             var discussion = await _context.Discussions.FindAsync(request.DiscussionId);
+            if (discussion == null) throw new RestException(HttpStatusCode.NotFound, new { Discussion = "Not found." });
 
-            // Discussion not found.
-            if (discussion == null)
-                throw new RestException(HttpStatusCode.NotFound, new { Discussion = "Not found." });
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+            if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
 
-            // Get the details of the user who is sending the message.
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
-
-            // Create the new message.
             var message = new Message {
-                CreatedBy = user,
                 Discussion = discussion,
                 Body = request.Body,
             };
             discussion.Messages.Add(message);
 
-            // Save changes to the database.
             var success = await _context.SaveChangesAsync() > 0;
 
-            // Return the final response.
-            if (success) return _mapper.Map<DiscussionMessageDto>(message);
+            if (!success) throw new Exception("Unable to save new message.");
 
-            throw new Exception("There was a problem saving changes.");
+            return _mapper.Map<DiscussionMessageDto>(message);            
         }
     }
 }

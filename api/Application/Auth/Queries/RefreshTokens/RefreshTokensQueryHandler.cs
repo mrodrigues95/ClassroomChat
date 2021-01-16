@@ -81,8 +81,8 @@ namespace Application.Auth.Queries.RefreshTokens {
             var success = await _context.SaveChangesAsync() > 0;
             if (!success) throw new Exception("Unable to save new refresh token.");
 
-            // We need to set the refresh token cookie.
-            _httpContextManager.SetHttpCookieRefreshToken(newRefreshToken.Token);
+            // Set the refresh token cookie.
+            _httpContextManager.SetHttpCookieRefreshToken(newRefreshToken);
 
             return CreateUserAndTokenDto(user);
         }

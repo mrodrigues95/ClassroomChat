@@ -5,7 +5,6 @@ using Application.Classrooms.Queries.GetClassroomDetail;
 using Application.Classrooms.Queries.GetClassroomsList;
 using Application.Common.Dtos;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -28,7 +27,6 @@ namespace classroom_messenger_api.Controllers {
 
         // GET api/classroom/{id}
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<ClassroomDto>> Get(Guid id) {
             return Ok(await _mediator.Send(new GetClassroomDetailQuery { Id = id }));
         }

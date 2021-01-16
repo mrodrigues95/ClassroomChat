@@ -1,10 +1,3 @@
-export enum Direction {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-}
-
 export enum MEDIA_QUERIES {
   SMALL = '(min-width: 640px)',
   MEDIUM = '(min-width: 768px)',

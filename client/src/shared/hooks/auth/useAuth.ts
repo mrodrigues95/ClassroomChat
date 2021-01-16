@@ -6,9 +6,9 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { AuthEvent } from '../../constants/events';
 import { User, UserBase } from '../../types';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
+import { AuthEvent } from '../../constants/events';
 
 type AuthContextType = {
   user: User | null;
@@ -17,6 +17,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  waitingForToken: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -28,14 +29,16 @@ const useAuth = () => {
   const onTokenInvalid = () => setUser(null);
 
   const refreshToken = useCallback(async () => {
-    const {
-      data: { user, ...rest },
-    } = await axios
-      .get<UserAndTokenResponse>('auth/refresh')
-      .finally(() => setWaitingForToken(false));
+    try {
+      const {
+        data: { user, ...rest },
+      } = await axios.get<UserAndTokenResponse>('auth/refresh');
 
-    setUser(user);
-    setToken(rest);
+      setUser(user);
+      setToken(rest);
+    } finally {
+      setWaitingForToken(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

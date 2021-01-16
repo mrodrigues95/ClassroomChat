@@ -1,4 +1,6 @@
-﻿namespace Application.Common.Interfaces {
+﻿using Domain.Entities;
+
+namespace Application.Common.Interfaces {
     /// <summary>
     /// Provides a set of helper methods for handling HTTP context.
     /// </summary>
@@ -14,6 +16,6 @@
         /// <summary>
         /// Appends the refresh token to the HTTP context response cookies.
         /// </summary>
-        void SetHttpCookieRefreshToken(string refreshToken);
+        void SetHttpCookieRefreshToken(RefreshToken refreshToken);
     }
 }

@@ -43,7 +43,7 @@ const Register = () => {
   };
 
   return (
-    <main className="flex min-h-screen xl:p-16">
+    <main className="flex flex-1 w-full">
       <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Message Your Classmates"

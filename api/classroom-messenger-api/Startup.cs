@@ -128,7 +128,7 @@ namespace classroom_messenger_api {
                 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                endpoints.MapHub<DiscussionHub>("/chat");
+                endpoints.MapHub<DiscussionHub>("/discussionhub");
             });
         }
     }

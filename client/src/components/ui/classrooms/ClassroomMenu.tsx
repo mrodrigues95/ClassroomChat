@@ -1,31 +1,27 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import { mergeRefs, useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
-import clsx from 'clsx';
 import { Classroom, Discussion } from '../../../shared/types';
 import getStateReducer from '../utils/getStateReducer';
-import useClassrooms from '../../../shared/hooks/data/useClassrooms';
+import useClassrooms from '../../../data/queries/useClassrooms';
 import Spinner from '../Spinner';
 import { ErrorIcon } from '../../../shared/assets/icons';
 import { isClassroom, isDiscussion } from '../../../shared/typeguards';
 import ClassroomMenuItems from './ClassroomMenuItems';
-import ClassroomMenuItem, { MenuVariant } from './ClassroomMenuItem';
+import ClassroomMenuItem, { MenuItemVariant } from './ClassroomMenuItem';
 import getMenuActions from '../utils/getMenuActions';
 import { isMenuAction } from './../../../shared/typeguards';
 
 const ClassroomMenuHeader = ({ title }: { title: string }) => {
-  return (
-    <div className="px-4 py-2 text-sm font-bold border-b mb-2">{title}</div>
-  );
+  return <li className="px-4 py-2 text-sm font-bold border-b mb-2">{title}</li>;
 };
 
 export type MenuAction = {
   name: string;
   type: 'join-classroom' | 'leave-classroom';
-  variant: MenuVariant;
+  variant: MenuItemVariant;
   icon?: ReactElement;
 };
 
@@ -118,9 +114,10 @@ const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
     }
   }, [selectedItem, navigate]);
 
-  // TODO: Truncate list items.
+  // TODO: Add menu animations.
   // TODO: Make menu groups.
   // TODO: Handle a user that has no classrooms.
+  // TODO: Handle menu actions when selected.
   return (
     <>
       {React.cloneElement(menuButton, {
@@ -128,58 +125,47 @@ const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
         ...getToggleButtonProps({ ref: mergeRefs(triggerProps.ref, focusRef) }),
       })}
       {renderLayer(
-        <AnimatePresence>
-          <ClassroomMenuItems
-            layerProps={layerProps}
-            getMenuProps={getMenuProps}
-          >
-            {isOpen && (
-              <motion.div
-                initial={{ x: 40 }}
-                animate={{ x: 0 }}
-                exit={{ x: 40 }}
-                transition={{ duration: 0.1, ease: 'easeOut' }}
-                className={clsx(
-                  'w-full p-2 rounded-md shadow-lg bg-white border border-gray-200 space-y-1'
-                )}
-              >
-                {isLoading ? (
-                  <li className="flex items-center justify-center h-8">
-                    <Spinner className="h-5 w-5 mr-2 text-primary-dark" />
-                  </li>
-                ) : isError ? (
-                  <li className="flex items-center h-8">
-                    <ErrorIcon className="w-6 h-6 text-red-600 mr-2" />
-                    Error loading classrooms.
-                  </li>
-                ) : items ? (
-                  <>
-                    <ClassroomMenuHeader
-                      title={
-                        isClassroom(items[0]) ? 'Classrooms' : 'Discussions'
-                      }
-                    />
-                    {(items as Item[]).map((item: Item, index: number) => (
-                      <ClassroomMenuItem
-                        key={index}
-                        item={item}
-                        isHighlighted={highlightedIndex === index}
-                        variant={isMenuAction(item) ? item.variant : 'default'}
-                        index={index}
-                        getItemProps={getItemProps}
-                      >
-                        {isMenuAction(item) && item.icon}
-                        {item.name}
-                      </ClassroomMenuItem>
-                    ))}
-                  </>
-                ) : (
-                  <li>No classrooms found...</li>
-                )}
-              </motion.div>
-            )}
-          </ClassroomMenuItems>
-        </AnimatePresence>
+        <ClassroomMenuItems
+          isOpen={isOpen}
+          layerProps={layerProps}
+          getMenuProps={getMenuProps}
+        >
+          {isOpen && (
+            <>
+              {isLoading ? (
+                <li className="flex items-center justify-center h-8">
+                  <Spinner className="h-5 w-5 mr-2 text-primary-dark" />
+                </li>
+              ) : isError ? (
+                <li className="flex items-center h-8">
+                  <ErrorIcon className="w-6 h-6 text-red-600 mr-2" />
+                  Error loading classrooms.
+                </li>
+              ) : items ? (
+                <>
+                  <ClassroomMenuHeader
+                    title={isClassroom(items[0]) ? 'Classrooms' : 'Discussions'}
+                  />
+                  {(items as Item[]).map((item: Item, index: number) => (
+                    <ClassroomMenuItem
+                      key={index}
+                      item={item}
+                      isHighlighted={highlightedIndex === index}
+                      variant={isMenuAction(item) ? item.variant : 'default'}
+                      index={index}
+                      getItemProps={getItemProps}
+                    >
+                      {isMenuAction(item) && item.icon}
+                      {item.name}
+                    </ClassroomMenuItem>
+                  ))}
+                </>
+              ) : (
+                <li>No classrooms found...</li>
+              )}
+            </>
+          )}
+        </ClassroomMenuItems>
       )}
     </>
   );

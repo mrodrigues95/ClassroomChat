@@ -58,7 +58,7 @@ namespace Application.Auth {
         }
 
         private UserAndTokenDto FinishLogin(ApplicationUser user, RefreshToken refreshToken) {
-            _httpContextManager.SetHttpCookieRefreshToken(refreshToken.Token);
+            _httpContextManager.SetHttpCookieRefreshToken(refreshToken);
             var accessToken = _jwtManager.GenerateJWT(user);
 
             var userDto = new UserDto {

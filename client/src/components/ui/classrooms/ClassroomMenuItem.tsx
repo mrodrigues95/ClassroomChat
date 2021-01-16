@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { UseSelectGetItemPropsOptions } from 'downshift';
 import { Item } from './ClassroomMenu';
 
-const VARIANTS = {
+const variants = {
   primary: {
     active: 'text-white bg-green-500',
     inactive: 'text-green-600',
@@ -18,14 +18,14 @@ const VARIANTS = {
   },
 };
 
-export type MenuVariant = keyof typeof VARIANTS;
+export type MenuItemVariant = keyof typeof variants;
 
 type Props = {
   item: Item;
   index: number;
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any;
   isHighlighted: boolean;
-  variant: MenuVariant;
+  variant: MenuItemVariant;
   children: React.ReactNode;
 };
 
@@ -38,12 +38,12 @@ const ClassroomMenuItem = ({
   children,
   ...props
 }: Props) => {
-  const variantStyles = VARIANTS[variant];
+  const variantStyles = variants[variant];
 
   return (
     <li
       className={clsx(
-        'flex w-full px-4 py-2 text-sm font-semibold leading-5 rounded-md text-left cursor-pointer truncate',
+        'w-full px-4 py-2 text-sm font-semibold leading-5 rounded-md text-left cursor-pointer truncate',
         isHighlighted ? variantStyles.active : variantStyles.inactive
       )}
       {...getItemProps({ item: item, index })}

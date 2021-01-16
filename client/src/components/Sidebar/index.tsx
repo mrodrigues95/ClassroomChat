@@ -24,7 +24,7 @@ const SidebarContainer = ({
   return (
     <div
       className={clsx(
-        'w-full p-3 rounded-3xl text-gray-700 font-medium lg:p-5 lg:mb-8 xl:border border-gray-300 bg-white',
+        'w-full p-3 rounded-3xl text-gray-700 font-medium border-gray-300 bg-white shadow-sm lg:p-5 lg:mb-8 xl:border',
         navigation && 'border',
         className
       )}
