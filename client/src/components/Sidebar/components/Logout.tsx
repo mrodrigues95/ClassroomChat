@@ -15,7 +15,7 @@ const Logout = () => {
   return (
     <Button
       variant="primary"
-      className="text-xl h-16 border-none"
+      className="text-xl h-16 border-none rounded-2xl"
       onClick={() => handleOnLogout()}
       fullWidth
     >

@@ -12,7 +12,7 @@ const Spinner = ({
   return (
     <div className="inline-flex items-center">
       <LoadingIcon
-        className={clsx('animate-spin', className ?? 'h-5 w-5 mr-2 text-white')}
+        className={clsx('animate-spin', className ?? 'h-5 w-5 mr-2 text-primary-dark')}
       />
       {children}
     </div>

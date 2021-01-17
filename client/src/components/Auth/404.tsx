@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Void } from './../../shared/assets/illustrations';
+import { VoidIllustration } from './../../shared/assets/illustrations';
 
 const FourOhFour = () => {
   return (
@@ -16,7 +16,7 @@ const FourOhFour = () => {
         </Link>
       </div>
       <div className="hidden flex-1 ml-32 lg:block">
-        <Void className="h-96" />
+        <VoidIllustration className="h-96" />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import AuthHeader from './components/AuthHeader';
 import Button from '../ui/Button';
 import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
 import Carousel from './components/Carousel';
-import { Messaging } from '../../shared/assets/illustrations';
+import { MessagingIllustration } from '../../shared/assets/illustrations';
 import { AuthContext } from '../../shared/hooks/auth/useAuth';
 import Spinner from './../ui/Spinner';
 import {
@@ -49,7 +49,7 @@ const Register = () => {
           caption="Message Your Classmates"
           description="Classroom Chat makes it easy to stay updated on the latest classroom information."
         >
-          <Messaging className="w-8/12 mx-auto" />
+          <MessagingIllustration className="w-8/12 mx-auto" />
         </Carousel>
       </section>
       <section className="w-full xl:w-1/2 p-3 md:p-10 xl:pr-0">
@@ -104,10 +104,17 @@ const Register = () => {
               </span>
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
-              <Button className="p-4" type="submit" disabled={waitingForResponse} fullWidth>
+              <Button
+                className="p-4"
+                type="submit"
+                disabled={waitingForResponse}
+                fullWidth
+              >
                 {waitingForResponse ? (
                   <>
-                    <Spinner>Creating your account...</Spinner>
+                    <Spinner className="h-5 w-5 mr-2 text-white">
+                      Creating your account...
+                    </Spinner>
                   </>
                 ) : (
                   <>Create Account</>

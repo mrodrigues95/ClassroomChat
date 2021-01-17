@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Application.Invites {
+namespace Application.Common.Dtos {
     public class InviteLinkDto {
         public Guid Id { get; set; }
         public string Token { get; set; }

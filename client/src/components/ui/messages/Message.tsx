@@ -1,6 +1,12 @@
 import React from 'react';
+import { format } from 'date-fns';
+import * as types from '../../../shared/types';
 
-const Message = () => {
+// TODO: Format dates for the following scenarios:
+// If the message was posted today -> 'Today at 12:48 PM',
+// If the message was posted yesterday -> 'Yesterday at 3:12 PM',
+// Anything after that -> 'MM/dd/yyyy (e.g. 1/14/2021').
+const Message = ({ message }: { message: types.Message }) => {
   return (
     <div className="flex items-start pb-2">
       <svg width="52" height="52" fill="none">
@@ -8,12 +14,12 @@ const Message = () => {
       </svg>
       <div className="flex-1 ml-2">
         <div>
-          <span className="font-bold">John Doe</span>
+          <span className="font-bold">{message.createdBy}</span>
           <span className="ml-2 text-xs text-gray-500">
-            12:48 PM
+            {format(new Date(message.createdAt), 'MM/dd/yyyy')}
           </span>
         </div>
-        <p className="font-semibold text-sm">Wow, this works!</p>
+        <p className="font-semibold text-sm">{message.body}</p>
       </div>
     </div>
   );

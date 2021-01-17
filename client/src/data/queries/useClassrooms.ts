@@ -7,15 +7,14 @@ type GetClassroomsResponse = {
   classroomsCount: number;
 };
 
+const getClassrooms = async () => {
+  return await axios
+    .get<GetClassroomsResponse>('classroom/list')
+    .then((res) => res.data);
+};
+
 const useClassrooms = () => {
-  return useQuery(
-    'classrooms',
-    () =>
-      axios
-        .get<GetClassroomsResponse>('classroom/list')
-        .then((res) => res.data),
-    { enabled: false }
-  );
+  return useQuery('classrooms', getClassrooms, { enabled: false });
 };
 
 export default useClassrooms;

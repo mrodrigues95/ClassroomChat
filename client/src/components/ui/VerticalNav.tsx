@@ -25,6 +25,7 @@ export const VerticalNavItem = forwardRef<HTMLButtonElement, Props>(
       selected = location.pathname === toLocation.pathname;
     }
 
+    // TODO: These styles should be moved to the LinkOrButton component.
     return (
       <LinkOrButton
         to={to}

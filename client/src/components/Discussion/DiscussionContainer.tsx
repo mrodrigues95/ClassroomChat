@@ -1,18 +1,40 @@
 import React from 'react';
-import Container, { ContainerHeader } from '../ui/Container';
+import { QueryObserverResult } from 'react-query';
 import { ContainerBody } from './../ui/Container';
+import Container, { ContainerHeader } from '../ui/Container';
 import ActionsMenu from './ActionsMenu';
 import DiscussionMembers from './DiscussionMembers';
+import { GetDiscussionResponse } from '../../data/queries/useDiscussion';
+import Spinner from '../ui/Spinner';
+import Error from '../ui/Error';
 
 type Props = {
-  title?: string;
+  discussionQuery: QueryObserverResult<GetDiscussionResponse, unknown>;
   children: React.ReactNode;
 };
 
-const DiscussionContainer = ({ title, children }: Props) => {
+const DiscussionContainer = ({ discussionQuery, children }: Props) => {
+  if (discussionQuery.isLoading) {
+    return (
+      <Container>
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner />
+        </div>
+      </Container>
+    );
+  }
+
+  if (discussionQuery.isError) {
+    return (
+      <Container>
+        <Error message="Sorry, we can't load this discussion right now." />
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <ContainerHeader title={title}>
+      <ContainerHeader title={discussionQuery.data?.name}>
         <DiscussionMembers />
         <ActionsMenu />
       </ContainerHeader>

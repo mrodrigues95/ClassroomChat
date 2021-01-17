@@ -1,4 +1,4 @@
-﻿using Application.Invites;
+﻿using Application.Common.Dtos;
 using Application.Invites.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

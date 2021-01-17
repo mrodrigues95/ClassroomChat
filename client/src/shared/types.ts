@@ -23,3 +23,10 @@ export type Classroom = {
   discussions?: Discussion[];
   discussionsCount: number;
 };
+
+export type Message = {
+  id: number;
+  body: string;
+  createdAt: Date;
+  createdBy: string;
+};

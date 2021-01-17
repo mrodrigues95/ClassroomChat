@@ -23,17 +23,9 @@ namespace Application.Classrooms.Discussions {
         }
 
         public async Task<DiscussionDto> Handle(GetDiscussionDetailQuery request, CancellationToken cancellationToken) {
-            // Get the discussion.
-            var discussion = await _context.Discussions
-                .FindAsync(request.Id);
-
-            // No discussion was found with the given id.
-            if (discussion == null)
-                throw new RestException(HttpStatusCode.NotFound, new { Discussion = "Not found." });
-
-            var discussionToReturn = _mapper.Map<Discussion, DiscussionDto>(discussion);
-
-            return discussionToReturn;
+            var discussion = await _context.Discussions.FindAsync(request.Id);
+            if (discussion == null) throw new RestException(HttpStatusCode.NotFound, new { Discussion = "Not found." });
+            return _mapper.Map<Discussion, DiscussionDto>(discussion);
         }
     }
 }

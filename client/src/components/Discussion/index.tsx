@@ -5,14 +5,14 @@ import {
   HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import Message from '../ui/messages/Message';
 import MessageContainer from '../ui/messages/MessageContainer';
-import MessageDivider from '../ui/messages/MessageDivider';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
 import { useParams } from 'react-router-dom';
 import useDiscussion from '../../data/queries/useDiscussion';
+import useDiscussionMessages from '../../data/queries/useDiscussionMessages';
 
+// TODO: Move this to a hook once more hubs are created.
 const createHubConnection = async (discussionId: string) => {
   const connection = new HubConnectionBuilder()
     .withUrl('http://localhost:5000/discussionhub')
@@ -46,50 +46,33 @@ const createHubConnection = async (discussionId: string) => {
 
 const Discussion = () => {
   const { uuid: discussionId } = useParams();
-  const { data, isLoading, isError } = useDiscussion(discussionId);
+  const discussionQuery = useDiscussion(discussionId);
+  const discussionMessagesQuery = useDiscussionMessages(discussionId);
+  const [queriesSuccessul, setQueriesSuccessful] = useState(false);
   const [hub, setHub] = useState<HubConnection | null>(null);
 
   useEffect(() => {
-    if (!hub) {
+    // Only setup a hub connection if the queries were successful.
+    if (!hub && queriesSuccessul) {
       createHubConnection(discussionId).then((hub) => setHub(hub));
     }
 
     return () => {
       hub?.stop();
     };
-  }, [discussionId, hub]);
+  }, [discussionId, hub, queriesSuccessul]);
+
+  useEffect(() => {
+    if (discussionQuery.isSuccess && discussionMessagesQuery.isSuccess) {
+      setQueriesSuccessful(true);
+    }
+  }, [discussionQuery, discussionMessagesQuery]);
 
   return (
     <>
       <Sidebar />
-      <DiscussionContainer title="C# Fundamentals">
-        <MessageContainer>
-          <MessageDivider />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-        </MessageContainer>
+      <DiscussionContainer discussionQuery={discussionQuery}>
+        <MessageContainer messageQuery={discussionMessagesQuery} />
       </DiscussionContainer>
     </>
   );

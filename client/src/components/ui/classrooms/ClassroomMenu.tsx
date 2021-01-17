@@ -134,7 +134,7 @@ const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
             <>
               {isLoading ? (
                 <li className="flex items-center justify-center h-8">
-                  <Spinner className="h-5 w-5 mr-2 text-primary-dark" />
+                  <Spinner />
                 </li>
               ) : isError ? (
                 <li className="flex items-center h-8">

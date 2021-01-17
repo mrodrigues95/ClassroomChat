@@ -30,11 +30,11 @@ const Button = ({
     <button
       type="button"
       className={clsx(
-        'relative inline-flex items-center justify-center p-2 rounded-2xl font-bold focus:outline-none transition duration-150 ease-in-out',
+        'relative inline-flex items-center justify-center p-2 rounded-md font-bold focus:outline-none transition duration-150 ease-in-out',
         variantStyles.base,
         props.disabled && 'cursor-not-allowed',
         fullWidth && 'w-full',
-        className
+        className,
       )}
       {...props}
     />

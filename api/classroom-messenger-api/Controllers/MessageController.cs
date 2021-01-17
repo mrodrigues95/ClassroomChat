@@ -1,8 +1,11 @@
-﻿using Application.Messages.Discussions.CreateDiscussionMessage;
+﻿using Application.Common.Dtos;
+using Application.Messages.Discussions.Commands;
+using Application.Messages.Discussions.Queries.GetDiscussionMesagesList;
 using classroom_messenger_api.SignalR;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
@@ -18,10 +21,9 @@ namespace classroom_messenger_api.Controllers {
         }
 
         // GET api/message/list/discussion/{id}
-        [HttpGet("/list/discussion/{id}")]
-        public async Task<ActionResult<Unit>> GetAll() {
-            return Ok();
-            //return Ok(await _mediator.Send(new GetClassroomsListQuery()));
+        [HttpGet("list/discussion/{id}")]
+        public async Task<ActionResult<DiscussionMessagesListDto>> GetAllDiscussionMessages([FromRoute] Guid id) {
+            return Ok(await _mediator.Send(new GetDiscussionMessagesListQuery { DiscussionId = id }));
         }
 
         // POST api/message

@@ -27,7 +27,7 @@ namespace classroom_messenger_api.Controllers {
 
         // GET api/classroom/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ClassroomDto>> Get(Guid id) {
+        public async Task<ActionResult<ClassroomDto>> Get([FromRoute] Guid id) {
             return Ok(await _mediator.Send(new GetClassroomDetailQuery { Id = id }));
         }
 

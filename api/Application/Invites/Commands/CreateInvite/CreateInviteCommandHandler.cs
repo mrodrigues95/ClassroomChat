@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Dtos;
+using Application.Common.Interfaces;
 using Application.Errors;
 using Application.Invites.Commands;
 using AutoMapper;

@@ -1,7 +1,7 @@
-﻿using Application.Classrooms.Queries.GetClassroomsList;
-using Application.Common.Dtos;
+﻿using Application.Common.Dtos;
 using Application.Common.Interfaces;
 using Application.Errors;
+using Application.Messages.Discussions.Queries.GetDiscussionMesagesList;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -14,18 +14,17 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Classrooms {
-
+namespace Application.Messages.Discussions.Queries.GetDiscussionMessagesList {
     /// <summary>
-    /// Gets a list of classrooms that the user is part of.
+    /// Gets a list of messages that belong to a specific discussion.
     /// </summary>
-    public class GetClassroomsListQueryHandler : IRequestHandler<GetClassroomsListQuery, ClassroomsListDto> {
+    public class GetDiscussionMessagesListQueryHandler : IRequestHandler<GetDiscussionMessagesListQuery, DiscussionMessagesListDto> {
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserAccessor _userAccessor;
 
-        public GetClassroomsListQueryHandler(ApplicationContext context, IMapper mapper, 
+        public GetDiscussionMessagesListQueryHandler(ApplicationContext context, IMapper mapper,
             UserManager<ApplicationUser> userManager, IUserAccessor userAccessor) {
             _context = context;
             _mapper = mapper;
@@ -33,19 +32,18 @@ namespace Application.Classrooms {
             _userAccessor = userAccessor;
         }
 
-        public async Task<ClassroomsListDto> Handle(GetClassroomsListQuery request, CancellationToken cancellationToken) {
+        public async Task<DiscussionMessagesListDto> Handle(GetDiscussionMessagesListQuery request, CancellationToken cancellationToken) {
             var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
             if (user == null) throw new RestException(HttpStatusCode.Unauthorized, new { User = "Not found." });
 
-            var queryable = _context.Classrooms.AsQueryable();
-            var classrooms = await queryable
-                .Where(x => x.ApplicationUserClassrooms
-                    .Any(uc => uc.ApplicationUserId == user.Id))
+            var queryable = _context.Messages.AsQueryable();
+            var discussionMessages = await queryable
+                .Where(x => x.Discussion.Id == request.DiscussionId)
                 .ToListAsync();
 
-            return new ClassroomsListDto {
-                Classrooms = _mapper.Map<List<Classroom>, List<ClassroomDto>>(classrooms),
-                ClassroomsCount = classrooms.Count
+            return new DiscussionMessagesListDto {
+                Discussion = _mapper.Map<Discussion, DiscussionDto>(discussionMessages.First().Discussion),
+                Messages = _mapper.Map<List<Message>, List<DiscussionMessageDto>>(discussionMessages)
             };
         }
     }
