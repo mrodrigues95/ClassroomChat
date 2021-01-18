@@ -11,7 +11,6 @@ type Props = {
   messageQuery: QueryObserverResult<GetDiscussionMessagesResponse, unknown>;
 };
 
-// TODO: Clicking 'Try Again' on error should attempt to refetch the query.
 const MessageContainer = ({ messageQuery }: Props) => {
   return (
     <div className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md">

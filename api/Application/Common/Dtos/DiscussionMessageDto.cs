@@ -10,7 +10,6 @@ namespace Application.Common.Dtos {
     }
 
     public class DiscussionMessagesListDto {
-        public DiscussionDto Discussion { get; set; }
         public ICollection<DiscussionMessageDto> Messages { get; set; }
     }
 }

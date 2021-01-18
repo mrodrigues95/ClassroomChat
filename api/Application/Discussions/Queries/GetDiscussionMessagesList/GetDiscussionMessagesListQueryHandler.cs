@@ -1,7 +1,6 @@
 ﻿using Application.Common.Dtos;
 using Application.Common.Interfaces;
 using Application.Errors;
-using Application.Messages.Discussions.Queries.GetDiscussionMesagesList;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -14,7 +13,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Messages.Discussions.Queries.GetDiscussionMessagesList {
+namespace Application.Discussions.Queries.GetDiscussionMessagesList {
     /// <summary>
     /// Gets a list of messages that belong to a specific discussion.
     /// </summary>
@@ -42,7 +41,6 @@ namespace Application.Messages.Discussions.Queries.GetDiscussionMessagesList {
                 .ToListAsync();
 
             return new DiscussionMessagesListDto {
-                Discussion = _mapper.Map<Discussion, DiscussionDto>(discussionMessages.First().Discussion),
                 Messages = _mapper.Map<List<Message>, List<DiscussionMessageDto>>(discussionMessages)
             };
         }

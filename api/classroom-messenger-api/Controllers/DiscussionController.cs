@@ -1,9 +1,13 @@
 ﻿using Application.Common.Dtos;
 using Application.Discussions.Commands;
+using Application.Discussions.Commands.CreateDiscussionMessage;
 using Application.Discussions.Queries.GetDiscussionDetail;
+using Application.Discussions.Queries.GetDiscussionMessagesList;
+using classroom_messenger_api.SignalR;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
@@ -12,9 +16,11 @@ namespace classroom_messenger_api.Controllers {
     [ApiController]
     public class DiscussionController : ControllerBase {
         private readonly IMediator _mediator;
+        private readonly IHubContext<DiscussionHub> _hub;
 
-        public DiscussionController(IMediator mediator) {
+        public DiscussionController(IMediator mediator, IHubContext<DiscussionHub> hub) {
             _mediator = mediator;
+            _hub = hub;
         }
 
         // GET api/discussion/{id}
@@ -28,6 +34,20 @@ namespace classroom_messenger_api.Controllers {
         [HttpPost]
         public async Task<ActionResult<Unit>> Create([FromBody] CreateDiscussionCommand command) {
             await _mediator.Send(command);
+            return NoContent();
+        }
+
+        // GET api/discussion/{id}/message/list
+        [HttpGet("{id}/message/list")]
+        public async Task<ActionResult<DiscussionMessagesListDto>> GetAllDiscussionMessages([FromRoute] Guid id) {
+            return Ok(await _mediator.Send(new GetDiscussionMessagesListQuery { DiscussionId = id }));
+        }
+
+        // POST api/discussion/{id}/message
+        [HttpPost("{id}/message")]
+        public async Task<ActionResult<Unit>> CreateDiscussionMessage([FromBody] CreateDiscussionMessageCommand command) {
+            var message = await _mediator.Send(command);
+            await _hub.Clients.Group(command.DiscussionId.ToString()).SendAsync("NewMessage", message);
             return NoContent();
         }
     }

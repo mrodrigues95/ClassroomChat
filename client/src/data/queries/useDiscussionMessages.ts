@@ -10,7 +10,7 @@ export type GetDiscussionMessagesResponse = {
 const getDiscussionMessagesById = async (discussionId: string) => {
   return await axios
     .get<GetDiscussionMessagesResponse>(
-      `message/list/discussion/${discussionId}`
+      `discussion/${discussionId}/message/list`
     )
     .then((res) => res.data);
 };

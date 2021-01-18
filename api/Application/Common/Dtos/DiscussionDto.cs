@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Application.Common.Dtos {
     public class DiscussionDto {

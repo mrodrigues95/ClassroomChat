@@ -10,7 +10,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Messages.Discussions.Commands {
+namespace Application.Discussions.Commands.CreateDiscussionMessage {
     /// <summary>
     /// Creates a new discussion message.
     /// </summary>
