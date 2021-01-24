@@ -47,7 +47,7 @@ namespace classroom_messenger_api.Controllers {
         [HttpPost("{id}/message")]
         public async Task<ActionResult<Unit>> CreateDiscussionMessage([FromBody] CreateDiscussionMessageCommand command) {
             var message = await _mediator.Send(command);
-            await _hub.Clients.Group(command.DiscussionId.ToString()).SendAsync("NewMessage", message);
+            await _hub.Clients.Group(command.DiscussionId.ToString()).SendAsync("ReceiveMessage", message);
             return NoContent();
         }
     }

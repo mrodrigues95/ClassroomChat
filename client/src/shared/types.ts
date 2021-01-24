@@ -24,9 +24,19 @@ export type Classroom = {
   discussionsCount: number;
 };
 
+export type Classrooms = {
+  classrooms: Classroom[];
+  classroomsCount: number;
+};
+
 export type Message = {
   id: number;
   body: string;
   createdAt: Date;
   createdBy: string;
+};
+
+export type DiscussionMessages = {
+  discussionId?: number;
+  messages: Message[];
 };

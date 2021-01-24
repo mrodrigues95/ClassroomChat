@@ -17,7 +17,7 @@ const Message = ({ message, lastMessage = false }: Props) => {
       return `Yesterday at ${format(new Date(date), 'p')}`;
     }
     return format(new Date(date), 'MMM d, yyyy');
-  }, [message.createdAt]);
+  }, [message]);
 
   return (
     <div className={clsx('flex items-start', lastMessage && 'pb-2')}>

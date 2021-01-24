@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   EmojiHappyIcon,
@@ -6,10 +7,43 @@ import {
   ChevronIcon,
 } from '../../../shared/assets/icons';
 import TextArea from './../TextArea';
+import { DiscussionContext } from '../../Discussion';
+import {
+  formatMessage,
+  isEmpty,
+} from './../../../shared/utils/stringValidation';
 
 const MessageBox = () => {
+  const { uuid } = useParams();
+  const location = useLocation();
+  const discussionContext = useContext(DiscussionContext)!;
   const [message, setMessage] = useState('');
   const [focused, setFocused] = useState(false);
+
+  const discussion = location.pathname.includes(`/discussion/${uuid}`);
+
+  const handleNewMessage = () => {
+    if (discussion && !isEmpty(message)) {
+      discussionContext.handleNewDiscussionMessage({
+        discussionId: uuid,
+        body: formatMessage(message),
+      });
+      setMessage('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      handleNewMessage();
+    }
+  };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // If a user wants to enter a new line, they must use SHIFT+ENTER.
+    if (e.target.value !== '\n') {
+      setMessage(e.target.value);
+    }
+  };
 
   return (
     <div className="z-10 px-3 pb-3 bg-white">
@@ -31,9 +65,10 @@ const MessageBox = () => {
             placeholder="Message..."
             value={message}
             aria-label="Enter message"
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => handleOnChange(e)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
+            onKeyPress={(e) => handleKeyPress(e)}
           />
         </div>
         <div className="flex items-center ml-8">
@@ -48,6 +83,7 @@ const MessageBox = () => {
             type="button"
             className="ml-4 p-2 rounded-full bg-primary shadow-lg text-white focus:outline-none hover:bg-primary-light active:bg-primary-dark"
             aria-label="Send message"
+            onClick={() => handleNewMessage()}
           >
             <ChevronIcon className="h-5 w-5 text-white transform rotate-180" />
           </button>

@@ -1,15 +1,10 @@
 import { useQuery } from 'react-query';
 import { axios } from '../../shared/hooks/auth/useToken';
-
-export type GetDiscussionResponse = {
-  id: number;
-  classroomId: number;
-  name: string;
-};
+import { Discussion } from '../../shared/types';
 
 const getDiscussionById = async (discussionId: string) => {
   return await axios
-    .get<GetDiscussionResponse>(`discussion/${discussionId}`)
+    .get<Discussion>(`discussion/${discussionId}`)
     .then((res) => res.data);
 };
 

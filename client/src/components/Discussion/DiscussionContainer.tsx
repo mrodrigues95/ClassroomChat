@@ -4,12 +4,12 @@ import { ContainerBody } from './../ui/Container';
 import Container, { ContainerHeader } from '../ui/Container';
 import ActionsMenu from './ActionsMenu';
 import DiscussionMembers from './DiscussionMembers';
-import { GetDiscussionResponse } from '../../data/queries/useDiscussion';
 import Spinner from '../ui/Spinner';
 import Error from '../ui/Error';
+import { Discussion } from '../../shared/types';
 
 type Props = {
-  discussionQuery: QueryObserverResult<GetDiscussionResponse, unknown>;
+  discussionQuery: QueryObserverResult<Discussion, unknown>;
   children: React.ReactNode;
 };
 
@@ -27,7 +27,7 @@ const DiscussionContainer = ({ discussionQuery, children }: Props) => {
   if (discussionQuery.isError) {
     return (
       <Container>
-        <Error message="Sorry, we can't load this discussion right now." />
+        <Error message="Sorry, we can't load this discussion right now" />
       </Container>
     );
   }
