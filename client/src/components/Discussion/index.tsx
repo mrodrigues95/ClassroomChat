@@ -1,17 +1,5 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  HubConnectionState,
-  LogLevel,
-} from '@microsoft/signalr';
 import MessageContainer from '../ui/messages/MessageContainer';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
@@ -20,44 +8,8 @@ import useDiscussionMessages from '../../data/queries/useDiscussionMessages';
 import useCreateDiscussionMessage, {
   PostDiscussionMessageRequest,
 } from '../../data/mutations/useCreateDiscussionMessage';
-import { AuthContext } from '../../shared/hooks/auth/useAuth';
-import { Message, User } from '../../shared/types';
-
-// TODO: Move this to a hook.
-const createHubConnection = async (discussionId: string, user: User) => {
-  const connection = new HubConnectionBuilder()
-    .withUrl('http://localhost:5000/discussionhub')
-    .configureLogging(LogLevel.Information)
-    .build();
-
-  connection.on('ConnectionSuccess', (message: string) => {
-    console.log(message);
-  });
-
-  connection.on('JoinedDiscussion', (message: string) => {
-    console.log(message);
-  });
-
-  connection.on('ReceiveMessage', (message: string) => {
-    console.log(message);
-  });
-
-  try {
-    await connection.start();
-  } catch (e) {
-    console.error(e);
-  }
-
-  if (connection.state === HubConnectionState.Connected) {
-    connection
-      .invoke('SubscribeToDiscussion', discussionId, user.name)
-      .catch((e: Error) => {
-        return console.error(e);
-      });
-  }
-
-  return connection;
-};
+import { Message } from '../../shared/types';
+import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 
 type DiscussionContextType = {
   handleNewDiscussionMessage: (
@@ -70,32 +22,19 @@ export const DiscussionContext = createContext<DiscussionContextType | null>(
 );
 
 const Discussion = () => {
-  const { user } = useContext(AuthContext)!;
   const { uuid: discussionId } = useParams();
   const discussionQuery = useDiscussion(discussionId);
   const messagesQuery = useDiscussionMessages(discussionId);
   const createDiscussionMessage = useCreateDiscussionMessage();
-  const [queriesSuccessul, setQueriesSuccessful] = useState(false);
-  const [hub, setHub] = useState<HubConnection | null>(null);
   const [messages, setMessages] = useState<Message[] | null>(null);
-
-  useEffect(() => {
-    // Only setup a hub connection if the queries were successful.
-    if (!hub && queriesSuccessul) {
-      createHubConnection(discussionId, user!).then((hub) => setHub(hub));
-    }
-
-    return () => {
-      hub?.stop();
-    };
-  }, [discussionId, hub, queriesSuccessul, user]);
+  const { createHub } = useDiscussionHub(discussionId, { enabled: false });
 
   useEffect(() => {
     if (discussionQuery.isSuccess && messagesQuery.isSuccess) {
-      setQueriesSuccessful(true);
+      createHub();
       setMessages(messagesQuery.data.messages);
     }
-  }, [discussionQuery, messagesQuery]);
+  }, [discussionQuery, messagesQuery, createHub]);
 
   const handleNewDiscussionMessage = useCallback(
     (newMessage: PostDiscussionMessageRequest) => {
