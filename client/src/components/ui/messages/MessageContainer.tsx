@@ -28,7 +28,7 @@ const MessageContainer = ({
     });
   }, [messages]);
 
-  // Group the messages by createdAt dates so we can separate them in the message box.
+  // Group the messages by createdAt dates so they can be separated in the message box.
   const groupedMessages: GroupedMessagesMap | null = useMemo(() => {
     if (!Array.isArray(messages) || !messages.length) return null;
     return (

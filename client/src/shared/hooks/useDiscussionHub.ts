@@ -1,23 +1,33 @@
-import { useMemo, useContext, useEffect } from 'react';
+import { useMemo, useEffect, useCallback, useState } from 'react';
 import { HubConnectionState } from '@microsoft/signalr';
-import useHub, { HubOptions, HubActionEventMap } from './useHub';
+import useHub, { HubOptions, HubActionEventMap, HubResponse } from './useHub';
 import { HubConnectionURL } from '../constants/common';
-import { AuthContext } from './auth/useAuth';
+import { PostDiscussionMessageRequest } from '../../data/mutations/useCreateDiscussionMessage';
+import { Message } from '../types';
 
 const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
-  const { user } = useContext(AuthContext)!;
+  const [receivedHubMessages, setReceivedHubMessages] = useState<Message[]>([]);
 
-  const connectionSuccess = (message: string) => console.log(message);
-  const joinedDiscussion = (message: string) => console.log(message);
-  const receiveMessage = (message: string) => console.log(message);
+  // TODO: Do something with these responses or just remove them.
+  const connectionSuccess = (message: HubResponse) => console.log(message);
+  const joinDiscussion = (message: HubResponse) => console.log(message);
+  const leaveDiscussion = (message: HubResponse) => console.log(message);
+
+  const receiveMessage = useCallback((receivedMessage: HubResponse) => {
+    setReceivedHubMessages((messages) => [
+      ...messages,
+      receivedMessage as Message,
+    ]);
+  }, []);
 
   const discussionEventMap: HubActionEventMap = useMemo(() => {
     const map = new Map() as HubActionEventMap;
     map.set('ConnectionSuccess', connectionSuccess);
-    map.set('JoinedDiscussion', joinedDiscussion);
+    map.set('JoinDiscussion', joinDiscussion);
+    map.set('LeaveDiscussion', leaveDiscussion);
     map.set('ReceiveMessage', receiveMessage);
     return map;
-  }, []);
+  }, [receiveMessage]);
 
   const { hub, hubState, createHub } = useHub(
     HubConnectionURL.DISUCUSSION_HUB,
@@ -25,15 +35,44 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     opts
   );
 
-  useEffect(() => {
-    if (hub?.state === HubConnectionState.Connected) {
-      hub
-        .invoke('SubscribeToDiscussion', discussionId, user?.name)
-        .catch((err: Error) => console.error(err));
-    }
-  }, [hub, hubState, discussionId, user]);
+  const isConnected = hubState === HubConnectionState.Connected ? true : false;
 
-  return { hubState, createHub };
+  const sendMessage = useCallback(
+    async (newMessage: PostDiscussionMessageRequest) => {
+      try {
+        if (!isConnected) {
+          throw new Error(
+            "Cannot invoke provided method - hub isn't connected."
+          );
+        }
+        await hub?.invoke('SendMessage', newMessage);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [hub, isConnected]
+  );
+
+  const subscribeToDiscussion = useCallback(async () => {
+    try {
+      if (!isConnected) {
+        throw new Error("Cannot invoke provided method - hub isn't connected.");
+      }
+      await hub?.invoke('SubscribeToDiscussion', discussionId);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [hub, discussionId, isConnected]);
+
+  const invoke = {
+    sendMessage: sendMessage,
+  };
+
+  useEffect(() => {
+    if (isConnected) subscribeToDiscussion();
+  }, [isConnected, subscribeToDiscussion]);
+
+  return { hubState, createHub, invoke, receivedHubMessages };
 };
 
 export default useDiscussionHub;

@@ -5,12 +5,14 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  MutableRefObject,
 } from 'react';
 import { User, UserBase } from '../../types';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 import { AuthEvent } from '../../constants/events';
 
 type AuthContextType = {
+  jwt: MutableRefObject<string | undefined>;
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
   register: (userToRegister: UserBase) => Promise<void>;
@@ -42,7 +44,7 @@ const useAuth = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { setToken, clearToken, isAuthenticated } = useToken(
+  const { jwt, setToken, clearToken, isAuthenticated } = useToken(
     onTokenInvalid,
     refreshToken
   );
@@ -106,6 +108,7 @@ const useAuth = () => {
   );
 
   return {
+    jwt,
     user,
     setUser,
     register,

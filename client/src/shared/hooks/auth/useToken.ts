@@ -20,6 +20,7 @@ type TokenResponse = {
 
 const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
   const jwt = useRef<string>();
+
   const { clearAutomaticTokenRefresh, setTokenExpiration } = useTokenExpiration(
     onRefreshRequired
   );
@@ -44,7 +45,6 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
       if (shouldClearRefreshTokenCookie) {
         cookie.remove('refresh_token', { domain: 'localhost' });
       }
-
       jwt.current = '';
       clearAutomaticTokenRefresh();
     },
@@ -74,7 +74,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
     configure({ axios });
   }, [clearToken, onTokenInvalid]);
 
-  return { clearToken, setToken, isAuthenticated };
+  return { jwt, clearToken, setToken, isAuthenticated };
 };
 
 export default useToken;

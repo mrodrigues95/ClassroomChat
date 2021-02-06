@@ -1,6 +1,5 @@
 ﻿using Application.Common.Dtos;
 using Application.Discussions.Commands;
-using Application.Discussions.Commands.CreateDiscussionMessage;
 using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Discussions.Queries.GetDiscussionMessagesList;
 using classroom_messenger_api.SignalR;
@@ -41,14 +40,6 @@ namespace classroom_messenger_api.Controllers {
         [HttpGet("{id}/message/list")]
         public async Task<ActionResult<DiscussionMessagesListDto>> GetAllDiscussionMessages([FromRoute] Guid id) {
             return Ok(await _mediator.Send(new GetDiscussionMessagesListQuery { DiscussionId = id }));
-        }
-
-        // POST api/discussion/{id}/message
-        [HttpPost("{id}/message")]
-        public async Task<ActionResult<Unit>> CreateDiscussionMessage([FromBody] CreateDiscussionMessageCommand command) {
-            var message = await _mediator.Send(command);
-            await _hub.Clients.Group(command.DiscussionId.ToString()).SendAsync("ReceiveMessage", message);
-            return NoContent();
         }
     }
 }

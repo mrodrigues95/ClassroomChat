@@ -5,9 +5,7 @@ import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
 import useDiscussion from '../../data/queries/useDiscussion';
 import useDiscussionMessages from '../../data/queries/useDiscussionMessages';
-import useCreateDiscussionMessage, {
-  PostDiscussionMessageRequest,
-} from '../../data/mutations/useCreateDiscussionMessage';
+import { PostDiscussionMessageRequest } from '../../data/mutations/useCreateDiscussionMessage';
 import { Message } from '../../shared/types';
 import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 
@@ -25,22 +23,35 @@ const Discussion = () => {
   const { uuid: discussionId } = useParams();
   const discussionQuery = useDiscussion(discussionId);
   const messagesQuery = useDiscussionMessages(discussionId);
-  const createDiscussionMessage = useCreateDiscussionMessage();
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  const { createHub } = useDiscussionHub(discussionId, { enabled: false });
+  const { createHub, invoke, receivedHubMessages } = useDiscussionHub(
+    discussionId,
+    { enabled: false }
+  );
+
+  useEffect(() => {
+    if (receivedHubMessages.length) {
+      setMessages((messages) => [...messages, ...receivedHubMessages]);
+    }
+  }, [receivedHubMessages]);
 
   useEffect(() => {
     if (discussionQuery.isSuccess && messagesQuery.isSuccess) {
-      createHub();
       setMessages(messagesQuery.data.messages);
+      setDataLoaded(true);
     }
-  }, [discussionQuery, messagesQuery, createHub]);
+  }, [discussionQuery, messagesQuery]);
+
+  useEffect(() => {
+    if (dataLoaded) createHub();
+  }, [dataLoaded, createHub]);
 
   const handleNewDiscussionMessage = useCallback(
     (newMessage: PostDiscussionMessageRequest) => {
-      createDiscussionMessage.mutate(newMessage);
+      invoke.sendMessage(newMessage).catch((err) => console.log(err));
     },
-    [createDiscussionMessage]
+    [invoke]
   );
 
   return (

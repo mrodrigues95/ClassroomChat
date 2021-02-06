@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
   HubConnection,
   HubConnectionBuilder,
@@ -8,12 +8,16 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { HubConnectionURL } from '../constants/common';
+import { AuthContext } from './auth/useAuth';
+import { Message } from '../types';
+
+export type HubResponse = string | Message;
 
 export type HubOptions = {
   enabled?: boolean;
 };
 
-export type HubActionEventMap = Map<string, (message: string) => void>;
+export type HubActionEventMap = Map<string, (message: HubResponse) => void>;
 
 type Hub = {
   hub: HubConnection | null;
@@ -26,6 +30,7 @@ const useHub = (
   actionEventMap: HubActionEventMap,
   opts?: HubOptions
 ): Hub => {
+  const { jwt } = useContext(AuthContext)!;
   const [hub, setHub] = useState<HubConnection | null>(null);
   const [hubState, setHubState] = useState<HubConnectionState>(
     HubConnectionState.Disconnected
@@ -64,12 +69,12 @@ const useHub = (
   }, []);
 
   const createHub = useCallback(async () => {
-    console.log('Creating hub...');
     const options: IHttpConnectionOptions = {
+      accessTokenFactory: () => jwt.current!,
       logMessageContent: true,
-      logger: LogLevel.Warning,
     };
 
+    console.log('Creating hub...');
     const connection = new HubConnectionBuilder()
       .withUrl(hubUrl, options)
       .withAutomaticReconnect()
@@ -108,14 +113,14 @@ const useHub = (
         setTimeout(() => startHub(connection), 5000);
       } else {
         setHub(hub);
+        setHubState(hub.state);
       }
     });
-  }, [startHub, hubUrl, actionEventMap]);
+  }, [startHub, hubUrl, actionEventMap, jwt]);
 
   useEffect(() => {
     return () => {
       hub?.stop();
-      setHubState(HubConnectionState.Disconnected);
     };
   }, [hub]);
 
