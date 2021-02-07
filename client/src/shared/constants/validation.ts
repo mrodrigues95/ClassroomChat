@@ -9,5 +9,5 @@ export enum RegistrationError {
 }
 
 export enum FormError {
-  FIELD_REQUIRED= '- This field is required.',
+  FIELD_REQUIRED = '- This field is required.',
 }

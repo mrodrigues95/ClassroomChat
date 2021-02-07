@@ -5,7 +5,7 @@ import MessageDivider from './MessageDivider';
 import Spinner from '../Spinner';
 import Message from './Message';
 import Error from './../Error';
-import * as types from '../../../shared/types';
+import * as types from '../../../shared/types/api';
 
 type GroupedMessagesMap = Map<string, types.Message[]>;
 

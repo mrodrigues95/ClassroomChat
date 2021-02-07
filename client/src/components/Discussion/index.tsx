@@ -6,7 +6,7 @@ import DiscussionContainer from './DiscussionContainer';
 import useDiscussion from '../../data/queries/useDiscussion';
 import useDiscussionMessages from '../../data/queries/useDiscussionMessages';
 import { PostDiscussionMessageRequest } from '../../data/mutations/useCreateDiscussionMessage';
-import { Message } from '../../shared/types';
+import { Message } from '../../shared/types/api';
 import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 
 type DiscussionContextType = {
@@ -30,7 +30,11 @@ const Discussion = () => {
     { enabled: false }
   );
 
+  // Everytime a new message is received while connected to the hub,
+  // update the state.
   useEffect(() => {
+    // Receved hub messages will be empty on initial connect. Once new
+    // messages are sent after the user has connected, this will update.
     if (receivedHubMessages.length) {
       setMessages((messages) => [...messages, ...receivedHubMessages]);
     }

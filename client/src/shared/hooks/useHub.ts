@@ -7,21 +7,18 @@ import {
   JsonHubProtocol,
   LogLevel,
 } from '@microsoft/signalr';
-import { HubConnectionURL } from '../constants/common';
 import { AuthContext } from './auth/useAuth';
-import { Message } from '../types';
-
-export type HubResponse = string | Message;
-
-export type HubOptions = {
-  enabled?: boolean;
-};
-
-export type HubActionEventMap = Map<string, (message: HubResponse) => void>;
+import { getHubConnectionState } from '../utils/hubHelper';
+import {
+  HubActionEventMap,
+  HubConnectionURL,
+  HubOptions,
+  HubState,
+} from '../types/hub';
 
 type Hub = {
   hub: HubConnection | null;
-  hubState: HubConnectionState;
+  hubState: HubState;
   createHub: () => Promise<void>;
 };
 
@@ -32,8 +29,8 @@ const useHub = (
 ): Hub => {
   const { jwt } = useContext(AuthContext)!;
   const [hub, setHub] = useState<HubConnection | null>(null);
-  const [hubState, setHubState] = useState<HubConnectionState>(
-    HubConnectionState.Disconnected
+  const [hubState, setHubState] = useState<HubState>(
+    getHubConnectionState(HubConnectionState.Disconnected)
   );
   const [customOpts, setCustomOptions] = useState(opts);
 
@@ -92,7 +89,7 @@ const useHub = (
     connection.onreconnecting((error) => {
       console.assert(connection.state === HubConnectionState.Reconnecting);
       console.warn('Connection lost due to error. Reconnecting...', error);
-      setHubState(HubConnectionState.Reconnecting);
+      setHubState(getHubConnectionState(connection.state));
     });
 
     connection.onreconnected((connectionId) => {
@@ -101,19 +98,17 @@ const useHub = (
         `Connection re-established. Connected with ${connectionId}`,
         connectionId
       );
-      setHubState(HubConnectionState.Connected);
+      setHubState(getHubConnectionState(connection.state));
     });
 
-    actionEventMap.forEach((event, action) => {
-      connection.on(action, event);
-    });
+    actionEventMap.forEach((event, action) => connection.on(action, event));
 
     await startHub(connection).then((hub) => {
       if (!hub) {
         setTimeout(() => startHub(connection), 5000);
       } else {
         setHub(hub);
-        setHubState(hub.state);
+        setHubState(getHubConnectionState(hub.state));
       }
     });
   }, [startHub, hubUrl, actionEventMap, jwt]);
@@ -125,8 +120,7 @@ const useHub = (
   }, [hub]);
 
   useEffect(() => {
-    if (!options?.enabled) return;
-    if (!hub) createHub();
+    if (options?.enabled && !hub) createHub();
   }, [createHub, hub, options]);
 
   return { hub, hubState, createHub };

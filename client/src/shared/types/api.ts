@@ -1,5 +1,3 @@
-export type Direction = 'up' | 'down' | 'left' | 'right';
-
 export type User = {
   id?: string;
   role?: 'student' | 'faculty';

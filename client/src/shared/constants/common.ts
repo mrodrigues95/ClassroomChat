@@ -5,6 +5,4 @@ export enum MEDIA_QUERIES {
   XL = '(min-width: 1280px)',
 }
 
-export enum HubConnectionURL {
-  DISUCUSSION_HUB = 'http://localhost:5000/discussionhub',
-}
+export type Direction = 'up' | 'down' | 'left' | 'right';

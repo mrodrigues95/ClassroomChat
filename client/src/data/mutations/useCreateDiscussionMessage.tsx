@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { AuthContext } from '../../shared/hooks/auth/useAuth';
 import { axios } from '../../shared/hooks/auth/useToken';
-import { DiscussionMessages } from '../../shared/types';
+import { DiscussionMessages } from '../../shared/types/api';
 
 export type PostDiscussionMessageRequest = {
   discussionId: number | string;

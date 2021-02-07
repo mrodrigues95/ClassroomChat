@@ -7,7 +7,7 @@ import {
   SetStateAction,
   MutableRefObject,
 } from 'react';
-import { User, UserBase } from '../../types';
+import { User, UserBase } from '../../types/api';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 import { AuthEvent } from '../../constants/events';
 

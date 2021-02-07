@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { ChevronIcon } from '../../../shared/assets/icons';
-import { Direction } from '../../../shared/types';
+import { Direction } from '../../../shared/constants/common';
 
 type Props = {
   direction?: Direction;

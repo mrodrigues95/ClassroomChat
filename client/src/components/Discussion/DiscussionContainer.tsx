@@ -6,7 +6,7 @@ import ActionsMenu from './ActionsMenu';
 import DiscussionMembers from './DiscussionMembers';
 import Spinner from '../ui/Spinner';
 import Error from '../ui/Error';
-import { Discussion } from '../../shared/types';
+import { Discussion } from '../../shared/types/api';
 
 type Props = {
   discussionQuery: QueryObserverResult<Discussion, unknown>;

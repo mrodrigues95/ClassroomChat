@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { axios } from '../../shared/hooks/auth/useToken';
-import { DiscussionMessages } from '../../shared/types';
+import { DiscussionMessages } from '../../shared/types/api';
 
 const getDiscussionMessagesById = async (discussionId: string) => {
   return await axios
@@ -10,7 +10,7 @@ const getDiscussionMessagesById = async (discussionId: string) => {
 
 const useDiscussionMessages = (discussionId: string) => {
   return useQuery(['discussionMessages', discussionId], () =>
-    getDiscussionMessagesById(discussionId), { refetchOnWindowFocus: false }
+    getDiscussionMessagesById(discussionId)
   );
 };
 

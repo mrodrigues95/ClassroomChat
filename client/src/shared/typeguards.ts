@@ -1,5 +1,5 @@
 import { MenuAction } from '../components/ui/classrooms/ClassroomMenu';
-import { Classroom, Discussion } from './types';
+import { Classroom, Discussion } from './types/api';
 
 export const isClassroom = (obj: any): obj is Classroom =>
   (obj as Classroom)?.discussionsCount !== undefined;

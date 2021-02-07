@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { axios } from '../../shared/hooks/auth/useToken';
-import { Discussion } from '../../shared/types';
+import { Discussion } from '../../shared/types/api';
 
 const getDiscussionById = async (discussionId: string) => {
   return await axios

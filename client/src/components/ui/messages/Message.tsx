@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { differenceInDays, format, formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
-import * as types from '../../../shared/types';
+import * as types from '../../../shared/types/api';
 
 type Props = {
   message: types.Message;

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { mergeRefs, useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Classroom, Discussion } from '../../../shared/types';
+import { Classroom, Discussion } from '../../../shared/types/api';
 import getStateReducer from '../utils/getStateReducer';
 import useClassrooms from '../../../data/queries/useClassrooms';
 import Spinner from '../Spinner';

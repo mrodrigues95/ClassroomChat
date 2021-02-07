@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { Classroom } from '../../shared/types';
+import { Classroom } from '../../shared/types/api';
 import { axios } from '../../shared/hooks/auth/useToken';
 
 type GetClassroomsResponse = {
