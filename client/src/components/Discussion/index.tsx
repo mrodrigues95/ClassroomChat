@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 import MessageContainer from '../ui/messages/MessageContainer';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
@@ -25,9 +26,18 @@ const Discussion = () => {
   const messagesQuery = useDiscussionMessages(discussionId);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  const { createHub, invoke, receivedHubMessages } = useDiscussionHub(
+
+  // const onReconnected = useCallback(
+  //   () => toast.success('Reconnected successfully!'),
+  //   []
+  // );
+
+  const { createHub, hubState, invoke, receivedHubMessages } = useDiscussionHub(
     discussionId,
-    { enabled: false }
+    {
+      enabled: false,
+      // onReconnected: onReconnected,
+    }
   );
 
   // Everytime a new message is received while connected to the hub,
@@ -51,6 +61,18 @@ const Discussion = () => {
     if (dataLoaded) createHub();
   }, [dataLoaded, createHub]);
 
+  useEffect(() => {
+    toast.remove();
+
+    if (hubState.isReconnecting) {
+      toast.loading('Reconnecting...');
+    } else if (hubState.isDisconnected) {
+      toast.error('Error while establishing connection to this discussion.');
+    } else if (hubState.isReconnected) {
+      toast.success('Reconnected!');
+    }
+  }, [hubState]);
+
   const handleNewDiscussionMessage = useCallback(
     (newMessage: PostDiscussionMessageRequest) => {
       invoke.sendMessage(newMessage).catch((err) => console.log(err));
@@ -68,6 +90,7 @@ const Discussion = () => {
           messagesError={messagesQuery.isError}
         />
       </DiscussionContainer>
+      <Toaster toastOptions={{ className: 'font-bold' }} />
     </DiscussionContext.Provider>
   );
 };

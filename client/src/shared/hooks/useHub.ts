@@ -8,13 +8,26 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { AuthContext } from './auth/useAuth';
-import { getHubConnectionState } from '../utils/hubHelper';
 import {
   HubActionEventMap,
   HubConnectionURL,
   HubOptions,
   HubState,
 } from '../types/hub';
+
+const getHubConnectionState = (
+  currentState: HubConnectionState,
+  reconnected = false
+): HubState => {
+  return {
+    isConnected: currentState === HubConnectionState.Connected,
+    isConnecting: currentState === HubConnectionState.Connecting,
+    isReconnecting: currentState === HubConnectionState.Reconnecting,
+    isDisconnected: currentState === HubConnectionState.Disconnected,
+    isDisconnecting: currentState === HubConnectionState.Disconnecting,
+    isReconnected: reconnected,
+  };
+};
 
 type Hub = {
   hub: HubConnection | null;
@@ -30,7 +43,7 @@ const useHub = (
   const { jwt } = useContext(AuthContext)!;
   const [hub, setHub] = useState<HubConnection | null>(null);
   const [hubState, setHubState] = useState<HubState>(
-    getHubConnectionState(HubConnectionState.Disconnected)
+    getHubConnectionState(HubConnectionState.Connecting)
   );
   const [customOpts, setCustomOptions] = useState(opts);
 
@@ -52,6 +65,8 @@ const useHub = (
     return customOpts;
   }, [opts, defaultOpts, customOpts]);
 
+  // console.log(hubState);
+
   const startHub = useCallback(async (connection: HubConnection) => {
     try {
       await connection.start();
@@ -66,14 +81,14 @@ const useHub = (
   }, []);
 
   const createHub = useCallback(async () => {
-    const options: IHttpConnectionOptions = {
+    const httpOptions: IHttpConnectionOptions = {
       accessTokenFactory: () => jwt.current!,
       logMessageContent: true,
     };
 
     console.log('Creating hub...');
     const connection = new HubConnectionBuilder()
-      .withUrl(hubUrl, options)
+      .withUrl(hubUrl, httpOptions)
       .withAutomaticReconnect()
       .withHubProtocol(new JsonHubProtocol())
       .configureLogging(LogLevel.Information)
@@ -98,7 +113,8 @@ const useHub = (
         `Connection re-established. Connected with ${connectionId}`,
         connectionId
       );
-      setHubState(getHubConnectionState(connection.state));
+      // if (options?.onReconnected) options.onReconnected();
+      setHubState(getHubConnectionState(connection.state, true));
     });
 
     actionEventMap.forEach((event, action) => connection.on(action, event));

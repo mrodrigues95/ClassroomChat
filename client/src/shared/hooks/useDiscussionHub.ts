@@ -12,6 +12,8 @@ import {
 
 // TODO: Handle reconnecting/disconnected states.
 // TODO: Handle error conditions (e.g. message not sent, network issues, etc.)
+// Ideas: Show a toast when reconnecting/disconnected. Then, disable the TextArea
+// and show a "Reconnect" bottom on the bottom right of the chat box.
 const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
   const [receivedHubMessages, setReceivedHubMessages] = useState<Message[]>([]);
 
@@ -39,8 +41,6 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     discussionEventMap,
     opts
   );
-
-  // const isConnected = hubState === HubConnectionState.Connected ? true : false;
 
   const sendMessage = useCallback(
     async (newMessage: PostDiscussionMessageRequest) => {
