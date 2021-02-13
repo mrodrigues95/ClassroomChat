@@ -17,11 +17,11 @@ namespace Application.Auth {
     public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, Result<UserAndTokenDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IJwtManager _jwtManager;
+        private readonly ITokenManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
         public RegisterNewUserCommandHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
-            IJwtManager jwtManager, IHttpContextManager httpContextManager) {
+            ITokenManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _jwtManager = jwtManager;

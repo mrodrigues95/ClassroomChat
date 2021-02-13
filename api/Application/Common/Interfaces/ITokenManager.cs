@@ -7,7 +7,7 @@ namespace Application.Common.Interfaces {
     /// Provides a set of helper methods for handling and creating
     /// JSON Web Tokens for client side use.
     /// </summary>
-    public interface IJwtManager {
+    public interface ITokenManager {
         /// <summary>
         /// Generates a JSON Web Token.
         /// </summary>

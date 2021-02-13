@@ -34,7 +34,7 @@ namespace classroom_messenger_api.Controllers {
         [AllowAnonymous]
         [HttpGet("refresh")]
         public async Task<IActionResult> RefreshTokens() {
-            return Ok(await _mediator.Send(new RefreshTokensQuery()));
+            return HandleResult(await _mediator.Send(new RefreshTokensQuery()));
         }
     }
 }

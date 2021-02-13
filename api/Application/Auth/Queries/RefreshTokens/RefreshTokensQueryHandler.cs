@@ -6,7 +6,6 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +13,11 @@ namespace Application.Auth.Queries.RefreshTokens {
     public class RefreshTokensQueryHandler : IRequestHandler<RefreshTokensQuery, Result<UserAndTokenDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IJwtManager _jwtManager;
+        private readonly ITokenManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
         public RefreshTokensQueryHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
-            IJwtManager jwtManager, IHttpContextManager httpContextManager) {
+            ITokenManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _jwtManager = jwtManager;
@@ -75,7 +74,7 @@ namespace Application.Auth.Queries.RefreshTokens {
             _context.RefreshTokens.Add(newRefreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
-            if (!success) throw new Exception("Unable to save new refresh token.");
+            if (!success) return Result<UserAndTokenDto>.Failure("Unable to save new refresh token.", true);
 
             // Set the refresh token cookie.
             _httpContextManager.SetHttpCookieRefreshToken(newRefreshToken);

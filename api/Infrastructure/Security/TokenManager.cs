@@ -10,10 +10,10 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Security {
-    public class JwtManager : IJwtManager {
+    public class TokenManager : ITokenManager {
         private readonly SymmetricSecurityKey _key;
 
-        public JwtManager(IConfiguration config) {
+        public TokenManager(IConfiguration config) {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
@@ -50,11 +50,12 @@ namespace Infrastructure.Security {
             if (string.IsNullOrEmpty(accessTokenString)) return null;
 
             var accessTokenValidationParameters = new TokenValidationParameters {
-                ValidateAudience = false, // We may want to validate the audience and issuer.
+                ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = _key,
-                ValidateLifetime = false
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -66,8 +67,9 @@ namespace Infrastructure.Security {
             // request.
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(
-                SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
+                SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase)) {
                 throw new SecurityTokenException("Invalid access token.");
+            }
 
             return principal;
         }

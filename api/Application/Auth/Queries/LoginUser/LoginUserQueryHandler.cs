@@ -19,11 +19,11 @@ namespace Application.Auth {
         private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IJwtManager _jwtManager;
+        private readonly ITokenManager _jwtManager;
         private readonly IHttpContextManager _httpContextManager;
 
         public LoginUserQueryHandler(ApplicationContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, IJwtManager jwtManager, IHttpContextManager httpContextManager) {
+            SignInManager<ApplicationUser> signInManager, ITokenManager jwtManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
