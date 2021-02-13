@@ -1,10 +1,8 @@
 ﻿using Application.Classrooms.Commands.LeaveClassroom;
+using Application.Common;
 using Application.Common.Interfaces;
-using Application.Errors;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +10,7 @@ namespace Application.Classrooms {
     /// <summary>
     /// Allows a user to leave any classroom they are currently a part of.
     /// </summary>
-    public class LeaveClassroomCommandHandler : IRequestHandler<LeaveClassroomCommand> {
+    public class LeaveClassroomCommandHandler : IRequestHandler<LeaveClassroomCommand, Result<Unit>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
 
@@ -21,13 +19,13 @@ namespace Application.Classrooms {
             _userAccessor = userAccessor;
         }
 
-        public async Task<Unit> Handle(LeaveClassroomCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<Unit>> Handle(LeaveClassroomCommand request, CancellationToken cancellationToken) {
             // Get the classroom.
             var classroom = await _context.Classrooms.FindAsync(request.Id);
 
             // No classroom  was found with the given id.
             if (classroom == null) {
-                throw new RestException(HttpStatusCode.NotFound, new { Classroom = "Could not find classroom." });
+                return Result<Unit>.Failure("Unable to find classroom.");
             }
 
             // Get the currently authorized user.
@@ -38,12 +36,11 @@ namespace Application.Classrooms {
                     x.ApplicationUserId == user.Id);
 
             // They already left the classroom.
-            if (student == null)
-                return Unit.Value;
+            if (student == null) return Result<Unit>.Success(Unit.Value);
 
             // TODO: Implement functionality to hand over admin privileges to another user.
             if (student.IsCreator) {
-                throw new RestException(HttpStatusCode.BadRequest, new { Classroom = "You cannot leave the classroom if you are the creator." });
+                return Result<Unit>.Failure("You cannot leave the classroom if you are the creator.");
             }
 
             // Save changes to the database.
@@ -51,9 +48,9 @@ namespace Application.Classrooms {
             var success = await _context.SaveChangesAsync() > 0;
 
             // Return the final response.
-            if (success) return Unit.Value;
+            if (success) return Result<Unit>.Success(Unit.Value);
 
-            throw new Exception("There was a problem saving changes.");
+            return Result<Unit>.Failure("There was a problem saving changes.");
         }
     }
 }

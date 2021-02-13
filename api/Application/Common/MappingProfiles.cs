@@ -4,8 +4,8 @@ using AutoMapper;
 using Domain.Entities;
 
 namespace Application.Common {
-    public class MappingProfile : Profile {
-        public MappingProfile() {
+    public class MappingProfiles : Profile {
+        public MappingProfiles() {
             CreateMap<Classroom, ClassroomDto>();
             CreateMap<Discussion, DiscussionDto>();
             CreateMap<Message, DiscussionMessageDto>()

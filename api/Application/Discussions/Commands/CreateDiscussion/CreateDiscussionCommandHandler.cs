@@ -1,9 +1,9 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common;
+using Application.Common.Interfaces;
 using Application.Discussions.Commands;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ namespace Application.Classrooms.Discussions {
     /// <summary>
     /// Creates a new discussion channel.
     /// </summary>
-    public class CreateDiscussionCommandHandler : IRequestHandler<CreateDiscussionCommand> {
+    public class CreateDiscussionCommandHandler : IRequestHandler<CreateDiscussionCommand, Result<Unit>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
 
@@ -20,7 +20,7 @@ namespace Application.Classrooms.Discussions {
             _userAccessor = userAccessor;
         }
 
-        public async Task<Unit> Handle(CreateDiscussionCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<Unit>> Handle(CreateDiscussionCommand request, CancellationToken cancellationToken) {
             // Get the currently authorized user.
             var user = await _context.Users.SingleOrDefaultAsync(x =>
                 x.UserName == _userAccessor.GetCurrentUsername());
@@ -42,10 +42,9 @@ namespace Application.Classrooms.Discussions {
             var success = await _context.SaveChangesAsync() > 0;
 
             // Return the final response.
-            if (success)
-                return Unit.Value;
+            if (success) return Result<Unit>.Success(Unit.Value);
 
-            throw new Exception("There was a problem saving changes.");
+            return Result<Unit>.Failure("There was a problem saving changes.");
         }
     }
 }

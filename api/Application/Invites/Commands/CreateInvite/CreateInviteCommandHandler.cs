@@ -1,6 +1,6 @@
-﻿using Application.Common.Dtos;
+﻿using Application.Common;
+using Application.Common.Dtos;
 using Application.Common.Interfaces;
-using Application.Errors;
 using Application.Invites.Commands;
 using AutoMapper;
 using CSharpVitamins;
@@ -8,7 +8,6 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace Application.Invites {
     /// <summary>
     /// Generates a new unique invite link for a given classroom.
     /// </summary>
-    public class CreateInviteCommandHandler : IRequestHandler<CreateInviteCommand, InviteLinkDto> {
+    public class CreateInviteCommandHandler : IRequestHandler<CreateInviteCommand, Result<InviteLinkDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
         private readonly IMapper _mapper;
@@ -27,14 +26,12 @@ namespace Application.Invites {
             _mapper = mapper;
         }
 
-        public async Task<InviteLinkDto> Handle(CreateInviteCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<InviteLinkDto>> Handle(CreateInviteCommand request, CancellationToken cancellationToken) {
             // Get the classroom.
             var classroom = await _context.Classrooms.FindAsync(request.ClassroomId);
 
             // No classroom  was found with the given id.
-            if (classroom == null)
-                throw new RestException(HttpStatusCode.NotFound,
-                    new { Classroom = "Could not find classroom." });
+            if (classroom is null) return Result<InviteLinkDto>.Failure("Unable to find classroom.");
 
             // Get the currently authorized user.
             var user = await _context.Users.SingleOrDefaultAsync(x =>
@@ -55,10 +52,9 @@ namespace Application.Invites {
             // Save changes to the database.
             var success = await _context.SaveChangesAsync() > 0;
 
-            if (success)
-                return linkToReturn;
+            if (success) return Result<InviteLinkDto>.Success(linkToReturn);
 
-            throw new Exception("There was a problem saving changes.");
+            return Result<InviteLinkDto>.Failure("There was a problem saving changes.");
         }
     }
 }

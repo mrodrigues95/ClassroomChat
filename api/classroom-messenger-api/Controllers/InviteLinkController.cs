@@ -1,5 +1,4 @@
-﻿using Application.Common.Dtos;
-using Application.Invites.Commands;
+﻿using Application.Invites.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 namespace classroom_messenger_api.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class InviteLinkController : ControllerBase {
+    public class InviteLinkController : BaseApiController {
         private readonly IMediator _mediator;
 
         public InviteLinkController(IMediator mediator) {
@@ -16,8 +15,8 @@ namespace classroom_messenger_api.Controllers {
 
         // POST api/invitelink
         [HttpPost]
-        public async Task<ActionResult<InviteLinkDto>> Create(CreateInviteCommand command) {
-            return Ok(await _mediator.Send(command));
+        public async Task<IActionResult> Create(CreateInviteCommand command) {
+            return HandleResult(await _mediator.Send(command));
         }
     }
 }

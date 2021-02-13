@@ -1,12 +1,10 @@
-﻿using Application.Common.Dtos;
+﻿using Application.Common;
+using Application.Common.Dtos;
 using Application.Common.Interfaces;
-using Application.Errors;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,10 +23,10 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
 
         public async Task<DiscussionMessageDto> Handle(CreateDiscussionMessageCommand request, CancellationToken cancellationToken) {
             var discussion = await _context.Discussions.FindAsync(request.DiscussionId);
-            if (discussion == null) throw new RestException(HttpStatusCode.NotFound, new { Discussion = "Not found." });
+            if (discussion is null) Result<DiscussionMessageDto>.Failure("Unable to find discussion.");
 
             var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
-            if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
+            if (user is null) Result<DiscussionMessageDto>.Failure("Unable to find user.", true);
 
             var message = new Message {
                 Discussion = discussion,
@@ -39,7 +37,7 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
 
             var success = await _context.SaveChangesAsync() > 0;
 
-            if (!success) throw new Exception("Unable to save new discussion message.");
+            if (!success) Result<DiscussionMessageDto>.Failure("There was a problem saving changes.");
 
             return new DiscussionMessageDto {
                 Body = message.Body,

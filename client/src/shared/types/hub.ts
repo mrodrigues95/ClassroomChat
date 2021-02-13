@@ -1,9 +1,5 @@
 import { Message } from '../types/api';
 
-export enum HubConnectionURL {
-  DISUCUSSION_HUB = 'http://localhost:5000/discussionhub',
-}
-
 export type HubResponse = string | Message;
 
 export type HubOptions = {

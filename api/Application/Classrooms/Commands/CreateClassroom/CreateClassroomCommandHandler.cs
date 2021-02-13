@@ -1,4 +1,5 @@
 ﻿using Application.Classrooms.Commands.CreateClassroom;
+using Application.Common;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
@@ -11,7 +12,7 @@ namespace Application.Classrooms {
     /// <summary>
     /// Creates a new classroom server.
     /// </summary>
-    public class CreateClassroomCommandHandler : IRequestHandler<CreateClassroomCommand> {
+    public class CreateClassroomCommandHandler : IRequestHandler<CreateClassroomCommand, Result<Unit>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
 
@@ -20,7 +21,7 @@ namespace Application.Classrooms {
             _userAccessor = userAccessor;
         }
 
-        public async Task<Unit> Handle(CreateClassroomCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<Unit>> Handle(CreateClassroomCommand request, CancellationToken cancellationToken) {
             var user = await _context.Users.SingleOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetCurrentUsername());
 
@@ -38,7 +39,7 @@ namespace Application.Classrooms {
 
             var success = await _context.SaveChangesAsync() > 0;
 
-            if (success) return Unit.Value;
+            if (success) return Result<Unit>.Success(Unit.Value);
 
             throw new Exception("There was a problem saving changes.");
         }

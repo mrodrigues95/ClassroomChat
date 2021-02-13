@@ -8,12 +8,7 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { AuthContext } from './auth/useAuth';
-import {
-  HubActionEventMap,
-  HubConnectionURL,
-  HubOptions,
-  HubState,
-} from '../types/hub';
+import { HubActionEventMap, HubOptions, HubState } from '../types/hub';
 
 const getHubConnectionState = (
   currentState: HubConnectionState,
@@ -36,7 +31,7 @@ type Hub = {
 };
 
 const useHub = (
-  hubUrl: HubConnectionURL,
+  hubUrl: string,
   actionEventMap: HubActionEventMap,
   opts?: HubOptions
 ): Hub => {
@@ -64,8 +59,6 @@ const useHub = (
 
     return customOpts;
   }, [opts, defaultOpts, customOpts]);
-
-  // console.log(hubState);
 
   const startHub = useCallback(async (connection: HubConnection) => {
     try {
@@ -113,7 +106,6 @@ const useHub = (
         `Connection re-established. Connected with ${connectionId}`,
         connectionId
       );
-      // if (options?.onReconnected) options.onReconnected();
       setHubState(getHubConnectionState(connection.state, true));
     });
 

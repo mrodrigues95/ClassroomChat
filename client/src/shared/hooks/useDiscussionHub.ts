@@ -3,12 +3,7 @@ import useHub from './useHub';
 import { PostDiscussionMessageRequest } from '../../data/mutations/useCreateDiscussionMessage';
 import { Message } from '../types/api';
 import { DiscussionHubEvent } from '../constants/events';
-import {
-  HubActionEventMap,
-  HubConnectionURL,
-  HubOptions,
-  HubResponse,
-} from '../types/hub';
+import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';
 
 // TODO: Handle reconnecting/disconnected states.
 // TODO: Handle error conditions (e.g. message not sent, network issues, etc.)
@@ -37,7 +32,7 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
   }, [onReceiveMessage]);
 
   const { hub, hubState, createHub } = useHub(
-    HubConnectionURL.DISUCUSSION_HUB,
+    process.env.REACT_APP_DISCUSSION_HUB_URL!,
     discussionEventMap,
     opts
   );

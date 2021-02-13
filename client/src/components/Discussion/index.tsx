@@ -26,17 +26,10 @@ const Discussion = () => {
   const messagesQuery = useDiscussionMessages(discussionId);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
-
-  // const onReconnected = useCallback(
-  //   () => toast.success('Reconnected successfully!'),
-  //   []
-  // );
-
   const { createHub, hubState, invoke, receivedHubMessages } = useDiscussionHub(
     discussionId,
     {
       enabled: false,
-      // onReconnected: onReconnected,
     }
   );
 
@@ -67,7 +60,7 @@ const Discussion = () => {
     if (hubState.isReconnecting) {
       toast.loading('Reconnecting...');
     } else if (hubState.isDisconnected) {
-      toast.error('Error while establishing connection to this discussion.');
+      toast.error('Error while establishing a connection to this discussion.');
     } else if (hubState.isReconnected) {
       toast.success('Reconnected!');
     }

@@ -1,14 +1,12 @@
 ﻿using Application.Auth.Commands.RegisterNewUser;
+using Application.Common;
 using Application.Common.Dtos;
 using Application.Common.Interfaces;
-using Application.Errors;
 using Application.User;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +14,7 @@ namespace Application.Auth {
     /// <summary>
     /// Registers a new user with Identity.
     /// </summary>
-    public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, UserAndTokenDto> {
+    public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, Result<UserAndTokenDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtManager _jwtManager;
@@ -30,12 +28,16 @@ namespace Application.Auth {
             _httpContextManager = httpContextManager;
         }
 
-        public async Task<UserAndTokenDto> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken) {
-            if (await _context.Users.AnyAsync(x => x.Email == request.Email))
-                throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists." });
+        public async Task<Result<UserAndTokenDto>> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken) {
+            if (await _context.Users.AnyAsync(x => x.Email == request.Email)) {
+                return Result<UserAndTokenDto>.Failure("Email already exists.");
+            }
 
             var newUser = await CreateNewUser(request);
+            if (newUser is null) return Result<UserAndTokenDto>.Failure("Unable to create new user.");
+
             var refreshToken = await CreateAndSaveRefreshToken(newUser);
+            if (refreshToken is null) return Result<UserAndTokenDto>.Failure("Unable to save new refresh token.");
 
             return FinishRegister(newUser, refreshToken);
         }
@@ -48,7 +50,7 @@ namespace Application.Auth {
             };
 
             var createUser = await _userManager.CreateAsync(newUser, request.Password);
-            if (!createUser.Succeeded) throw new Exception("Unable to create new user.");
+            if (!createUser.Succeeded) return null;
 
             return newUser;
         }
@@ -61,12 +63,12 @@ namespace Application.Auth {
             _context.RefreshTokens.Add(refreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
-            if (!success) throw new Exception("Unable to save new refresh token.");
+            if (!success) return null;
 
             return refreshToken;
         }
 
-        private UserAndTokenDto FinishRegister(ApplicationUser user, RefreshToken refreshToken) {
+        private Result<UserAndTokenDto> FinishRegister(ApplicationUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken);
             var accessToken = _jwtManager.GenerateJWT(user);
 
@@ -75,11 +77,13 @@ namespace Application.Auth {
                 Email = user.Email
             };
 
-            return new UserAndTokenDto {
+            var userAndTokenDto = new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
                 ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
             };
+
+            return Result<UserAndTokenDto>.Success(userAndTokenDto);
         }
     }
 }

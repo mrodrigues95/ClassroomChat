@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.SignalR {
-    // TODO: This should be strongly typed.
     public class DiscussionHub : Hub<IDiscussionHub> {
         private readonly IMediator _mediator;
         private readonly IUserAccessor _userAccessor;

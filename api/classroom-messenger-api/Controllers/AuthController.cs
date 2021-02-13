@@ -1,7 +1,6 @@
 ﻿using Application.Auth.Commands.RegisterNewUser;
 using Application.Auth.Queries.LoginUser;
 using Application.Auth.Queries.RefreshTokens;
-using Application.Common.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 namespace classroom_messenger_api.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase {
+    public class AuthController : BaseApiController {
         private readonly IMediator _mediator;
 
         public AuthController(IMediator mediator) {
@@ -20,21 +19,21 @@ namespace classroom_messenger_api.Controllers {
         // POST api/auth/login
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<UserAndTokenDto>> Login([FromBody] LoginUserQuery query) {
-            return Ok(await _mediator.Send(query));
+        public async Task<IActionResult> Login([FromBody] LoginUserQuery query) {
+            return HandleResult(await Mediator.Send(query));
         }
 
         // POST api/auth/register
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<UserAndTokenDto>> Register([FromBody] RegisterNewUserCommand command) {
-            return Ok(await _mediator.Send(command));
+        public async Task<IActionResult> Register([FromBody] RegisterNewUserCommand command) {
+            return HandleResult(await _mediator.Send(command));
         }
 
         // GET api/auth/refresh
         [AllowAnonymous]
         [HttpGet("refresh")]
-        public async Task<ActionResult<UserAndTokenDto>> RefreshTokens() {
+        public async Task<IActionResult> RefreshTokens() {
             return Ok(await _mediator.Send(new RefreshTokensQuery()));
         }
     }

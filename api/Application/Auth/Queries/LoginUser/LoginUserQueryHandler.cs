@@ -1,14 +1,13 @@
 ﻿using Application.Auth.Queries.LoginUser;
+using Application.Common;
 using Application.Common.Dtos;
 using Application.Common.Interfaces;
-using Application.Errors;
 using Application.User;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace Application.Auth {
     /// <summary>
     /// Login a user into the application.
     /// </summary>
-    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, UserAndTokenDto> {
+    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, Result<UserAndTokenDto>> {
         private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -32,12 +31,12 @@ namespace Application.Auth {
             _httpContextManager = httpContextManager;
         }
 
-        public async Task<UserAndTokenDto> Handle(LoginUserQuery request, CancellationToken cancellationToken) {
+        public async Task<Result<UserAndTokenDto>> Handle(LoginUserQuery request, CancellationToken cancellationToken) {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null) throw new RestException(HttpStatusCode.Unauthorized);
+            if (user is null) return Result<UserAndTokenDto>.Failure("Unable to find user.", true);
 
             var loginUser = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (!loginUser.Succeeded) throw new RestException(HttpStatusCode.Unauthorized);
+            if (!loginUser.Succeeded) return Result<UserAndTokenDto>.Failure("Failed to login user.", true);
 
             var refreshToken = await CreateAndSaveRefreshToken(user);
 
@@ -57,7 +56,7 @@ namespace Application.Auth {
             return refreshToken;
         }
 
-        private UserAndTokenDto FinishLogin(ApplicationUser user, RefreshToken refreshToken) {
+        private Result<UserAndTokenDto> FinishLogin(ApplicationUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken);
             var accessToken = _jwtManager.GenerateJWT(user);
 
@@ -66,11 +65,13 @@ namespace Application.Auth {
                 Email = user.Email
             };
 
-            return new UserAndTokenDto {
+            var userAndTokenDto = new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
                 ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
             };
+
+            return Result<UserAndTokenDto>.Success(userAndTokenDto);
         }
     }
 }

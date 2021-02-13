@@ -1,7 +1,7 @@
 ﻿using Application.Classrooms.Queries.GetClassroomsList;
+using Application.Common;
 using Application.Common.Dtos;
 using Application.Common.Interfaces;
-using Application.Errors;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ namespace Application.Classrooms {
     /// <summary>
     /// Gets a list of classrooms that the user is part of.
     /// </summary>
-    public class GetClassroomsListQueryHandler : IRequestHandler<GetClassroomsListQuery, ClassroomsListDto> {
+    public class GetClassroomsListQueryHandler : IRequestHandler<GetClassroomsListQuery, Result<ClassroomsListDto>> {
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,9 +32,9 @@ namespace Application.Classrooms {
             _userAccessor = userAccessor;
         }
 
-        public async Task<ClassroomsListDto> Handle(GetClassroomsListQuery request, CancellationToken cancellationToken) {
+        public async Task<Result<ClassroomsListDto>> Handle(GetClassroomsListQuery request, CancellationToken cancellationToken) {
             var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
-            if (user == null) throw new RestException(HttpStatusCode.Unauthorized, new { User = "Not found." });
+            if (user is null) Result<ClassroomsListDto>.Failure("Unable to find user.", true);
 
             var queryable = _context.Classrooms.AsQueryable();
             var classrooms = await queryable
@@ -43,10 +42,12 @@ namespace Application.Classrooms {
                     .Any(uc => uc.ApplicationUserId == user.Id))
                 .ToListAsync();
 
-            return new ClassroomsListDto {
+            var list = new ClassroomsListDto {
                 Classrooms = _mapper.Map<List<Classroom>, List<ClassroomDto>>(classrooms),
                 ClassroomsCount = classrooms.Count
             };
+
+            return Result<ClassroomsListDto>.Success(list);
         }
     }
 }
