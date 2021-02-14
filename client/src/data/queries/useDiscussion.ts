@@ -9,8 +9,10 @@ const getDiscussionById = async (discussionId: string) => {
 };
 
 const useDiscussion = (discussionId: string) => {
-  return useQuery(['discussion', discussionId], () =>
-    getDiscussionById(discussionId), { refetchOnWindowFocus: false }
+  return useQuery<Discussion, Error>(
+    ['discussion', discussionId],
+    () => getDiscussionById(discussionId),
+    { refetchOnWindowFocus: false }
   );
 };
 

@@ -7,7 +7,6 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,6 +38,7 @@ namespace Application.Auth {
             if (!loginUser.Succeeded) return Result<UserAndTokenDto>.Failure("Failed to login user.", true);
 
             var refreshToken = await CreateAndSaveRefreshToken(user);
+            if (refreshToken is null) return Result<UserAndTokenDto>.Failure("Unable to save new refresh token.");
 
             return FinishLogin(user, refreshToken);
         }
@@ -51,7 +51,7 @@ namespace Application.Auth {
             _context.RefreshTokens.Add(refreshToken);
 
             var success = await _context.SaveChangesAsync() > 0;
-            if (!success) throw new Exception("Unable to save new refresh token.");
+            if (!success) return null;
 
             return refreshToken;
         }

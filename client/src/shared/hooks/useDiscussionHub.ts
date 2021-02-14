@@ -5,10 +5,6 @@ import { Message } from '../types/api';
 import { DiscussionHubEvent } from '../constants/events';
 import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';
 
-// TODO: Handle reconnecting/disconnected states.
-// TODO: Handle error conditions (e.g. message not sent, network issues, etc.)
-// Ideas: Show a toast when reconnecting/disconnected. Then, disable the TextArea
-// and show a "Reconnect" bottom on the bottom right of the chat box.
 const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
   const [receivedHubMessages, setReceivedHubMessages] = useState<Message[]>([]);
 
@@ -31,7 +27,7 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     return map;
   }, [onReceiveMessage]);
 
-  const { hub, hubState, createHub } = useHub(
+  const { hub, hubState, createHub, reconnect } = useHub(
     process.env.REACT_APP_DISCUSSION_HUB_URL!,
     discussionEventMap,
     opts
@@ -72,7 +68,7 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     if (hubState.isConnected) subscribeToDiscussion();
   }, [hubState, subscribeToDiscussion]);
 
-  return { hubState, createHub, invoke, receivedHubMessages };
+  return { hubState, createHub, reconnect, invoke, receivedHubMessages };
 };
 
 export default useDiscussionHub;

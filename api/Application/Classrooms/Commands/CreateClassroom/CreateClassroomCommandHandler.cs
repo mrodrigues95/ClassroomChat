@@ -4,7 +4,6 @@ using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,10 +37,9 @@ namespace Application.Classrooms {
             _context.ApplicationUserClassrooms.Add(student);
 
             var success = await _context.SaveChangesAsync() > 0;
+            if (!success) return Result<Unit>.Failure("There was a problem saving changes.");
 
-            if (success) return Result<Unit>.Success(Unit.Value);
-
-            throw new Exception("There was a problem saving changes.");
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

@@ -9,6 +9,7 @@ import {
 } from '@microsoft/signalr';
 import { AuthContext } from './auth/useAuth';
 import { HubActionEventMap, HubOptions, HubState } from '../types/hub';
+import useMounted from './useMounted';
 
 const getHubConnectionState = (
   currentState: HubConnectionState,
@@ -27,7 +28,8 @@ const getHubConnectionState = (
 type Hub = {
   hub: HubConnection | null;
   hubState: HubState;
-  createHub: () => Promise<void>;
+  createHub: () => Promise<boolean>;
+  reconnect: () => Promise<boolean>;
 };
 
 const useHub = (
@@ -41,6 +43,7 @@ const useHub = (
     getHubConnectionState(HubConnectionState.Connecting)
   );
   const [customOpts, setCustomOptions] = useState(opts);
+  const mounted = useMounted();
 
   const defaultOpts: HubOptions = useMemo(() => ({ enabled: true }), []);
 
@@ -79,7 +82,6 @@ const useHub = (
       logMessageContent: true,
     };
 
-    console.log('Creating hub...');
     const connection = new HubConnectionBuilder()
       .withUrl(hubUrl, httpOptions)
       .withAutomaticReconnect()
@@ -92,6 +94,7 @@ const useHub = (
     connection.onclose((error) => {
       console.assert(connection.state === HubConnectionState.Disconnected);
       console.warn('Connection closed.', error);
+      if (mounted.current) setHubState(getHubConnectionState(connection.state));
     });
 
     connection.onreconnecting((error) => {
@@ -111,27 +114,28 @@ const useHub = (
 
     actionEventMap.forEach((event, action) => connection.on(action, event));
 
-    await startHub(connection).then((hub) => {
-      if (!hub) {
-        setTimeout(() => startHub(connection), 5000);
-      } else {
-        setHub(hub);
-        setHubState(getHubConnectionState(hub.state));
-      }
+    return await startHub(connection).then((hub) => {
+      if (!hub) return false;
+      setHub(hub);
+      setHubState(getHubConnectionState(hub.state));
+      return true;
     });
-  }, [startHub, hubUrl, actionEventMap, jwt]);
+  }, [startHub, hubUrl, actionEventMap, jwt, mounted]);
 
-  useEffect(() => {
-    return () => {
-      hub?.stop();
-    };
-  }, [hub]);
+  // This should only be called when the connection has been completely terminated.
+  const reconnect = useCallback(async () => {
+    return await createHub().then((result) => result);
+  }, [createHub]);
 
   useEffect(() => {
     if (options?.enabled && !hub) createHub();
+
+    return () => {
+      hub?.stop();
+    };
   }, [createHub, hub, options]);
 
-  return { hub, hubState, createHub };
+  return { hub, hubState, createHub, reconnect };
 };
 
 export default useHub;

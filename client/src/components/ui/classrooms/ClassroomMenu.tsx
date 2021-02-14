@@ -148,7 +148,7 @@ const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
                   />
                   {(items as Item[]).map((item: Item, index: number) => (
                     <ClassroomMenuItem
-                      key={index}
+                      key={item.name}
                       item={item}
                       isHighlighted={highlightedIndex === index}
                       variant={isMenuAction(item) ? item.variant : 'default'}

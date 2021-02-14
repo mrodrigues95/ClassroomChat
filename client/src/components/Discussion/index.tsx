@@ -14,6 +14,7 @@ type DiscussionContextType = {
   handleNewDiscussionMessage: (
     newMessage: PostDiscussionMessageRequest
   ) => void;
+  disableNewMessages: boolean;
 };
 
 export const DiscussionContext = createContext<DiscussionContextType | null>(
@@ -26,12 +27,17 @@ const Discussion = () => {
   const messagesQuery = useDiscussionMessages(discussionId);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
-  const { createHub, hubState, invoke, receivedHubMessages } = useDiscussionHub(
-    discussionId,
-    {
-      enabled: false,
-    }
-  );
+  const [disableNewMessages, setDisableNewMessages] = useState(false);
+  const [allowReconnect, setAllowReconnect] = useState(false);
+  const {
+    createHub,
+    reconnect,
+    hubState,
+    invoke,
+    receivedHubMessages,
+  } = useDiscussionHub(discussionId, {
+    enabled: false,
+  });
 
   // Everytime a new message is received while connected to the hub,
   // update the state.
@@ -58,11 +64,20 @@ const Discussion = () => {
     toast.remove();
 
     if (hubState.isReconnecting) {
-      toast.loading('Reconnecting...');
+      toast.loading('Reconnecting...', { duration: 120000 });
+      setDisableNewMessages(true);
     } else if (hubState.isDisconnected) {
-      toast.error('Error while establishing a connection to this discussion.');
+      toast.error(
+        `You've been disconnected. Please check your connection and try reconnecting again.`
+      );
+      setDisableNewMessages(true);
+      setAllowReconnect(true);
     } else if (hubState.isReconnected) {
       toast.success('Reconnected!');
+      setDisableNewMessages(false);
+    } else if (hubState.isConnected) {
+      setDisableNewMessages(false);
+      setAllowReconnect(false);
     }
   }, [hubState]);
 
@@ -73,14 +88,29 @@ const Discussion = () => {
     [invoke]
   );
 
+  const handleManualReconnect = async () => {
+    return await reconnect().then((success) => {
+      if (!success) return false;
+
+      setAllowReconnect(false);
+      setDisableNewMessages(false);
+      messagesQuery.refetch();
+      return true;
+    });
+  };
+
   return (
-    <DiscussionContext.Provider value={{ handleNewDiscussionMessage }}>
+    <DiscussionContext.Provider
+      value={{ handleNewDiscussionMessage, disableNewMessages }}
+    >
       <Sidebar />
       <DiscussionContainer discussionQuery={discussionQuery}>
         <MessageContainer
           messages={messages}
-          messagesLoading={messagesQuery.isLoading}
-          messagesError={messagesQuery.isError}
+          loading={messagesQuery.isLoading}
+          error={messagesQuery.isError}
+          allowReconnect={allowReconnect}
+          reconnect={handleManualReconnect}
         />
       </DiscussionContainer>
       <Toaster toastOptions={{ className: 'font-bold' }} />

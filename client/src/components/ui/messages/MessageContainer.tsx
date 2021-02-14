@@ -1,26 +1,33 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { format, differenceInDays } from 'date-fns';
+import toast from 'react-hot-toast';
 import MessageBox from './MessageBox';
 import MessageDivider from './MessageDivider';
 import Spinner from '../Spinner';
 import Message from './Message';
 import Error from './../Error';
 import * as types from '../../../shared/types/api';
+import Button from './../Button';
 
 type GroupedMessagesMap = Map<string, types.Message[]>;
 
 type Props = {
   messages: types.Message[] | null;
-  messagesLoading: boolean;
-  messagesError: boolean;
+  loading: boolean;
+  error: boolean;
+  allowReconnect: boolean;
+  reconnect: () => Promise<boolean>;
 };
 
 const MessageContainer = ({
   messages,
-  messagesLoading,
-  messagesError,
+  loading,
+  error,
+  allowReconnect,
+  reconnect,
 }: Props) => {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [isReconnecting, setIsReconnecting] = useState(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -49,48 +56,76 @@ const MessageContainer = ({
     );
   }, [messages]);
 
+  const handleReconnect = async () => {
+    setIsReconnecting(true);
+    await reconnect().then((success) => {
+      setIsReconnecting(false);
+
+      if (!success) {
+        toast.error(
+          'Reconnect failed. Please check your connection and try again.'
+        );
+      } else {
+        toast.success('Reconnected!');
+      }
+    });
+  };
+
   // TODO: Fix unique key bug.
   return (
-    <div className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md">
-      <div className="h-full p-3 overflow-y-auto">
-        {messagesLoading ? (
-          <div className="flex h-full items-center justify-center">
-            <Spinner />
-          </div>
-        ) : messagesError ? (
-          <Error message="Sorry, we can't load any messages right now" />
-        ) : (
-          <>
-            {groupedMessages && groupedMessages.size > 0 ? (
-              <>
-                {[...groupedMessages].map(([date, messages], index) => (
-                  <>
-                    <MessageDivider key={index} date={date} />
-                    {messages.map((message, index) => (
-                      <Message
-                        key={index}
-                        message={message}
-                        lastMessage={
-                          index === messages.length - 1 ? false : true
-                        }
-                      />
-                    ))}
-                  </>
-                ))}
-              </>
-            ) : (
-              <Error
-                message="No messages found"
-                altMessage="Be the first to start the discussion!"
-                showAction={false}
-              />
-            )}
-          </>
-        )}
-        <div ref={bottomRef} aria-hidden="true" />
+    <>
+      <div className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md">
+        <div className="h-full px-4 py-2 overflow-y-auto">
+          {loading ? (
+            <div className="flex h-full items-center justify-center">
+              <Spinner />
+            </div>
+          ) : error ? (
+            <Error message="Sorry, we can't load any messages right now" />
+          ) : (
+            <>
+              {groupedMessages && groupedMessages.size > 0 ? (
+                <>
+                  {[...groupedMessages].map(([date, messages]) => (
+                    <>
+                      <MessageDivider key={date} date={date} />
+                      {messages.map((message, index) => (
+                        <Message
+                          key={index}
+                          message={message}
+                          lastMessage={
+                            index === messages.length - 1 ? false : true
+                          }
+                        />
+                      ))}
+                    </>
+                  ))}
+                </>
+              ) : (
+                <Error
+                  message="No messages found"
+                  altMessage="Be the first to start the discussion!"
+                  showAction={false}
+                />
+              )}
+            </>
+          )}
+          <div ref={bottomRef} aria-hidden="true" />
+        </div>
+        <MessageBox />
       </div>
-      <MessageBox />
-    </div>
+      {allowReconnect && (
+        <div className="z-10 absolute right-0 bottom-0 w-full inline-flex justify-end items-center mb-24 pr-4">
+          {isReconnecting ? (
+            <Spinner />
+          ) : (
+            <Button className="text-sm" onClick={() => handleReconnect()}>
+              Reconnect
+            </Button>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

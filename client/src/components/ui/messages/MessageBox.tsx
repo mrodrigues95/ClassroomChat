@@ -16,7 +16,9 @@ import {
 const MessageBox = () => {
   const { uuid } = useParams();
   const location = useLocation();
-  const discussionContext = useContext(DiscussionContext)!;
+  const { handleNewDiscussionMessage, disableNewMessages } = useContext(
+    DiscussionContext
+  )!;
   const [message, setMessage] = useState('');
   const [focused, setFocused] = useState(false);
 
@@ -24,7 +26,7 @@ const MessageBox = () => {
 
   const handleNewMessage = () => {
     if (discussion && !isEmpty(message)) {
-      discussionContext.handleNewDiscussionMessage({
+      handleNewDiscussionMessage({
         discussionId: uuid,
         body: formatMessage(message),
       });
@@ -33,24 +35,28 @@ const MessageBox = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      handleNewMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) handleNewMessage();
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // If a user wants to enter a new line, they must use SHIFT+ENTER.
-    if (e.target.value !== '\n') {
-      setMessage(e.target.value);
-    }
+    if (e.target.value !== '\n') setMessage(e.target.value);
   };
 
   return (
-    <div className="z-10 px-3 pb-3 bg-white">
+    <div
+      className={clsx(
+        'z-10 px-4 pb-3 bg-white',
+        disableNewMessages ? 'cursor-not-allowed' : 'cursor-default'
+      )}
+    >
       <div
         className={clsx(
           'flex items-center justify-between h-full p-3 border rounded-md transition ease-in-out duration-150',
-          focused ? 'border-transparent shadow-outline' : 'border-gray-300'
+          focused ? 'border-transparent shadow-outline' : 'border-gray-300',
+          disableNewMessages
+            ? 'bg-gray-100 pointer-events-none border-none'
+            : 'pointer-events-auto bg-white border'
         )}
       >
         <div className="flex flex-1 items-center">
@@ -65,6 +71,7 @@ const MessageBox = () => {
             placeholder="Message..."
             value={message}
             aria-label="Enter message"
+            className={clsx(disableNewMessages ? 'bg-gray-100' : 'bg-white')}
             onChange={(e) => handleOnChange(e)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
