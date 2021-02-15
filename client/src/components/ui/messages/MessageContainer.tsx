@@ -38,6 +38,7 @@ const MessageContainer = ({
   // Group the messages by createdAt dates so they can be separated in the message box.
   const groupedMessages: GroupedMessagesMap | null = useMemo(() => {
     if (!Array.isArray(messages) || !messages.length) return null;
+    console.log('grouping messages...');
     return (
       messages.reduce((map: GroupedMessagesMap, message) => {
         if (differenceInDays(new Date(), new Date(message.createdAt)) === 0) {
@@ -87,18 +88,18 @@ const MessageContainer = ({
               {groupedMessages && groupedMessages.size > 0 ? (
                 <>
                   {[...groupedMessages].map(([date, messages]) => (
-                    <>
+                    <React.Fragment key={date}>
                       <MessageDivider key={date} date={date} />
                       {messages.map((message, index) => (
                         <Message
-                          key={index}
+                          key={message.id}
                           message={message}
                           lastMessage={
                             index === messages.length - 1 ? false : true
                           }
                         />
                       ))}
-                    </>
+                    </React.Fragment>
                   ))}
                 </>
               ) : (
