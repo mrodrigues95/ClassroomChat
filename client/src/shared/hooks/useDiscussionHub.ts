@@ -27,7 +27,7 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     return map;
   }, [onReceiveMessage]);
 
-  const { hub, hubState, createHub, reconnect } = useHub(
+  const { hub, hubState, reconnect, start } = useHub(
     process.env.REACT_APP_DISCUSSION_HUB_URL!,
     discussionEventMap,
     opts
@@ -36,29 +36,21 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
   const sendMessage = useCallback(
     async (newMessage: PostDiscussionMessageRequest) => {
       try {
-        if (!hubState.isConnected) {
-          throw new Error(
-            "Cannot invoke provided method - hub isn't connected."
-          );
-        }
-        await hub?.invoke('SendMessage', newMessage);
+        await hub.current?.invoke('SendMessage', newMessage);
       } catch (err) {
         console.error(err);
       }
     },
-    [hub, hubState]
+    [hub]
   );
 
   const subscribeToDiscussion = useCallback(async () => {
     try {
-      if (!hubState.isConnected) {
-        throw new Error("Cannot invoke provided method - hub isn't connected.");
-      }
-      await hub?.invoke('SubscribeToDiscussion', discussionId);
+      await hub.current?.invoke('SubscribeToDiscussion', discussionId);
     } catch (err) {
       console.error(err);
     }
-  }, [hub, discussionId, hubState]);
+  }, [hub, discussionId]);
 
   const invoke = {
     sendMessage: sendMessage,
@@ -68,7 +60,13 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     if (hubState.isConnected) subscribeToDiscussion();
   }, [hubState, subscribeToDiscussion]);
 
-  return { hubState, createHub, reconnect, invoke, receivedHubMessages };
+  return {
+    hubState,
+    reconnect,
+    start,
+    invoke,
+    receivedHubMessages,
+  };
 };
 
 export default useDiscussionHub;

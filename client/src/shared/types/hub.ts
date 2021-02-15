@@ -4,7 +4,6 @@ export type HubResponse = string | Message;
 
 export type HubOptions = {
   enabled?: boolean;
-  onReconnected?: () => void;
 };
 
 export type HubActionEventMap = Map<string, (message: HubResponse) => void>;

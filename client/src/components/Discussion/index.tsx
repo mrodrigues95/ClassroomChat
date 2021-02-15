@@ -30,8 +30,8 @@ const Discussion = () => {
   const [disableNewMessages, setDisableNewMessages] = useState(false);
   const [allowReconnect, setAllowReconnect] = useState(false);
   const {
-    createHub,
     reconnect,
+    start,
     hubState,
     invoke,
     receivedHubMessages,
@@ -45,7 +45,8 @@ const Discussion = () => {
     // Receved hub messages will be empty on initial connect. Once new
     // messages are sent after the user has connected, this will update.
     if (receivedHubMessages.length) {
-      setMessages((messages) => [...messages, ...receivedHubMessages]);
+      const lastMessage = [...receivedHubMessages].pop();
+      setMessages((messages) => [...messages, lastMessage!]);
     }
   }, [receivedHubMessages]);
 
@@ -57,8 +58,8 @@ const Discussion = () => {
   }, [discussionQuery, messagesQuery]);
 
   useEffect(() => {
-    if (dataLoaded) createHub();
-  }, [dataLoaded, createHub]);
+    if (dataLoaded) start();
+  }, [dataLoaded, start, discussionId]);
 
   useEffect(() => {
     toast.remove();

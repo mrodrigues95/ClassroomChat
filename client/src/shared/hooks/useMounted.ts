@@ -8,8 +8,8 @@ const useMounted = () => {
     return () => {
       mounted.current = false;
     };
-  }, [mounted]);
-  
+  }, []);
+
   return mounted;
 };
 

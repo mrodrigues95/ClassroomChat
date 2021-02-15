@@ -17,14 +17,14 @@ namespace Application.Auth {
     public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, Result<UserAndTokenDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenManager _jwtManager;
+        private readonly ITokenManager _tokenManager;
         private readonly IHttpContextManager _httpContextManager;
 
         public RegisterNewUserCommandHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
-            ITokenManager jwtManager, IHttpContextManager httpContextManager) {
+            ITokenManager tokenManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
-            _jwtManager = jwtManager;
+            _tokenManager = tokenManager;
             _httpContextManager = httpContextManager;
         }
 
@@ -57,7 +57,7 @@ namespace Application.Auth {
 
         private async Task<RefreshToken> CreateAndSaveRefreshToken(ApplicationUser user) {
             var refreshToken = new RefreshToken {
-                Token = _jwtManager.GenerateRefreshToken(),
+                Token = _tokenManager.GenerateRefreshToken(),
                 ApplicationUser = user
             };
             _context.RefreshTokens.Add(refreshToken);
@@ -70,7 +70,7 @@ namespace Application.Auth {
 
         private Result<UserAndTokenDto> FinishRegister(ApplicationUser user, RefreshToken refreshToken) {
             _httpContextManager.SetHttpCookieRefreshToken(refreshToken);
-            var accessToken = _jwtManager.GenerateJWT(user);
+            var accessToken = _tokenManager.GenerateJWT(user);
 
             var userDto = new UserDto {
                 Name = user.Name,
@@ -80,7 +80,7 @@ namespace Application.Auth {
             var userAndTokenDto = new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
-                ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
+                ExpiresAt = _tokenManager.GetJWTExpirationDate(accessToken),
             };
 
             return Result<UserAndTokenDto>.Success(userAndTokenDto);

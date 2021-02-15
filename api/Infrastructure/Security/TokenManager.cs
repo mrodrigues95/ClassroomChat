@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ using System.Text;
 namespace Infrastructure.Security {
     public class TokenManager : ITokenManager {
         private readonly SymmetricSecurityKey _key;
+        private readonly ILogger<TokenManager> _logger;
 
-        public TokenManager(IConfiguration config) {
+        public TokenManager(IConfiguration config, ILogger<TokenManager> logger) {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            _logger = logger;
         }
 
         public string GenerateJWT(ApplicationUser user) {
@@ -49,7 +52,7 @@ namespace Infrastructure.Security {
         public ClaimsPrincipal GetPrincipalFromExpiredJWT(string accessTokenString) {
             if (string.IsNullOrEmpty(accessTokenString)) return null;
 
-            var accessTokenValidationParameters = new TokenValidationParameters {
+            var validationParameters = new TokenValidationParameters {
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
@@ -59,14 +62,20 @@ namespace Infrastructure.Security {
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            ClaimsPrincipal principal;
+            try {
+                principal = tokenHandler.ValidateToken(accessTokenString, validationParameters, out securityToken);
+            } catch (SecurityTokenExpiredException) {
+                return null;
+            } catch (Exception ex) {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
 
-            var principal = tokenHandler.ValidateToken(accessTokenString, accessTokenValidationParameters,
-                out SecurityToken securityToken);
-
-            // Check if the security algorithm we used to sign the access token matches up with the
-            // request.
+            // Check if the security algorithm we used to sign the access token matches up with the request.
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(
+            if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(
                 SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase)) {
                 throw new SecurityTokenException("Invalid access token.");
             }

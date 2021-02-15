@@ -1,4 +1,12 @@
-import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+  useRef,
+  MutableRefObject,
+} from 'react';
 import {
   HubConnection,
   HubConnectionBuilder,
@@ -11,25 +19,11 @@ import { AuthContext } from './auth/useAuth';
 import { HubActionEventMap, HubOptions, HubState } from '../types/hub';
 import useMounted from './useMounted';
 
-const getHubConnectionState = (
-  currentState: HubConnectionState,
-  reconnected = false
-): HubState => {
-  return {
-    isConnected: currentState === HubConnectionState.Connected,
-    isConnecting: currentState === HubConnectionState.Connecting,
-    isReconnecting: currentState === HubConnectionState.Reconnecting,
-    isDisconnected: currentState === HubConnectionState.Disconnected,
-    isDisconnecting: currentState === HubConnectionState.Disconnecting,
-    isReconnected: reconnected,
-  };
-};
-
 type Hub = {
-  hub: HubConnection | null;
+  hub: MutableRefObject<HubConnection | null>;
   hubState: HubState;
-  createHub: () => Promise<boolean>;
   reconnect: () => Promise<boolean>;
+  start: () => Promise<boolean>;
 };
 
 const useHub = (
@@ -38,7 +32,7 @@ const useHub = (
   opts?: HubOptions
 ): Hub => {
   const { jwt } = useContext(AuthContext)!;
-  const [hub, setHub] = useState<HubConnection | null>(null);
+  const hub = useRef<HubConnection | null>(null);
   const [hubState, setHubState] = useState<HubState>(
     getHubConnectionState(HubConnectionState.Connecting)
   );
@@ -48,7 +42,7 @@ const useHub = (
   const defaultOpts: HubOptions = useMemo(() => ({ enabled: true }), []);
 
   // Memoize the options. If we don't do this, then multiple hubs will be created
-  // on initial render.
+  // on the initial render.
   const options: HubOptions | undefined = useMemo(() => {
     if (!opts) return defaultOpts;
 
@@ -63,16 +57,20 @@ const useHub = (
     return customOpts;
   }, [opts, defaultOpts, customOpts]);
 
-  const startHub = useCallback(async (connection: HubConnection) => {
+  const connectToHub = useCallback(async (connection: HubConnection) => {
     try {
       await connection.start();
+      hub.current = connection;
+      setHubState(getHubConnectionState(connection.state));
       console.assert(connection.state === HubConnectionState.Connected);
       console.log('SignalR connection established.');
-      return connection;
+      return true;
     } catch (err) {
       console.assert(connection.state === HubConnectionState.Disconnected);
       console.error('SignalR Connection Error: ', err);
-      return null;
+      hub.current = null;
+      setHubState(getHubConnectionState(connection.state));
+      return false;
     }
   }, []);
 
@@ -114,28 +112,50 @@ const useHub = (
 
     actionEventMap.forEach((event, action) => connection.on(action, event));
 
-    return await startHub(connection).then((hub) => {
-      if (!hub) return false;
-      setHub(hub);
-      setHubState(getHubConnectionState(hub.state));
-      return true;
-    });
-  }, [startHub, hubUrl, actionEventMap, jwt, mounted]);
+    // Attempt to start the connection.
+    const hubConnected = await connectToHub(connection);
+    return hubConnected;
+  }, [connectToHub, hubUrl, actionEventMap, jwt, mounted]);
 
-  // This should only be called when the connection has been completely terminated.
-  const reconnect = useCallback(async () => {
-    return await createHub().then((result) => result);
-  }, [createHub]);
+  const stop = useCallback(async () => {
+    await hub.current?.stop();
+  }, []);
+
+  const start = useCallback(async () => {
+    try {
+      await stop();
+      return await createHub();
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }, [stop, createHub]);
+
+  const reconnect = useCallback(async () => start(), [start]);
 
   useEffect(() => {
-    if (options?.enabled && !hub) createHub();
+    if (options?.enabled && !hub.current) start();
 
     return () => {
-      hub?.stop();
+      stop();
     };
-  }, [createHub, hub, options]);
+  }, [start, stop, hub, options]);
 
-  return { hub, hubState, createHub, reconnect };
+  return { hub, hubState, reconnect, start };
 };
 
 export default useHub;
+
+const getHubConnectionState = (
+  currentState: HubConnectionState,
+  reconnected = false
+): HubState => {
+  return {
+    isConnected: currentState === HubConnectionState.Connected,
+    isConnecting: currentState === HubConnectionState.Connecting,
+    isReconnecting: currentState === HubConnectionState.Reconnecting,
+    isDisconnected: currentState === HubConnectionState.Disconnected,
+    isDisconnecting: currentState === HubConnectionState.Disconnecting,
+    isReconnected: reconnected,
+  };
+};

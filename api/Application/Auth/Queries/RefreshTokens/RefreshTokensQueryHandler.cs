@@ -13,19 +13,19 @@ namespace Application.Auth.Queries.RefreshTokens {
     public class RefreshTokensQueryHandler : IRequestHandler<RefreshTokensQuery, Result<UserAndTokenDto>> {
         private readonly Persistence.ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenManager _jwtManager;
+        private readonly ITokenManager _tokenManager;
         private readonly IHttpContextManager _httpContextManager;
 
         public RefreshTokensQueryHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
-            ITokenManager jwtManager, IHttpContextManager httpContextManager) {
+            ITokenManager tokenManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
-            _jwtManager = jwtManager;
+            _tokenManager = tokenManager;
             _httpContextManager = httpContextManager;
         }
 
         public async Task<Result<UserAndTokenDto>> Handle(RefreshTokensQuery request, CancellationToken cancellationToken) {
-            var principal = _jwtManager.GetPrincipalFromExpiredJWT(_httpContextManager.GetJWT());
+            var principal = _tokenManager.GetPrincipalFromExpiredJWT(_httpContextManager.GetJWT());
 
             var authenticatedRefreshToken = await AuthenticateRefreshToken();
             if (authenticatedRefreshToken is null) return Result<UserAndTokenDto>.Failure("Invalid or expired refresh token.", true);
@@ -68,7 +68,7 @@ namespace Application.Auth.Queries.RefreshTokens {
             _context.RefreshTokens.Remove(refreshToken);
 
             var newRefreshToken = new RefreshToken {
-                Token = _jwtManager.GenerateRefreshToken(),
+                Token = _tokenManager.GenerateRefreshToken(),
                 ApplicationUser = user,
             };
             _context.RefreshTokens.Add(newRefreshToken);
@@ -83,7 +83,7 @@ namespace Application.Auth.Queries.RefreshTokens {
         }
 
         private Result<UserAndTokenDto> CreateUserAndTokenDto(ApplicationUser user) {
-            var accessToken = _jwtManager.GenerateJWT(user);
+            var accessToken = _tokenManager.GenerateJWT(user);
 
             var userDto = new UserDto {
                 Name = user.Name,
@@ -93,7 +93,7 @@ namespace Application.Auth.Queries.RefreshTokens {
             var userAndTokenDto = new UserAndTokenDto {
                 User = userDto,
                 AccessToken = accessToken,
-                ExpiresAt = _jwtManager.GetJWTExpirationDate(accessToken),
+                ExpiresAt = _tokenManager.GetJWTExpirationDate(accessToken),
             };
 
             return Result<UserAndTokenDto>.Success(userAndTokenDto);
