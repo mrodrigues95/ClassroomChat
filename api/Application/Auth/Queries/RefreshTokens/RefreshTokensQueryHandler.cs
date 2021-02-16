@@ -6,17 +6,18 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Auth.Queries.RefreshTokens {
     public class RefreshTokensQueryHandler : IRequestHandler<RefreshTokensQuery, Result<UserAndTokenDto>> {
-        private readonly Persistence.ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenManager _tokenManager;
         private readonly IHttpContextManager _httpContextManager;
 
-        public RefreshTokensQueryHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
+        public RefreshTokensQueryHandler(ApplicationContext context, UserManager<ApplicationUser> userManager,
             ITokenManager tokenManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;

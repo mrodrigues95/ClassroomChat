@@ -38,7 +38,6 @@ const MessageContainer = ({
   // Group the messages by createdAt dates so they can be separated in the message box.
   const groupedMessages: GroupedMessagesMap | null = useMemo(() => {
     if (!Array.isArray(messages) || !messages.length) return null;
-    console.log('grouping messages...');
     return (
       messages.reduce((map: GroupedMessagesMap, message) => {
         if (differenceInDays(new Date(), new Date(message.createdAt)) === 0) {
@@ -72,7 +71,6 @@ const MessageContainer = ({
     });
   };
 
-  // TODO: Fix unique key bug.
   return (
     <>
       <div className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md">

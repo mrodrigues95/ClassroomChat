@@ -56,6 +56,7 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     sendMessage: sendMessage,
   };
 
+  // TODO: Move this to onConnectionSuccess.
   useEffect(() => {
     if (hubState.isConnected) subscribeToDiscussion();
   }, [hubState, subscribeToDiscussion]);
