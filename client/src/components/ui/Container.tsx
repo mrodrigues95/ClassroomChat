@@ -26,7 +26,7 @@ export const ContainerHeader = ({ title, children }: Props) => {
         >
           <HamburgerMenuIcon className="w-4 h-4" />
         </Button>
-        {title && <h1 className="font-bold truncate sm:text-4xl">{title}</h1>}
+        {title && <h1 className="hidden sm:block font-bold truncate sm:text-4xl">{title}</h1>}
         <div className="flex justify-end items-center w-3/5">
           <Search placeholder="Search" />
           <Button
@@ -44,7 +44,7 @@ export const ContainerHeader = ({ title, children }: Props) => {
 };
 
 const Container = ({ children }: Props) => {
-  return <main className="flex flex-col flex-1 w-full">{children}</main>;
+  return <main className="flex flex-col flex-1 w-full sm:p-3 lg:p-10">{children}</main>;
 };
 
 export default Container;

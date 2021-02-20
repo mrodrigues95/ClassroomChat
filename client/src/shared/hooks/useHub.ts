@@ -131,7 +131,7 @@ const useHub = (
     }
   }, [stop, createHub]);
 
-  const reconnect = useCallback(async () => start(), [start]);
+  const reconnect = useCallback(() => start(), [start]);
 
   useEffect(() => {
     if (options?.enabled && !hub.current) start();
