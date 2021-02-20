@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from '../../ui/Avatar';
+import Button from '../../ui/Button';
 
 type ItemProps = {
   avatarUrl: string;
@@ -9,7 +10,7 @@ type ItemProps = {
 const ActivityFeedItem = ({ avatarUrl, message }: ItemProps) => {
   return (
     <div className="flex items-center text-gray-700">
-      <Avatar url={avatarUrl} className='mr-3' />
+      <Avatar url={avatarUrl} className="mr-3" />
       {message}
     </div>
   );
@@ -34,6 +35,9 @@ const ActivityFeed = () => {
         avatarUrl="https://images.unsplash.com/photo-1532417344469-368f9ae6d187?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
         message="joined Networking Infrastructure."
       />
+      <Button className="rounded-xl font-semibold" fullWidth>
+        See More
+      </Button>
     </div>
   );
 };

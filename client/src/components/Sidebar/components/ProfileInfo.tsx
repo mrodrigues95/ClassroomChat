@@ -1,7 +1,6 @@
 import React from 'react';
-import { ChevronIcon } from '../../../shared/assets/icons';
+import NavigationButton from '../../ui/NavigationButton';
 import Avatar from '../../ui/Avatar';
-import Button from '../../ui/Button';
 
 const ProfileInfo = () => {
   return (
@@ -18,13 +17,12 @@ const ProfileInfo = () => {
             johnsmith@gmail.com
           </p>
         </div>
-        <Button
-          variant="primary"
-          className="rounded-full p-2 border-none ml-3"
+        <NavigationButton
+          to="/profile"
+          direction="right"
+          size="medium"
           aria-label="Go to profile"
-        >
-          <ChevronIcon className="h-5 w-5 transform rotate-180" />
-        </Button>
+        />
       </div>
     </div>
   );

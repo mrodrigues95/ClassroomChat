@@ -75,7 +75,7 @@ const Login = () => {
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
                 <Button
-                  className="p-4"
+                  className="p-4 font-bold"
                   type="submit"
                   disabled={waitingForResponse}
                   fullWidth
