@@ -31,7 +31,7 @@ const Login = () => {
   };
 
   return (
-    <main className="flex flex-1 w-full">
+    <main className="flex flex-1 w-full xl:p-10">
       <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Connect With Classmates"
@@ -75,10 +75,11 @@ const Login = () => {
             <div className="absolute bottom-0 inset-x-0">
               <div className="mb-2 sm:mb-6">
                 <Button
-                  className="p-4 font-bold"
+                  className="font-bold rounded-xl md:text-xl"
                   type="submit"
                   disabled={waitingForResponse}
                   fullWidth
+                  style={{ padding: '1rem' }}
                 >
                   {waitingForResponse ? (
                     <Spinner className="h-5 w-5 mr-2 text-white">
@@ -96,8 +97,8 @@ const Login = () => {
               </div>
               <Link
                 to="/auth/register"
-                className="relative inline-flex items-center justify-center w-full p-4 rounded-md font-bold focus:outline-none transition duration-150 ease-in-out
-                  border border-gray-300 bg-white text-black hover:bg-gray-100 hover:border-gray-400 active:bg-gray-200 active:border-gray-500"
+                className="relative inline-flex items-center justify-center w-full p-4 rounded-xl font-bold focus:outline-none transition duration-150 ease-in-out
+                  border border-gray-300 bg-white text-black hover:bg-gray-100 hover:border-gray-400 active:bg-gray-200 active:border-gray-500 md:text-xl"
               >
                 <span className="absolute right-0 inset-y-0 flex items-center pr-3">
                   <ChevronIcon className="h-5 w-5 transform rotate-180" />

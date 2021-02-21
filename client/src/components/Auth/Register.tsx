@@ -43,7 +43,7 @@ const Register = () => {
   };
 
   return (
-    <main className="flex flex-1 w-full">
+    <main className="flex flex-1 w-full xl:p-10">
       <section className="hidden xl:block xl:w-1/2 p-10 border border-gray-300 rounded-3xl">
         <Carousel
           caption="Message Your Classmates"
@@ -105,10 +105,11 @@ const Register = () => {
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
               <Button
-                className="p-4 font-bold"
+                className="font-bold rounded-xl md:text-xl"
                 type="submit"
                 disabled={waitingForResponse}
                 fullWidth
+                style={{ padding: '1rem' }}
               >
                 {waitingForResponse ? (
                   <>

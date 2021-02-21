@@ -1,11 +1,12 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ProfileLayout from './ProfileLayout';
 
 const Profile = () => {
   return (
     <Routes>
       <Route path="/" element={<ProfileLayout />} />
+      <Route path="*" element={<Navigate to="." replace />} />
     </Routes>
   );
 };

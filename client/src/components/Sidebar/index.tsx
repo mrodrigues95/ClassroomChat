@@ -14,18 +14,15 @@ import ClassroomsMenu from '../ui/classrooms/ClassroomMenu';
 
 const SidebarContainer = ({
   className,
-  navigation,
   children,
 }: {
   className?: string;
-  navigation?: boolean;
   children: React.ReactNode;
 }) => {
   return (
     <div
       className={clsx(
-        'w-full p-3 rounded-3xl text-gray-700 font-medium border-gray-300 bg-white shadow-sm lg:p-5 lg:mb-8 xl:border',
-        navigation && 'border',
+        'w-full p-3 rounded-3xl text-gray-700 font-medium border-gray-300 bg-white shadow-sm lg:mb-8 xl:border',
         className
       )}
     >
@@ -36,12 +33,15 @@ const SidebarContainer = ({
 
 const Sidebar = () => {
   return (
-    <aside>
-      <div className="hidden sticky top-0 max-h-screen h-full flex-col w-84 sm:py-3 sm:pl-3 md:flex lg:py-10 lg:pl-10">
-        <SidebarContainer className="mb-10 shadow-none xl:shadow-sm">
+    <aside className="md:mr-4 lg:mr-0">
+      <div
+        className="hidden sticky top-0 max-h-screen h-full flex-col sm:py-3 sm:pl-3 md:flex lg:py-10 lg:pl-10"
+        style={{ maxWidth: '21.5rem' }}
+      >
+        <SidebarContainer className="mb-10 shadow-none px-5 pb-5 pt-2 xl:pt-5 xl:shadow-sm">
           <ProfileInfo />
         </SidebarContainer>
-        <SidebarContainer navigation>
+        <SidebarContainer className="border lg:p-5">
           <VerticalNav>
             <VerticalNavItem
               to="/home"
@@ -73,7 +73,7 @@ const Sidebar = () => {
             />
           </VerticalNav>
         </SidebarContainer>
-        <SidebarContainer className="hidden xl:block">
+        <SidebarContainer className="hidden lg:p-5 xl:block">
           <ActivityFeed />
         </SidebarContainer>
         <div className="mt-auto">
