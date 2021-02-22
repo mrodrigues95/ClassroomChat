@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace classroom_messenger_api {
                 try {
                     var context = services.GetRequiredService<ApplicationContext>();
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
+                    await context.Database.MigrateAsync();
                     await ApplicationContextSeed.SeedDataAsync(context, userManager, loggerFactory);
                 } catch (Exception ex) {
                     var logger = loggerFactory.CreateLogger<Program>();
