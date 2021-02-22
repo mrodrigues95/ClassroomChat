@@ -7,7 +7,7 @@ const Content = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex-1 flex flex-col items-start p-3">
-      <div className={clsx('w-full', title || description ? 'mb-4' : 'mb-0')}>
+      <div className={clsx('w-full', title || description ? 'block mb-4' : 'hidden mb-0')}>
         {title && (
           <Dialog.Title className="font-bold text-lg uppercase">
             {title}
@@ -27,7 +27,7 @@ const Content = ({ children }: { children: React.ReactNode }) => {
 
 const Footer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="p-3 flex items-center justify-end mt-4 rounded-b-md bg-gray-200">
+    <div className="p-3 flex items-center justify-end mt-2 rounded-b-md bg-gray-200">
       {children}
     </div>
   );

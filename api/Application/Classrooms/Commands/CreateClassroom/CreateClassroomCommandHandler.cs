@@ -4,6 +4,7 @@ using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,10 +13,10 @@ namespace Application.Classrooms {
     /// Creates a new classroom server.
     /// </summary>
     public class CreateClassroomCommandHandler : IRequestHandler<CreateClassroomCommand, Result<Unit>> {
-        private readonly Persistence.ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly IUserAccessor _userAccessor;
 
-        public CreateClassroomCommandHandler(Persistence.ApplicationContext context, IUserAccessor userAccessor) {
+        public CreateClassroomCommandHandler(ApplicationContext context, IUserAccessor userAccessor) {
             _context = context;
             _userAccessor = userAccessor;
         }

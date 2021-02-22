@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
     public class UserController : BaseApiController {
         // GET api/user
         [HttpGet]

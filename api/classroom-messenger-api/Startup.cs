@@ -39,6 +39,7 @@ namespace classroom_messenger_api {
             services.AddDbContext<ApplicationContext>(opt => {
                 opt.UseLazyLoadingProxies();
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSnakeCaseNamingConvention();
             });
             ConfigureServices(services);
         }

@@ -9,5 +9,6 @@ namespace Domain.Entities {
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
         public virtual ICollection<InviteLink> InviteLinks { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
     }
 }

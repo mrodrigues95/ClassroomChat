@@ -1,6 +1,7 @@
 ﻿using Application.Auth;
 using Application.Common.Interfaces;
 using AutoMapper;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ namespace classroom_messenger_api.Extensions {
             services.AddSignalR();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IHttpContextManager, HttpContextManager>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
 
             return services;
         }

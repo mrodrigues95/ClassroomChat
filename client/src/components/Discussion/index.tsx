@@ -25,7 +25,7 @@ const Discussion = () => {
   const { uuid: discussionId } = useParams();
   const discussionQuery = useDiscussion(discussionId);
   const messagesQuery = useDiscussionMessages(discussionId);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [ready, setReady] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [disableNewMessages, setDisableNewMessages] = useState(false);
   const [allowReconnect, setAllowReconnect] = useState(false);
@@ -53,13 +53,13 @@ const Discussion = () => {
   useEffect(() => {
     if (discussionQuery.isSuccess && messagesQuery.isSuccess) {
       setMessages(messagesQuery.data.messages);
-      setDataLoaded(true);
+      setReady(true);
     }
   }, [discussionQuery, messagesQuery]);
 
   useEffect(() => {
-    if (dataLoaded) start();
-  }, [dataLoaded, start, discussionId]);
+    if (ready) start();
+  }, [ready, start, discussionId]);
 
   useEffect(() => {
     toast.remove();

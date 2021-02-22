@@ -2,16 +2,16 @@ import React from 'react';
 import { Cropper } from 'react-cropper';
 
 type Props = {
-  imagePreview: string;
+  image: string;
   setCropper: (cropper: Cropper) => void;
   className: string;
 };
 
-const PhotoCropper = ({ imagePreview, setCropper, className }: Props) => {
+const PhotoCropper = ({ image, setCropper, className }: Props) => {
   return (
     <Cropper
+      src={image}
       className={className}
-      src={imagePreview}
       initialAspectRatio={1}
       aspectRatio={1}
       autoCropArea={1}

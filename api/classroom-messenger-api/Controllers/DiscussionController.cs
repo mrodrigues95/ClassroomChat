@@ -7,8 +7,6 @@ using System;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
     public class DiscussionController : BaseApiController {
         // GET api/discussion/{id}
         [Authorize]

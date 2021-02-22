@@ -8,10 +8,8 @@ using System;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ClassroomController : BaseApiController {
-                // GET api/classroom/list
+        // GET api/classroom/list
         [HttpGet("list")]
         public async Task<IActionResult> GetAll() {
             return HandleResult(await Mediator.Send(new GetClassroomsListQuery()));

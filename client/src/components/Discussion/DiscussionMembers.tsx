@@ -23,6 +23,7 @@ const DiscussionMembers = () => {
           variant="primary"
           className="rounded-full ml-2 px-2 py-2 border-none"
           aria-label="View group members"
+          defaultPadding={false}
         >
           <DotsVerticalIcon className="w-5 h-5" />
         </Button>

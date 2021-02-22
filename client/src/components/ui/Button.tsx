@@ -16,12 +16,14 @@ type Props = {
   variant?: keyof typeof VARIANTS;
   className?: string;
   fullWidth?: boolean;
+  defaultPadding?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button = ({
   variant = 'default',
   className,
   fullWidth = false,
+  defaultPadding = true,
   ...props
 }: Props) => {
   const variantStyles = VARIANTS[variant] || VARIANTS.default;
@@ -30,10 +32,11 @@ const Button = ({
     <button
       type="button"
       className={clsx(
-        'relative inline-flex items-center justify-center px-4 py-2 rounded-md focus:outline-none transition duration-150 ease-in-out',
+        'relative inline-flex items-center justify-center rounded-md focus:outline-none transition duration-150 ease-in-out',
         variantStyles.base,
         props.disabled && 'cursor-not-allowed',
         fullWidth && 'w-full',
+        defaultPadding && 'px-4 py-2',
         className
       )}
       {...props}

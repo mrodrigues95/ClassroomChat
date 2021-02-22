@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
     public class AuthController : BaseApiController {
         // POST api/auth/login
         [AllowAnonymous]

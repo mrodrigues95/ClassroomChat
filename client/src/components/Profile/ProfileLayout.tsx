@@ -51,7 +51,7 @@ const ProfileItemCard = ({
     <Link
       to={to}
       className={clsx(
-        'flex p-4 border border-gray-300 rounded-3xl hover:bg-gray-100 duration-150 ease-in-out'
+        'flex p-4 rounded-3xl border border-gray-300 outline-none focus:bg-gray-200 active:bg-gray-300 hover:bg-gray-200 duration-150 ease-in-out'
       )}
     >
       <div className="inline-flex items-center justify-center">
@@ -61,7 +61,7 @@ const ProfileItemCard = ({
           </span>
         </div>
       </div>
-      <div className="flex-1 ml-2">
+      <div className="flex-1 ml-3">
         <div>
           <span className="font-bold text-md sm:text-xl">{title}</span>
         </div>
@@ -78,9 +78,7 @@ const ProfileHeader = () => {
   const focusRef = useRef<HTMLButtonElement>(null);
 
   const handlePhotoUpload = () => {
-    if (cropper) {
-      cropper.getCroppedCanvas().toBlob((blob) => console.log(blob));
-    }
+    cropper?.getCroppedCanvas().toBlob((blob) => console.log(blob));
   };
 
   const handlePhotoSelected = useCallback((acceptedFiles: File[]) => {
@@ -108,9 +106,9 @@ const ProfileHeader = () => {
         description="Use the cropper below to edit your new profile photo."
       >
         <Modal.Content>
-          {files && files.length > 0 && (
+          {files.length > 0 && (
             <PhotoCropper
-              imagePreview={files[0].preview!}
+              image={files[0].preview!}
               setCropper={setCropper}
               className="h-full max-w-md mx-auto"
             />
@@ -140,6 +138,7 @@ const ProfileHeader = () => {
             <FilePicker.Button
               className="absolute right-0 bottom-0 mr-1 rounded-full bg-indigo-400 shadow-lg md:mr-4 md:mb-1 lg:mr-6 focus:outline-none"
               aria-label="Select photo"
+              aria-describedby="cc-tooltip"
             >
               <PlusCircleIcon className="w-6 h-6 text-white lg:w-8 lg:h-8" />
             </FilePicker.Button>

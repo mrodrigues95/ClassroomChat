@@ -13,6 +13,7 @@ namespace Persistence {
         public DbSet<InviteLink> InviteLinks { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         public DbSet<ApplicationUserClassroom> ApplicationUserClassrooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {            
