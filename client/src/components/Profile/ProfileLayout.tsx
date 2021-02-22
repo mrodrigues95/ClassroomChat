@@ -22,6 +22,7 @@ import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import FilePicker, { FileType } from '../ui/FilePicker';
 import PhotoCropper from './../ui/PhotoCropper';
+import useMutateUploadProfilePhoto from './../../data/mutations/useMutateUploadProfilePhoto';
 
 const CARDVARIANTS = {
   yellow: 'bg-yellow-400',
@@ -76,9 +77,14 @@ const ProfileHeader = () => {
   const [files, setFiles] = useState<FileType[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
   const focusRef = useRef<HTMLButtonElement>(null);
+  const { mutate, isLoading, isError } = useMutateUploadProfilePhoto();
 
+  // TODO: Handle loading/error states.
+  // TODO: Close the modal on success.
+  // TODO: Refetch profile information on success.
+  // TODO: Invalidate sidebar on success.
   const handlePhotoUpload = () => {
-    cropper?.getCroppedCanvas().toBlob((blob) => console.log(blob));
+    cropper?.getCroppedCanvas().toBlob((blob) => mutate(blob!));
   };
 
   const handlePhotoSelected = useCallback((acceptedFiles: File[]) => {

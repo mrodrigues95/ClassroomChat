@@ -5,6 +5,7 @@ export type User = {
 
 export type UserBase = {
   name: string;
+  username: string;
   email: string;
   password: string;
 };
@@ -38,3 +39,14 @@ export type DiscussionMessages = {
   discussionId?: number;
   messages: Message[];
 };
+
+export type Photo = {
+  id: string;
+  url: string;
+  isMain: boolean;
+};
+
+export type Profile = {
+  bio: string;
+  imageUrl: string;
+} & Omit<UserBase, 'password'>;

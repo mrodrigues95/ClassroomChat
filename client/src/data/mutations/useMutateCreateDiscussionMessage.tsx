@@ -20,7 +20,7 @@ const createDiscussionMessage = async (
     .then((res) => res.data);
 };
 
-const useCreateDiscussionMessage = () => {
+const useMutateCreateDiscussionMessage = () => {
   const queryClient = useQueryClient();
   const { user } = useContext(AuthContext)!;
 
@@ -69,4 +69,4 @@ const useCreateDiscussionMessage = () => {
   });
 };
 
-export default useCreateDiscussionMessage;
+export default useMutateCreateDiscussionMessage;

@@ -4,9 +4,9 @@ import toast, { Toaster } from 'react-hot-toast';
 import MessageContainer from '../ui/messages/MessageContainer';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
-import useDiscussion from '../../data/queries/useDiscussion';
-import useDiscussionMessages from '../../data/queries/useDiscussionMessages';
-import { PostDiscussionMessageRequest } from '../../data/mutations/useCreateDiscussionMessage';
+import useQueryDiscussion from '../../data/queries/useQueryDiscussion';
+import useQueryDiscussionMessages from '../../data/queries/useQueryDiscussionMessages';
+import { PostDiscussionMessageRequest } from '../../data/mutations/useMutateCreateDiscussionMessage';
 import { Message } from '../../shared/types/api';
 import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 
@@ -23,8 +23,8 @@ export const DiscussionContext = createContext<DiscussionContextType | null>(
 
 const Discussion = () => {
   const { uuid: discussionId } = useParams();
-  const discussionQuery = useDiscussion(discussionId);
-  const messagesQuery = useDiscussionMessages(discussionId);
+  const discussionQuery = useQueryDiscussion(discussionId);
+  const messagesQuery = useQueryDiscussionMessages(discussionId);
   const [ready, setReady] = useState(false);
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [disableNewMessages, setDisableNewMessages] = useState(false);

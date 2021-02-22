@@ -2,18 +2,18 @@ import { useQuery } from 'react-query';
 import { axios } from '../../shared/hooks/auth/useToken';
 import { Discussion } from '../../shared/types/api';
 
-const getDiscussionById = async (discussionId: string) => {
+const getById = async (discussionId: string) => {
   return await axios
     .get<Discussion>(`discussion/${discussionId}`)
     .then((res) => res.data);
 };
 
-const useDiscussion = (discussionId: string) => {
+const useQueryDiscussion = (discussionId: string) => {
   return useQuery<Discussion, Error>(
     ['discussion', discussionId],
-    () => getDiscussionById(discussionId),
+    () => getById(discussionId),
     { refetchOnWindowFocus: false }
   );
 };
 
-export default useDiscussion;
+export default useQueryDiscussion;

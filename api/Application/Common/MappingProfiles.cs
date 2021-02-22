@@ -16,7 +16,7 @@ namespace Application.Common {
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.ApplicationUser.Email));
             CreateMap<ApplicationUser, Profiles.Profile>()
-                .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain).Url));
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain).Url));
         }
     }
 }

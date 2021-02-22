@@ -5,7 +5,7 @@ import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
 import { Classroom, Discussion } from '../../../shared/types/api';
 import getStateReducer from '../utils/getStateReducer';
-import useClassrooms from '../../../data/queries/useClassrooms';
+import useQueryClassrooms from '../../../data/queries/useQueryClassrooms';
 import Spinner from '../Spinner';
 import { ErrorIcon } from '../../../shared/assets/icons';
 import { isClassroom, isDiscussion } from '../../../shared/typeguards';
@@ -29,7 +29,7 @@ export type Item = Classroom | Discussion | MenuAction;
 
 const ClassroomMenu = ({ menuButton }: { menuButton: ReactElement }) => {
   const navigate = useNavigate();
-  const { data, isLoading, isError, refetch } = useClassrooms();
+  const { data, isLoading, isError, refetch } = useQueryClassrooms();
   const focusRef = useRef<HTMLButtonElement>(null);
   const [items, setItems] = useState<Item[] | null>(null);
   const [stateReducer, setStateReducer] = useState(() =>
