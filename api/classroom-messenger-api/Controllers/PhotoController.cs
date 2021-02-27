@@ -1,13 +1,20 @@
 ﻿using Application.Photos.Commands.DeletePhoto;
-using Application.Photos.Commands.UploadProfilePhoto;
+using Application.Photos.Commands.UploadUserAvatar;
+using Application.Photos.Queries.GetUserAvatar;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
     public class PhotoController : BaseApiController {
-        // POST api/photo/profile
-        [HttpPost("profile")]
-        public async Task<IActionResult> UploadProfilePhoto([FromForm] UploadProfilePhotoCommand command) {
+        // GET api/photo/avatar
+        [HttpGet("avatar")]
+        public async Task<IActionResult> GetUserAvatar() {
+            return HandleResult(await Mediator.Send(new GetUserAvatarQuery()));
+        }
+
+        // POST api/photo/avatar
+        [HttpPost("avatar")]
+        public async Task<IActionResult> UploadUserAvatar([FromForm] UploadUserAvatarCommand command) {
             return HandleResult(await Mediator.Send(command));
         }
 

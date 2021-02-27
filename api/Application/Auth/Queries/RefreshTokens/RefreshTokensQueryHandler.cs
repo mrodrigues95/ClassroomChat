@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -88,7 +89,7 @@ namespace Application.Auth.Queries.RefreshTokens {
 
             var userDto = new UserDto {
                 Name = user.Name,
-                Email = user.Email
+                Email = user.Email,
             };
 
             var userAndTokenDto = new UserAndTokenDto {

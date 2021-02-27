@@ -1,6 +1,6 @@
 import React from 'react';
 import { FeelingBlueIllustration } from '../../shared/assets/illustrations';
-import LinkOrButton from './LinkOrButton';
+import { Link } from 'react-router-dom';
 
 type Props = {
   message: string;
@@ -16,18 +16,16 @@ const Error = ({ message, altMessage, showAction = true }: Props) => {
       <div className="my-6 text-center">
         <h2 className="font-bold text-2xl">{message}</h2>
         {altMessage && (
-          <h3 className="font-semibold text-gray-700">
-            {altMessage}
-          </h3>
+          <h3 className="font-semibold text-gray-700">{altMessage}</h3>
         )}
       </div>
       {showAction && (
-        <LinkOrButton
+        <Link
           to="/home"
           className="inline-flex justify-center items-center p-3 bg-primary text-white rounded-md font-semibold cursor-pointer transition duration-150 ease-out sm:w-48 focus:outline-none focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark"
         >
           Go home
-        </LinkOrButton>
+        </Link>
       )}
     </div>
   );

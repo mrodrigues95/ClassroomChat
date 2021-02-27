@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.User {
     /// <summary>
-    /// Gets the credentials of the current user that is logged in and authenticated.
+    /// Gets the credentials of the current user that is authenticated.
     /// </summary>
     public class GetCurrentUserDetailQueryHandler : IRequestHandler<GetCurrentUserDetailQuery, Result<UserDto>> {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,7 +21,6 @@ namespace Application.User {
         }
 
         public async Task<Result<UserDto>> Handle(GetCurrentUserDetailQuery request, CancellationToken cancellationToken) {
-            // Retrieve the users information.
             var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
 
             var userDto = new UserDto {

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import useAuth, { AuthContext } from './shared/hooks/auth/useAuth';
 import Home from './components/Home/index';
@@ -27,6 +29,7 @@ const App = () => {
     <BrowserRouter>
       <AuthContext.Provider value={auth}>
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools />
           <Layout>
             <Routes>
               <ProtectedRoute path="/home" element={<Home />} />
@@ -39,6 +42,7 @@ const App = () => {
               <Route path="*" element={<FourOhFour />} />
             </Routes>
           </Layout>
+          <Toaster toastOptions={{ className: 'font-bold' }} />
         </QueryClientProvider>
       </AuthContext.Provider>
     </BrowserRouter>

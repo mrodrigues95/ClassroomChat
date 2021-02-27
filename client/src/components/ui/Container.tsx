@@ -11,6 +11,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
+// TODO: Handle loading/error states here instead.
 export const ContainerBody = ({ children }: Props) => {
   return <section className="relative flex-1">{children}</section>;
 };

@@ -8,34 +8,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Photos.Commands.UploadProfilePhoto {
+namespace Application.Photos.Commands.UploadUserAvatar {
     /// <summary>
-    /// Uploads a new photo that is to be used as the user's profile photo.
+    /// Uploads a new photo that is to be used as the user's avatar photo.
     /// </summary>
-    public class UploadProfilePhotoCommandHandler : IRequestHandler<UploadProfilePhotoCommand, Result<Photo>> {
+    public class UploadUserAvatarCommandHandler : IRequestHandler<UploadUserAvatarCommand, Result<Photo>> {
         private readonly ApplicationContext _context;
         private readonly IPhotoAccessor _photoAccessor;
         private readonly IUserAccessor _userAccessor;
 
-        public UploadProfilePhotoCommandHandler(ApplicationContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor) {
+        public UploadUserAvatarCommandHandler(ApplicationContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor) {
             _context = context;
             _photoAccessor = photoAccessor;
             _userAccessor = userAccessor;
         }
 
-        public async Task<Result<Photo>> Handle(UploadProfilePhotoCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<Photo>> Handle(UploadUserAvatarCommand request, CancellationToken cancellationToken) {
             var user = await _context.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
             if (user is null) Result<Photo>.Failure("Unable to find user.", true);
 
-            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
-            if (currentMain != null) currentMain.IsMain = false;
+            var currentPhoto = user.Photos.FirstOrDefault(x => x.IsCurrent);
+            if (currentPhoto != null) currentPhoto.IsCurrent = false;
 
             var photoUploadResult = await _photoAccessor.AddPhoto(request.File);
             var photo = new Photo {
                 Id = photoUploadResult.PublicId,
                 Url = photoUploadResult.Url,
-                IsMain = true
+                IsCurrent = true
             };
 
             user.Photos.Add(photo);

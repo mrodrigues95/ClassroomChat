@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import MessageContainer from '../ui/messages/MessageContainer';
 import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
@@ -113,8 +113,7 @@ const Discussion = () => {
           allowReconnect={allowReconnect}
           reconnect={handleManualReconnect}
         />
-      </DiscussionContainer>
-      <Toaster toastOptions={{ className: 'font-bold' }} />
+      </DiscussionContainer>      
     </DiscussionContext.Provider>
   );
 };

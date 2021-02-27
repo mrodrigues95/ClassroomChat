@@ -3,12 +3,16 @@ import clsx from 'clsx';
 
 const VARIANTS = {
   primary: {
-    base:
-      'text-black sm:border sm:border-gray-300 focus:bg-gray-200 hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
+    base: 'text-black sm:border sm:border-gray-300',
+    active:
+      'focus:bg-gray-200 hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300',
+    disabled: 'opacity-50',
   },
   default: {
-    base:
-      'border border-transparent bg-primary text-white focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
+    base: 'border border-transparent text-white bg-primary',
+    active:
+      'focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
+    disabled: 'opacity-50',
   },
 };
 
@@ -32,9 +36,10 @@ const Button = ({
     <button
       type="button"
       className={clsx(
-        'relative inline-flex items-center justify-center rounded-md focus:outline-none transition duration-150 ease-in-out',
+        'relative inline-flex items-center justify-center rounded-md transition duration-150 ease-in-out focus:outline-none',
         variantStyles.base,
         props.disabled && 'cursor-not-allowed',
+        props.disabled ? variantStyles.disabled : variantStyles.active,
         fullWidth && 'w-full',
         defaultPadding && 'px-4 py-2',
         className
