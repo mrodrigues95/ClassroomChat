@@ -3,8 +3,8 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Photos.Commands.UploadUserAvatar {
-    public class UploadUserAvatarCommand : IRequest<Result<Photo>> {
+namespace Application.Profile.Commands.UpdateProfilePhoto {
+    public class UpdateProfilePhotoCommand : IRequest<Result<Photo>> {
         public IFormFile File { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Photos;
+﻿using Application.Profile;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 

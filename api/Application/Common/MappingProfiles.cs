@@ -1,11 +1,10 @@
 ﻿using Application.Classrooms;
 using Application.Common.Dtos;
-using AutoMapper;
 using Domain.Entities;
 using System.Linq;
 
 namespace Application.Common {
-    public class MappingProfiles : Profile {
+    public class MappingProfiles : AutoMapper.Profile {
         public MappingProfiles() {
             CreateMap<Classroom, ClassroomDto>();
             CreateMap<Discussion, DiscussionDto>();
@@ -15,6 +14,8 @@ namespace Application.Common {
             CreateMap<ApplicationUserClassroom, StudentDto>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.ApplicationUser.Email));
+            CreateMap<ApplicationUser, Profile.Profile>()
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsCurrent).Url));
         }
     }
 }

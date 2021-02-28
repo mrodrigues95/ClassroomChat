@@ -4,25 +4,25 @@ import { Photo } from '../../shared/types/api';
 
 type Request = Blob;
 
-const upload = async (photo: Request) => {
+const update = async (photo: Request) => {
   const formData = new FormData();
   formData.append('File', photo);
 
   return await axios
-    .post<Photo>('photo/avatar', formData, {
+    .put<Photo>('profile/photo', formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     })
     .then((res) => res.data);
 };
 
-const useMutateUploadAvatar = () => {
+const useMutateUpdateProfilePhoto = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(upload, {
+  return useMutation(update, {
     onSuccess: () => {
-      queryClient.invalidateQueries('userAvatar');
+      queryClient.invalidateQueries('profile');
     },
   });
 };
 
-export default useMutateUploadAvatar;
+export default useMutateUpdateProfilePhoto;

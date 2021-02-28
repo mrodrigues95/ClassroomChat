@@ -27,7 +27,9 @@ export const VerticalNavItem = forwardRef<HTMLButtonElement, Props>(
 
     return (
       <LinkOrButton to={to} selected={selected} ref={ref} {...props}>
-        <span className={clsx(selected ? 'text-white' : 'text-gray-900')}>
+        <span
+          className={clsx('mx-auto xl:mx-0', selected ? 'text-white' : 'text-gray-900')}
+        >
           {icon}
         </span>
         <span className="hidden xl:inline-block">{label}</span>

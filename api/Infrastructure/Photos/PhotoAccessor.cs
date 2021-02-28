@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Application.Photos;
+using Application.Profile;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +30,6 @@ namespace Infrastructure.Photos {
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
             if (uploadResult.Error != null) throw new Exception(uploadResult.Error.Message);            
 
             return new PhotoUploadResult {

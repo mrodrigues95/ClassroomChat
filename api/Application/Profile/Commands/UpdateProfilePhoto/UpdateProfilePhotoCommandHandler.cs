@@ -8,22 +8,22 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Photos.Commands.UploadUserAvatar {
+namespace Application.Profile.Commands.UpdateProfilePhoto {
     /// <summary>
     /// Uploads a new photo that is to be used as the user's avatar photo.
     /// </summary>
-    public class UploadUserAvatarCommandHandler : IRequestHandler<UploadUserAvatarCommand, Result<Photo>> {
+    public class UpdateProfilePhotoCommandHandler : IRequestHandler<UpdateProfilePhotoCommand, Result<Photo>> {
         private readonly ApplicationContext _context;
         private readonly IPhotoAccessor _photoAccessor;
         private readonly IUserAccessor _userAccessor;
 
-        public UploadUserAvatarCommandHandler(ApplicationContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor) {
+        public UpdateProfilePhotoCommandHandler(ApplicationContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor) {
             _context = context;
             _photoAccessor = photoAccessor;
             _userAccessor = userAccessor;
         }
 
-        public async Task<Result<Photo>> Handle(UploadUserAvatarCommand request, CancellationToken cancellationToken) {
+        public async Task<Result<Photo>> Handle(UpdateProfilePhotoCommand request, CancellationToken cancellationToken) {
             var user = await _context.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
             if (user is null) Result<Photo>.Failure("Unable to find user.", true);

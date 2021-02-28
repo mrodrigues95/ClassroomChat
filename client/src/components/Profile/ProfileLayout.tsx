@@ -1,14 +1,12 @@
 import React, {
   ReactElement,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import 'cropperjs/dist/cropper.css';
 import toast from 'react-hot-toast';
 import {
   ColourSwatchIcon,
@@ -24,11 +22,11 @@ import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import FilePicker, { FileType } from '../ui/FilePicker';
 import PhotoCropper from './../ui/PhotoCropper';
-import useMutateUploadAvatar from '../../data/mutations/useMutateUploadAvatar';
+import useMutateUpdateProfilePhoto from '../../data/mutations/useMutateUpdateProfilePhoto';
 import Spinner from '../ui/Spinner';
-import useQueryAvatar from '../../data/queries/useQueryAvatar';
-import { AuthContext } from './../../shared/hooks/auth/useAuth';
+import useQueryProfile from '../../data/queries/useQueryProfile';
 import Error from '../ui/Error';
+import { Profile } from '../../shared/types/api';
 
 const CARDVARIANTS = {
   yellow: 'bg-yellow-400',
@@ -93,13 +91,12 @@ const ProfileItemCard = ({
   );
 };
 
-const ProfileHeader = ({ photoUrl }: { photoUrl: string | undefined }) => {
-  const { user } = useContext(AuthContext)!;
+const ProfileHeader = ({ profile }: { profile?: Profile }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [files, setFiles] = useState<FileType[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
   const focusRef = useRef<HTMLButtonElement>(null);
-  const mutation = useMutateUploadAvatar();
+  const mutation = useMutateUpdateProfilePhoto();
 
   const handlePhotoUpload = () => {
     cropper?.getCroppedCanvas().toBlob((blob) => mutation.mutate(blob!));
@@ -179,7 +176,7 @@ const ProfileHeader = ({ photoUrl }: { photoUrl: string | undefined }) => {
         <div className="relative">
           <Avatar
             url={
-              photoUrl ??
+              profile?.imageUrl ??
               'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
             }
             className="inline-flex items-center justify-center w-full"
@@ -189,23 +186,22 @@ const ProfileHeader = ({ photoUrl }: { photoUrl: string | undefined }) => {
             <FilePicker.Button
               className="absolute right-0 bottom-0 mr-1 rounded-full bg-indigo-400 shadow-lg md:mr-4 md:mb-1 lg:mr-6 focus:outline-none"
               aria-label="Select photo"
-              aria-describedby="cc-tooltip"
             >
               <PlusCircleIcon className="w-6 h-6 text-white lg:w-8 lg:h-8" />
             </FilePicker.Button>
           </FilePicker>
         </div>
         <figcaption className="mt-5 font-bold text-xl sm:text-3xl">
-          {user?.name} 😀
+          {profile?.name} 😀
         </figcaption>
-        <span className="text-gray-700 font-medium">{user?.email}</span>
+        <span className="text-gray-700 font-medium">{profile?.email}</span>
       </figure>
     </>
   );
 };
 
 const ProfileLayout = () => {
-  const { data, isLoading, isError } = useQueryAvatar();
+  const { data: profile, isLoading, isError } = useQueryProfile();
 
   return (
     <>
@@ -220,7 +216,7 @@ const ProfileLayout = () => {
           ) : (
             <>
               <div className="container flex flex-col mx-auto mt-2 w-full p-2 sm:p-0">
-                <ProfileHeader photoUrl={data?.url} />
+                <ProfileHeader profile={profile} />
                 <article className="mt-8">
                   <h2 className="font-bold mb-3 text-xl sm:text-3xl">
                     Settings ⚙️
