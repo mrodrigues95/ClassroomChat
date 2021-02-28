@@ -26,7 +26,7 @@ namespace Application.Photos.Commands.DeletePhoto {
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
             if (photo is null) Result<Unit>.Failure("Unable to find photo.");
-            if (photo.IsCurrent) return Result<Unit>.Failure("You cannot delete your main photo.");
+            if (photo.IsCurrentProfilePhoto) return Result<Unit>.Failure("You cannot delete your main photo.");
 
             var result = await _photoAccessor.DeletePhoto(photo.Id);
             if (result is null) return Result<Unit>.Failure("Problem deleting photo from Cloudinary.");

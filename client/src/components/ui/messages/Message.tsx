@@ -2,13 +2,15 @@ import React, { useMemo } from 'react';
 import { differenceInDays, format, formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
 import * as types from '../../../shared/types/api';
+import Avatar from '../Avatar';
+import { getRandomAvatar } from '../../../shared/utils/getRandomAvatar';
 
 type Props = {
   message: types.Message;
-  lastMessage?: boolean;
+  isLastMessage?: boolean;
 };
 
-const Message = ({ message, lastMessage = false }: Props) => {
+const Message = ({ message, isLastMessage = false }: Props) => {
   const formattedDate = useMemo(() => {
     const date = new Date(message.createdAt);
     if (differenceInDays(new Date(), date) === 0) {
@@ -20,10 +22,16 @@ const Message = ({ message, lastMessage = false }: Props) => {
   }, [message]);
 
   return (
-    <div className={clsx('flex items-start', lastMessage && 'pb-2')}>
-      <svg width="52" height="52" fill="none">
-        <rect x="2" y="2" width="48" height="48" rx="8" fill="#EB5E28" />
-      </svg>
+    <div
+      className={clsx(
+        'flex items-center justify-center',
+        isLastMessage && 'pb-2'
+      )}
+    >
+      <Avatar
+        url={message.createdByImageUrl ?? getRandomAvatar()}
+        imgClassName="h-5 w-5"
+      />
       <div className="flex-1 ml-2">
         <div>
           <span className="font-bold">{message.createdBy}</span>

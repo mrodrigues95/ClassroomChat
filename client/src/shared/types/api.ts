@@ -8,6 +8,7 @@ export type UserBase = {
   username: string;
   email: string;
   password: string;
+  imageUrl?: string;
 };
 
 export type Discussion = {
@@ -33,6 +34,7 @@ export type Message = {
   body: string;
   createdAt: Date;
   createdBy: string;
+  createdByImageUrl: string;
 };
 
 export type DiscussionMessages = {

@@ -6,7 +6,7 @@ import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './DiscussionContainer';
 import useQueryDiscussion from '../../data/queries/useQueryDiscussion';
 import useQueryDiscussionMessages from '../../data/queries/useQueryDiscussionMessages';
-import { PostDiscussionMessageRequest } from '../../data/mutations/useMutateCreateDiscussionMessage';
+import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
 import { Message } from '../../shared/types/api';
 import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 

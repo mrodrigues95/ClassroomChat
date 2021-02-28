@@ -92,7 +92,7 @@ const MessageContainer = ({
                         <Message
                           key={message.id}
                           message={message}
-                          lastMessage={
+                          isLastMessage={
                             index === messages.length - 1 ? false : true
                           }
                         />

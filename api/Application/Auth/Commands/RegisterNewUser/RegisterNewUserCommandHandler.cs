@@ -7,6 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistence;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,12 +16,12 @@ namespace Application.Auth {
     /// Registers a new user with Identity.
     /// </summary>
     public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, Result<UserAndTokenDto>> {
-        private readonly Persistence.ApplicationContext _context;
+        private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenManager _tokenManager;
         private readonly IHttpContextManager _httpContextManager;
 
-        public RegisterNewUserCommandHandler(Persistence.ApplicationContext context, UserManager<ApplicationUser> userManager,
+        public RegisterNewUserCommandHandler(ApplicationContext context, UserManager<ApplicationUser> userManager,
             ITokenManager tokenManager, IHttpContextManager httpContextManager) {
             _context = context;
             _userManager = userManager;
@@ -33,7 +34,7 @@ namespace Application.Auth {
                 return Result<UserAndTokenDto>.Failure("Email already exists.");
             }
 
-            var newUser = await CreateNewUser(request);
+            var newUser = await CreateAndLoginNewUser(request);
             if (newUser is null) return Result<UserAndTokenDto>.Failure("Unable to create new user.");
 
             var refreshToken = await CreateAndSaveRefreshToken(newUser);
@@ -42,7 +43,7 @@ namespace Application.Auth {
             return FinishRegister(newUser, refreshToken);
         }
 
-        private async Task<ApplicationUser> CreateNewUser(RegisterNewUserCommand request) {
+        private async Task<ApplicationUser> CreateAndLoginNewUser(RegisterNewUserCommand request) {
             var newUser = new ApplicationUser {
                 Name = request.Name,
                 UserName = request.Email,

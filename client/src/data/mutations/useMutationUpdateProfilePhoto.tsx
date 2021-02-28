@@ -15,7 +15,7 @@ const update = async (photo: Request) => {
     .then((res) => res.data);
 };
 
-const useMutateUpdateProfilePhoto = () => {
+const useMutationUpdateProfilePhoto = () => {
   const queryClient = useQueryClient();
 
   return useMutation(update, {
@@ -25,4 +25,4 @@ const useMutateUpdateProfilePhoto = () => {
   });
 };
 
-export default useMutateUpdateProfilePhoto;
+export default useMutationUpdateProfilePhoto;

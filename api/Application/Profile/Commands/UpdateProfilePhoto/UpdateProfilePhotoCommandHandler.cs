@@ -26,22 +26,30 @@ namespace Application.Profile.Commands.UpdateProfilePhoto {
         public async Task<Result<Photo>> Handle(UpdateProfilePhotoCommand request, CancellationToken cancellationToken) {
             var user = await _context.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
-            if (user is null) Result<Photo>.Failure("Unable to find user.", true);
-
-            var currentPhoto = user.Photos.FirstOrDefault(x => x.IsCurrent);
-            if (currentPhoto != null) currentPhoto.IsCurrent = false;
+            if (user is null) return Result<Photo>.Failure("Unable to find user.", true);
 
             var photoUploadResult = await _photoAccessor.AddPhoto(request.File);
+
             var photo = new Photo {
                 Id = photoUploadResult.PublicId,
                 Url = photoUploadResult.Url,
-                IsCurrent = true
+                IsCurrentProfilePhoto = true,
             };
-
             user.Photos.Add(photo);
 
+            // Delete the current profile photo from Cloudinary only if it's not one of our
+            // random avatars.
+            var currentProfilePhoto = user.Photos.FirstOrDefault(x => x.IsCurrentProfilePhoto);
+            if (currentProfilePhoto != null) {
+                currentProfilePhoto.IsCurrentProfilePhoto = false;
+                if (!currentProfilePhoto.IsDefaultAvatar) {
+                    var deleteResult = await _photoAccessor.DeletePhoto(currentProfilePhoto.Id);
+                    if (deleteResult is null) return Result<Photo>.Failure("Problem deleting photo from Cloudinary.");
+                }
+            }
+
             var result = await _context.SaveChangesAsync() > 0;
-            if (!result) return Result<Photo>.Failure("There was a problem uploading the photo.");
+            if (!result) return Result<Photo>.Failure("There was a problem saving changes.");
 
             return Result<Photo>.Success(photo);
         }

@@ -22,11 +22,12 @@ import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import FilePicker, { FileType } from '../ui/FilePicker';
 import PhotoCropper from './../ui/PhotoCropper';
-import useMutateUpdateProfilePhoto from '../../data/mutations/useMutateUpdateProfilePhoto';
+import useMutationUpdateProfilePhoto from '../../data/mutations/useMutationUpdateProfilePhoto';
 import Spinner from '../ui/Spinner';
 import useQueryProfile from '../../data/queries/useQueryProfile';
 import Error from '../ui/Error';
 import { Profile } from '../../shared/types/api';
+import { getRandomAvatar } from './../../shared/utils/getRandomAvatar';
 
 const CARDVARIANTS = {
   yellow: 'bg-yellow-400',
@@ -96,7 +97,7 @@ const ProfileHeader = ({ profile }: { profile?: Profile }) => {
   const [files, setFiles] = useState<FileType[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
   const focusRef = useRef<HTMLButtonElement>(null);
-  const mutation = useMutateUpdateProfilePhoto();
+  const mutation = useMutationUpdateProfilePhoto();
 
   const handlePhotoUpload = () => {
     cropper?.getCroppedCanvas().toBlob((blob) => mutation.mutate(blob!));
@@ -175,10 +176,7 @@ const ProfileHeader = ({ profile }: { profile?: Profile }) => {
       <figure className="flex flex-col items-center justify-center">
         <div className="relative">
           <Avatar
-            url={
-              profile?.imageUrl ??
-              'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-            }
+            url={profile?.imageUrl ?? getRandomAvatar()}
             className="inline-flex items-center justify-center w-full"
             imgClassName="h-16 w-16 sm:h-20 sm:w-20 md:w-32 md:h-32 lg:h-48 lg:w-48"
           />

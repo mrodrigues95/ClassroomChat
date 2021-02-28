@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useCallback, useState } from 'react';
 import useHub from './useHub';
-import { PostDiscussionMessageRequest } from '../../data/mutations/useMutateCreateDiscussionMessage';
+import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
 import { Message } from '../types/api';
 import { DiscussionHubEvent } from '../constants/events';
 import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';

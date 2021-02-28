@@ -7,6 +7,7 @@ namespace Application.Common.Dtos {
         public string Body { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
+        public string CreatedByImageUrl { get; set; }
     }
 
     public class DiscussionMessagesListDto {

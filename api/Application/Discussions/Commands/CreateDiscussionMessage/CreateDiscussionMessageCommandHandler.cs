@@ -5,6 +5,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,9 +41,11 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
             if (!success) Result<DiscussionMessageDto>.Failure("There was a problem saving changes.");
 
             return new DiscussionMessageDto {
+                Id = message.Id,
                 Body = message.Body,
                 CreatedAt = message.CreatedAt,
-                CreatedBy = user.Name
+                CreatedBy = user.Name,
+                CreatedByImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentProfilePhoto).Url,
             };
         }
     }

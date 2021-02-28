@@ -9,13 +9,14 @@ namespace Application.Common {
             CreateMap<Classroom, ClassroomDto>();
             CreateMap<Discussion, DiscussionDto>();
             CreateMap<Message, DiscussionMessageDto>()
-                .ForMember(d => d.CreatedBy, o => o.MapFrom(s => s.CreatedBy.Name));
+                .ForMember(d => d.CreatedBy, o => o.MapFrom(s => s.CreatedBy.Name))
+                .ForMember(d => d.CreatedByImageUrl, o => o.MapFrom(s => s.CreatedBy.Photos.FirstOrDefault(x => x.IsCurrentProfilePhoto).Url));
             CreateMap<InviteLink, InviteLinkDto>();
             CreateMap<ApplicationUserClassroom, StudentDto>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.ApplicationUser.Email));
             CreateMap<ApplicationUser, Profile.Profile>()
-                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsCurrent).Url));
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsCurrentProfilePhoto).Url));
         }
     }
 }

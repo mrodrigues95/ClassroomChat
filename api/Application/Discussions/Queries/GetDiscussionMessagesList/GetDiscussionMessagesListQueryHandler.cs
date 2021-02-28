@@ -4,7 +4,6 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Collections.Generic;
@@ -19,20 +18,18 @@ namespace Application.Discussions.Queries.GetDiscussionMessagesList {
     public class GetDiscussionMessagesListQueryHandler : IRequestHandler<GetDiscussionMessagesListQuery, Result<DiscussionMessagesListDto>> {
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserAccessor _userAccessor;
 
-        public GetDiscussionMessagesListQueryHandler(ApplicationContext context, IMapper mapper,
-            UserManager<ApplicationUser> userManager, IUserAccessor userAccessor) {
+        public GetDiscussionMessagesListQueryHandler(ApplicationContext context, IMapper mapper, IUserAccessor userAccessor) {
             _context = context;
             _mapper = mapper;
-            _userManager = userManager;
             _userAccessor = userAccessor;
         }
 
         public async Task<Result<DiscussionMessagesListDto>> Handle(GetDiscussionMessagesListQuery request, CancellationToken cancellationToken) {
-            var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
-            if (user is null) Result<DiscussionMessagesListDto>.Failure("Unable to find user.", true);
+            var user = await _context.Users.Include(p => p.Photos)
+                .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+            if (user is null) return Result<DiscussionMessagesListDto>.Failure("Unable to find user.", true);
 
             var queryable = _context.Messages.AsQueryable();
             var discussionMessages = await queryable

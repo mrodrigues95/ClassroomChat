@@ -43,5 +43,27 @@ namespace Infrastructure.Photos {
             var result = await _cloudinary.DestroyAsync(deleteParams);
             return result.Result == "ok" ? result.Result : null;
         }
+
+        public async Task<PhotoUploadResult> GetRandomAvatar() {
+            SearchResult result = await _cloudinary.Search()
+                .Expression("folder:user_default_avatars")
+                .SortBy("public_id", "desc")
+                .ExecuteAsync();
+            if (result.Error != null) throw new Exception(result.Error.Message);
+
+            // Select a random avatar.
+            var random = new Random();
+            var index = random.Next(result.Resources.Count);
+            var randomAvatar = result.Resources[index];
+
+            // PublicId never changes since the default images are static and stored
+            // in a separate folder in Cloudinary. This means we will run into primary
+            // key constraints when setting a new user's default profile photo. A
+            // simple solution is to just generate a random id ourselves.
+            return new PhotoUploadResult {
+                PublicId = Guid.NewGuid().ToString(),
+                Url = randomAvatar.SecureUrl.ToString(),
+            };
+        }
     }
 }
