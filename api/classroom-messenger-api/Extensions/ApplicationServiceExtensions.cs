@@ -1,4 +1,5 @@
 ﻿using Application.Auth;
+using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
 using Infrastructure.Photos;
@@ -22,7 +23,7 @@ namespace classroom_messenger_api.Extensions {
             });
 
             services.AddMediatR(typeof(LoginUserQueryHandler).Assembly);
-            services.AddAutoMapper(typeof(LoginUserQueryHandler).Assembly);
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddSignalR();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IHttpContextManager, HttpContextManager>();

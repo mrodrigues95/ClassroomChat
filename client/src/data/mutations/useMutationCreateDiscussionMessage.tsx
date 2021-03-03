@@ -15,7 +15,7 @@ const createDiscussionMessage = async (
 ) => {
   return await axios
     .post<PostDiscussionMessageRequest>(
-      `discussion/${newMessage.discussionId}/message`,
+      `discussions/${newMessage.discussionId}/message`,
       newMessage
     )
     .then((res) => res.data);

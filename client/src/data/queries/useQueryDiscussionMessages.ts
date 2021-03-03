@@ -4,7 +4,7 @@ import { DiscussionMessages } from '../../shared/types/api';
 
 const getById = async (discussionId: string) => {
   return await axios
-    .get<DiscussionMessages>(`discussion/${discussionId}/message/list`)
+    .get<DiscussionMessages>(`discussions/${discussionId}/messages`)
     .then((res) => res.data);
 };
 

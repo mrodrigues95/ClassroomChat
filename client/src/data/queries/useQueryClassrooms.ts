@@ -3,7 +3,7 @@ import { Classrooms } from '../../shared/types/api';
 import { axios } from '../../shared/hooks/auth/useToken';
 
 const getClassrooms = async () => {
-  return await axios.get<Classrooms>('classroom/list').then((res) => res.data);
+  return await axios.get<Classrooms>('classrooms').then((res) => res.data);
 };
 
 const useQueryClassrooms = () => {

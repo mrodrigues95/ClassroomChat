@@ -8,32 +8,32 @@ using System;
 using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
-    public class ClassroomController : BaseApiController {
-        // GET api/classroom/list
-        [HttpGet("list")]
+    public class ClassroomsController : BaseApiController {
+        // GET api/classrooms
+        [HttpGet]
         public async Task<IActionResult> GetAll() {
             return HandleResult(await Mediator.Send(new GetClassroomsListQuery()));
         }
 
-        // GET api/classroom/{id}
+        // GET api/classrooms/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id) {
             return HandleResult(await Mediator.Send(new GetClassroomDetailQuery { Id = id }));
         }
 
-        // POST api/classroom
+        // POST api/classrooms
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateClassroomCommand command) {
             return HandleResult(await Mediator.Send(command));
         }
 
-        // POST api/classroom/{token}/join
+        // POST api/classrooms/{token}/join
         [HttpPost("{token}/join")]
         public async Task<IActionResult> Join(string token) {
             return HandleResult(await Mediator.Send(new JoinClassroomCommand { Token = token }));
         }
 
-        // POST api/classroom/{token}/leave
+        // POST api/classrooms/{token}/leave
         [HttpDelete("{id}/leave")]
         public async Task<IActionResult> Leave(Guid id) {
             return HandleResult(await Mediator.Send(new LeaveClassroomCommand { Id = id }));
