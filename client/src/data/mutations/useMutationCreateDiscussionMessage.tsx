@@ -1,6 +1,4 @@
-import { useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { AuthContext } from '../../shared/hooks/auth/useAuth';
 import { axios } from '../../shared/hooks/auth/useToken';
 import { DiscussionMessages } from '../../shared/types/api';
 import { getRandomAvatar } from '../../shared/utils/getRandomAvatar';
@@ -23,7 +21,6 @@ const createDiscussionMessage = async (
 
 const useMutationCreateDiscussionMessage = () => {
   const queryClient = useQueryClient();
-  const { user } = useContext(AuthContext)!;
 
   return useMutation(createDiscussionMessage, {
     onMutate: async (newMessage: PostDiscussionMessageRequest) => {
@@ -47,7 +44,7 @@ const useMutationCreateDiscussionMessage = () => {
               ...newMessage,
               id: Math.random(),
               createdAt: new Date(),
-              createdBy: user?.name ?? 'temp',
+              createdBy: 'temp',
               createdByImageUrl: getRandomAvatar(),
             },
           ],

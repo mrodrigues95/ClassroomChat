@@ -16,13 +16,13 @@ function RouteElement({
   unprotected?: boolean;
 }) {
   const location = useLocation();
-  const { user } = useContext(AuthContext)!;
+  const { hasUser } = useContext(AuthContext)!;
 
-  if (user && unprotected) {
+  if (hasUser && unprotected) {
     return <Navigate to="/home" />;
   }
 
-  if (!user && !unprotected) {
+  if (!hasUser && !unprotected) {
     return <Navigate to="/auth/login" state={{ from: location.pathname }} />;
   }
 

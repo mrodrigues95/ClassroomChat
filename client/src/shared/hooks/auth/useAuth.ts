@@ -3,32 +3,28 @@ import {
   useEffect,
   useState,
   createContext,
-  Dispatch,
-  SetStateAction,
   MutableRefObject,
 } from 'react';
-import { User, UserBase } from '../../types/api';
+import { UserBase } from '../../types/api';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 import { AuthEvent } from '../../constants/events';
 
 type AuthContextType = {
   jwt: MutableRefObject<string | undefined>;
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  hasUser: boolean;
   register: (userToRegister: UserBase) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  refreshToken: () => Promise<void>;
   waitingForToken: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [hasUser, setHasUser] = useState(false);
   const [waitingForToken, setWaitingForToken] = useState(true);
 
-  const onTokenInvalid = () => setUser(null);
+  const onTokenInvalid = () => setHasUser(false);
 
   const refreshToken = useCallback(async () => {
     try {
@@ -36,7 +32,7 @@ const useAuth = () => {
         data: { user, ...rest },
       } = await axios.get<UserAndTokenResponse>('auth/refresh');
 
-      setUser(user);
+      setHasUser(true);
       setToken(rest);
     } finally {
       setWaitingForToken(false);
@@ -59,7 +55,7 @@ const useAuth = () => {
       async (event: WindowEventMap['storage']) => {
         if (event.key === AuthEvent.LOGOUT && isAuthenticated()) {
           clearToken(false);
-          setUser(null);
+          setHasUser(false);
         } else if (event.key === AuthEvent.LOGIN) {
           refreshToken();
         }
@@ -76,7 +72,7 @@ const useAuth = () => {
         password,
       });
 
-      setUser(user);
+      setHasUser(true);
       setToken(rest);
 
       // Fire an event to let all tabs know they should login.
@@ -87,7 +83,7 @@ const useAuth = () => {
 
   const logout = useCallback(() => {
     clearToken();
-    setUser(null);
+    setHasUser(false);
 
     // Fire an event to logout from all tabs.
     window.localStorage.setItem(AuthEvent.LOGOUT, new Date().toISOString());
@@ -102,7 +98,7 @@ const useAuth = () => {
         userToRegister
       );
 
-      setUser(user);
+      setHasUser(true);
       setToken(rest);
 
       // Set a random avatar for the user.
@@ -113,12 +109,10 @@ const useAuth = () => {
 
   return {
     jwt,
-    user,
-    setUser,
+    hasUser,
     register,
     login,
     logout,
-    refreshToken,
     waitingForToken,
   };
 };
