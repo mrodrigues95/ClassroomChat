@@ -41,7 +41,6 @@ namespace classroom_messenger_api.Extensions {
                         }
                     };
                 });
-
             services.AddScoped<ITokenManager, TokenManager>();
 
             return services;

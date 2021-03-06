@@ -19,7 +19,7 @@ type AuthContextType = {
   hasUser: boolean;
   register: (userToRegister: UserBase) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   waitingForToken: boolean;
 };
 
@@ -86,7 +86,8 @@ const useAuth = () => {
     [setToken]
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await axios.get('auth/logout');
     clearToken();
     setHasUser(false);
 

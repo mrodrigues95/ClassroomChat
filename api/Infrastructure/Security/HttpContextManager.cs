@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Infrastructure.Security {
     public class HttpContextManager : IHttpContextManager {
@@ -35,6 +34,10 @@ namespace Infrastructure.Security {
         public void SetHttpCookieRefreshToken(RefreshToken refreshToken) {
             _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", refreshToken.Token,
                 new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        }
+
+        public void DeleteHttpCookieRefreshToken() {
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("refresh_token");
         }
     }
 }

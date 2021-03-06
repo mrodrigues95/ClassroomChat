@@ -17,5 +17,9 @@ namespace Application.Common.Interfaces {
         /// Appends the refresh token to the HTTP context response cookies.
         /// </summary>
         void SetHttpCookieRefreshToken(RefreshToken refreshToken);
+        /// <summary>
+        /// Deletes the refresh token from the current HTTP context response cookies.
+        /// </summary>
+        void DeleteHttpCookieRefreshToken();
     }
 }

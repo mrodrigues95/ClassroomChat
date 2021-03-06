@@ -7,8 +7,8 @@ const Logout = () => {
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext)!;
 
-  const handleOnLogout = () => {
-    logout();
+  const handleOnLogout = async () => {
+    await logout();
     navigate('/auth/login');
   };
 

@@ -1,5 +1,6 @@
 ﻿using Application.Auth.Commands.RegisterNewUser;
 using Application.Auth.Queries.LoginUser;
+using Application.Auth.Queries.LogoutUser;
 using Application.Auth.Queries.RefreshTokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,14 @@ namespace classroom_messenger_api.Controllers {
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserQuery query) {
             return HandleResult(await Mediator.Send(query));
+        }
+
+        /// <summary>
+        /// GET api/auth/logout
+        /// </summary>
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout() {
+            return HandleResult(await Mediator.Send(new LogoutUserQuery()));
         }
 
         /// <summary>

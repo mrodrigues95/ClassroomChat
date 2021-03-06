@@ -6,7 +6,7 @@ import useTokenExpiration from './useTokenExpiration';
 import { User } from '../../types/api';
 
 export const axios = Axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_URL!,
 });
 
 export type UserAndTokenResponse = {

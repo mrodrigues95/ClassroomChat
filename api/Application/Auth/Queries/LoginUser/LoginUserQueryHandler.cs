@@ -7,13 +7,12 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Auth {
     /// <summary>
-    /// Login a user into the application.
+    /// Logs a user into Identity.
     /// </summary>
     public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, Result<UserAndTokenDto>> {
         private readonly ApplicationContext _context;
