@@ -1,12 +1,12 @@
 import React from 'react';
 import NavigationButton from '../../ui/NavigationButton';
 import Avatar from '../../ui/Avatar';
-import useQueryProfile from '../../../data/queries/useQueryProfile';
+import useQueryUser from '../../../data/queries/useQueryUser';
 import Spinner from '../../ui/Spinner';
 import { getRandomAvatar } from './../../../shared/utils/getRandomAvatar';
 
 const ProfileInfo = () => {
-  const { data, isLoading, isError } = useQueryProfile();
+  const { data, isLoading, isError } = useQueryUser();
 
   return (
     <div className="flex items-center justify-center">

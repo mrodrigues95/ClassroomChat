@@ -102,11 +102,11 @@ const useAuth = () => {
         userToRegister
       );
 
-      // Set a random avatar for the user.
-      await axios.post('profile/photo/random', { email: userToRegister.email });
-
       setUser(user);
       setToken(rest);
+
+      // Set a random avatar for the user.
+      await axios.put('user/photo/update', {}, { params: { random: true } });
     },
     [setToken]
   );

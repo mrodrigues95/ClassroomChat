@@ -45,7 +45,7 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
                 Body = message.Body,
                 CreatedAt = message.CreatedAt,
                 CreatedBy = user.Name,
-                CreatedByImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentProfilePhoto).Url,
+                CreatedByImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto).Url,
             };
         }
     }

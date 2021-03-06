@@ -2,7 +2,7 @@
     public class Photo {
         public string Id { get; set; }
         public string Url { get; set; }
-        public bool IsCurrentProfilePhoto { get; set; }
-        public bool IsDefaultAvatar { get; set; } = false;
+        public bool IsCurrentUserPhoto { get; set; }
+        public bool IsCloudinaryStaticPhoto { get; set; } = false;
     }
 }

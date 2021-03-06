@@ -9,20 +9,20 @@ const update = async (photo: Request) => {
   formData.append('File', photo);
 
   return await axios
-    .put<Photo>('profile/photo', formData, {
+    .put<Photo>('user/photo/update', formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     })
     .then((res) => res.data);
 };
 
-const useMutationUpdateProfilePhoto = () => {
+const useMutationUpdateUserPhoto = () => {
   const queryClient = useQueryClient();
 
   return useMutation(update, {
     onSuccess: () => {
-      queryClient.invalidateQueries('profile');
+      queryClient.invalidateQueries('user');
     },
   });
 };
 
-export default useMutationUpdateProfilePhoto;
+export default useMutationUpdateUserPhoto;

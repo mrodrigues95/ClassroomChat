@@ -9,31 +9,41 @@ using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
     public class ClassroomsController : BaseApiController {
-        // GET api/classrooms
+        /// <summary>
+        /// GET api/classrooms
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll() {
             return HandleResult(await Mediator.Send(new GetClassroomsListQuery()));
         }
 
-        // GET api/classrooms/{id}
+        /// <summary>
+        /// GET api/classrooms/{id}
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id) {
             return HandleResult(await Mediator.Send(new GetClassroomDetailQuery { Id = id }));
         }
 
-        // POST api/classrooms
+        /// <summary>
+        /// POST api/classrooms
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateClassroomCommand command) {
             return HandleResult(await Mediator.Send(command));
         }
 
-        // POST api/classrooms/{token}/join
+        /// <summary>
+        /// POST api/classrooms/{token}/join
+        /// </summary>
         [HttpPost("{token}/join")]
         public async Task<IActionResult> Join(string token) {
             return HandleResult(await Mediator.Send(new JoinClassroomCommand { Token = token }));
         }
 
-        // POST api/classrooms/{token}/leave
+        /// <summary>
+        /// POST api/classrooms/{token}/leave
+        /// </summary>
         [HttpDelete("{id}/leave")]
         public async Task<IActionResult> Leave(Guid id) {
             return HandleResult(await Mediator.Send(new LeaveClassroomCommand { Id = id }));

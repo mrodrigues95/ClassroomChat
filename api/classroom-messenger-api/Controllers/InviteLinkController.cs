@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 namespace classroom_messenger_api.Controllers {
     public class InviteLinkController : BaseApiController {
-        // POST api/invitelink
+        /// <summary>
+        /// POST api/invitelink
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create(CreateInviteCommand command) {
             return HandleResult(await Mediator.Send(command));

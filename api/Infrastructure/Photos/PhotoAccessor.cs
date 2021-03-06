@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Application.Profile;
+using Application.User;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;

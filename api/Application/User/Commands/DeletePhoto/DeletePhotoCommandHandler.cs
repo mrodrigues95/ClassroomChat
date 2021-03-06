@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Photos.Commands.DeletePhoto {
+namespace Application.User.Commands.DeletePhoto {
     public class DeletePhotoCommandHandler : IRequestHandler<DeletePhotoCommand, Result<Unit>> {
         private readonly ApplicationContext _context;
         private readonly IPhotoAccessor _photoAccessor;
@@ -26,7 +26,7 @@ namespace Application.Photos.Commands.DeletePhoto {
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
             if (photo is null) Result<Unit>.Failure("Unable to find photo.");
-            if (photo.IsCurrentProfilePhoto) return Result<Unit>.Failure("You cannot delete your main photo.");
+            if (photo.IsCurrentUserPhoto) return Result<Unit>.Failure("You cannot delete your main photo.");
 
             var result = await _photoAccessor.DeletePhoto(photo.Id);
             if (result is null) return Result<Unit>.Failure("Problem deleting photo from Cloudinary.");

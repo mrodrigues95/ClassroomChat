@@ -22,11 +22,11 @@ import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import FilePicker, { FileType } from '../ui/FilePicker';
 import PhotoCropper from './../ui/PhotoCropper';
-import useMutationUpdateProfilePhoto from '../../data/mutations/useMutationUpdateProfilePhoto';
+import useMutationUpdateUserPhoto from '../../data/mutations/useMutationUpdateUserPhoto';
 import Spinner from '../ui/Spinner';
-import useQueryProfile from '../../data/queries/useQueryProfile';
+import useQueryUser from '../../data/queries/useQueryUser';
 import Error from '../ui/Error';
-import { Profile } from '../../shared/types/api';
+import { User } from '../../shared/types/api';
 import { getRandomAvatar } from './../../shared/utils/getRandomAvatar';
 
 const CARDVARIANTS = {
@@ -92,12 +92,12 @@ const ProfileItemCard = ({
   );
 };
 
-const ProfileHeader = ({ profile }: { profile?: Profile }) => {
+const ProfileHeader = ({ user }: { user?: User }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [files, setFiles] = useState<FileType[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
   const focusRef = useRef<HTMLButtonElement>(null);
-  const mutation = useMutationUpdateProfilePhoto();
+  const mutation = useMutationUpdateUserPhoto();
 
   const handlePhotoUpload = () => {
     cropper?.getCroppedCanvas().toBlob((blob) => mutation.mutate(blob!));
@@ -176,7 +176,7 @@ const ProfileHeader = ({ profile }: { profile?: Profile }) => {
       <figure className="flex flex-col items-center justify-center">
         <div className="relative">
           <Avatar
-            url={profile?.imageUrl ?? getRandomAvatar()}
+            url={user?.imageUrl ?? getRandomAvatar()}
             className="inline-flex items-center justify-center w-full"
             imgClassName="h-16 w-16 sm:h-20 sm:w-20 md:w-32 md:h-32 lg:h-48 lg:w-48"
           />
@@ -190,16 +190,16 @@ const ProfileHeader = ({ profile }: { profile?: Profile }) => {
           </FilePicker>
         </div>
         <figcaption className="mt-5 font-bold text-xl sm:text-3xl">
-          {profile?.name} 😀
+          {user?.name} 😀
         </figcaption>
-        <span className="text-gray-700 font-medium">{profile?.email}</span>
+        <span className="text-gray-700 font-medium">{user?.email}</span>
       </figure>
     </>
   );
 };
 
 const ProfileLayout = () => {
-  const { data: profile, isLoading, isError } = useQueryProfile();
+  const { data: user, isLoading, isError } = useQueryUser();
 
   return (
     <>
@@ -214,7 +214,7 @@ const ProfileLayout = () => {
           ) : (
             <>
               <div className="container flex flex-col mx-auto mt-2 w-full p-2 sm:p-0">
-                <ProfileHeader profile={profile} />
+                <ProfileHeader user={user} />
                 <article className="mt-8">
                   <h2 className="font-bold mb-3 text-xl sm:text-3xl">
                     Settings ⚙️

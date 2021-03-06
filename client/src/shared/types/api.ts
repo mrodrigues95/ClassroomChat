@@ -47,8 +47,3 @@ export type Photo = {
   url: string;
   isMain: boolean;
 };
-
-export type Profile = {
-  bio: string;
-  imageUrl: string;
-} & Omit<UserBase, 'password'>;
