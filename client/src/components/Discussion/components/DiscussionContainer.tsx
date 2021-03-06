@@ -1,12 +1,12 @@
 import React from 'react';
 import { QueryObserverResult } from 'react-query';
-import { ContainerBody } from './../ui/Container';
-import Container, { ContainerHeader } from '../ui/Container';
+import { ContainerBody } from './../../ui/Container';
+import Container, { ContainerHeader } from '../../ui/Container';
 import ActionsMenu from './ActionsMenu';
 import DiscussionMembers from './DiscussionMembers';
-import Spinner from '../ui/Spinner';
-import Error from '../ui/Error';
-import { Discussion } from '../../shared/types/api';
+import Spinner from '../../ui/Spinner';
+import Error from '../../ui/Error';
+import { Discussion } from '../../../shared/types/api';
 
 type Props = {
   discussionQuery: QueryObserverResult<Discussion, unknown>;

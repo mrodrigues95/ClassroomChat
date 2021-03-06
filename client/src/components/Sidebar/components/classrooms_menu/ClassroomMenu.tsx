@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { mergeRefs, useLayer } from 'react-laag';
 import { useSelect } from 'downshift';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Classroom, Discussion } from '../../../shared/types/api';
-import getStateReducer from '../utils/getStateReducer';
-import useQueryClassrooms from '../../../data/queries/useQueryClassrooms';
-import Spinner from '../Spinner';
-import { ErrorIcon } from '../../../shared/assets/icons';
-import { isClassroom, isDiscussion } from '../../../shared/typeguards';
+import { Classroom, Discussion } from '../../../../shared/types/api';
+import getStateReducer from '../../../ui/utils/getStateReducer';
+import useQueryClassrooms from '../../../../data/queries/useQueryClassrooms';
+import Spinner from '../../../ui/Spinner';
+import { ErrorIcon } from '../../../../shared/assets/icons';
+import { isClassroom, isDiscussion } from '../../../../shared/typeguards';
 import ClassroomMenuItems from './ClassroomMenuItems';
 import ClassroomMenuItem, { MenuItemVariant } from './ClassroomMenuItem';
-import getMenuActions from '../utils/getMenuActions';
-import { isMenuAction } from './../../../shared/typeguards';
+import getMenuActions from '../../../ui/utils/getMenuActions';
+import { isMenuAction } from './../../../../shared/typeguards';
 
 const ClassroomMenuHeader = ({ title }: { title: string }) => {
   return <li className="px-4 py-2 text-sm font-bold border-b mb-2">{title}</li>;

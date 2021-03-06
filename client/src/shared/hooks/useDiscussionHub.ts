@@ -2,8 +2,14 @@ import { useMemo, useEffect, useCallback, useState } from 'react';
 import useHub from './useHub';
 import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
 import { Message } from '../types/api';
-import { DiscussionHubEvent } from '../constants/events';
 import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';
+
+enum DiscussionHubEvent {
+  CONNECTION_SUCCESS = 'ConnectionSuccess',
+  JOIN_DISCUSSION = 'JoinDiscussion',
+  LEAVE_DISCUSSION = 'LeaveDiscussion',
+  RECEIVE_MESSAGE = 'ReceiveMessage',
+}
 
 const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
   const [receivedHubMessages, setReceivedHubMessages] = useState<Message[]>([]);

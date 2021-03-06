@@ -1,5 +1,5 @@
 import { FieldError } from 'react-hook-form';
-import { FormError } from '../../../shared/constants/validation';
+import { FormError } from '../forms/constants/validation';
 
 type Error = {
   name: string | undefined;

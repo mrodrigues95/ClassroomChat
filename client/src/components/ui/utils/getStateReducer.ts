@@ -3,7 +3,7 @@ import {
   UseSelectState,
   UseSelectStateChangeOptions,
 } from 'downshift';
-import { Item } from '../classrooms/ClassroomMenu';
+import { Item } from '../../Sidebar/components/classrooms_menu/ClassroomMenu';
 
 const classroomsStateReducer = (
   state: UseSelectState<Item>,

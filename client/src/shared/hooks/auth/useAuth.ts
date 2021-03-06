@@ -7,7 +7,12 @@ import {
 } from 'react';
 import { UserBase } from '../../types/api';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
-import { AuthEvent } from '../../constants/events';
+
+enum AuthEvent {
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+  SIGNUP = 'SIGNUP',
+}
 
 type AuthContextType = {
   jwt: MutableRefObject<string | undefined>;

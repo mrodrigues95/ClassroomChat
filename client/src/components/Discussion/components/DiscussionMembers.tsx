@@ -1,9 +1,9 @@
 import React from 'react';
-import Badge, { BadgeVariants } from '../ui/Badge';
-import Avatar from '../ui/Avatar';
-import Button from '../ui/Button';
-import { DotsVerticalIcon } from '../../shared/assets/icons';
-import { getRandomAvatar } from '../../shared/utils/getRandomAvatar';
+import Badge, { BadgeVariants } from '../../ui/Badge';
+import Avatar from '../../ui/Avatar';
+import Button from '../../ui/Button';
+import { DotsVerticalIcon } from '../../../shared/assets/icons';
+import { getRandomAvatar } from '../../../shared/utils/getRandomAvatar';
 
 const DiscussionMembers = () => {
   return (

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import MessageContainer from '../ui/messages/MessageContainer';
 import Sidebar from './../Sidebar/index';
-import DiscussionContainer from './DiscussionContainer';
+import DiscussionContainer from './components/DiscussionContainer';
 import useQueryDiscussion from '../../data/queries/useQueryDiscussion';
 import useQueryDiscussionMessages from '../../data/queries/useQueryDiscussionMessages';
 import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';

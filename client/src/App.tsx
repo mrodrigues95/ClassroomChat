@@ -10,7 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Auth from './components/Auth';
 import Profile from './components/Profile';
 import Discussion from './components/Discussion/index';
-import FourOhFour from './components/Auth/404';
+import FourOhFour from './components/Auth/components/404';
 import Loading from './components/Loading';
 
 const App = () => {

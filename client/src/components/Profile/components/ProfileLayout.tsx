@@ -14,20 +14,20 @@ import {
   NotificationsIcon,
   PlusCircleIcon,
   ProfileIcon,
-} from '../../shared/assets/icons';
-import Sidebar from '../Sidebar';
-import Avatar from '../ui/Avatar';
-import Container, { ContainerBody, ContainerHeader } from '../ui/Container';
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
-import FilePicker, { FileType } from '../ui/FilePicker';
-import PhotoCropper from './../ui/PhotoCropper';
-import useMutationUpdateUserPhoto from '../../data/mutations/useMutationUpdateUserPhoto';
-import Spinner from '../ui/Spinner';
-import useQueryUser from '../../data/queries/useQueryUser';
-import Error from '../ui/Error';
-import { User } from '../../shared/types/api';
-import { getRandomAvatar } from './../../shared/utils/getRandomAvatar';
+} from '../../../shared/assets/icons';
+import Sidebar from '../../Sidebar';
+import Avatar from '../../ui/Avatar';
+import Container, { ContainerBody, ContainerHeader } from '../../ui/Container';
+import Modal from '../../ui/Modal';
+import Button from '../../ui/Button';
+import FilePicker, { FileType } from '../../ui/FilePicker';
+import PhotoCropper from './../../ui/PhotoCropper';
+import useMutationUpdateUserPhoto from '../../../data/mutations/useMutationUpdateUserPhoto';
+import Spinner from '../../ui/Spinner';
+import useQueryUser from '../../../data/queries/useQueryUser';
+import Error from '../../ui/Error';
+import { User } from '../../../shared/types/api';
+import { getRandomAvatar } from './../../../shared/utils/getRandomAvatar';
 
 const CARDVARIANTS = {
   yellow: 'bg-yellow-400',

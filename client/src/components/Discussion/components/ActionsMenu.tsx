@@ -3,9 +3,9 @@ import {
   AttachmentsIcon,
   CalenderIcon,
   SettingsIcon,
-} from '../../shared/assets/icons';
-import Button from '../ui/Button';
-import Tooltip from './../ui/Tooltip';
+} from '../../../shared/assets/icons';
+import Button from '../../ui/Button';
+import Tooltip from './../../ui/Tooltip';
 
 const ActionsMenu = () => {
   return (

@@ -1,4 +1,4 @@
-import { MenuAction } from '../components/ui/classrooms/ClassroomMenu';
+import { MenuAction } from '../components/Sidebar/components/classrooms_menu/ClassroomMenu';
 import { Classroom, Discussion } from './types/api';
 
 export const isClassroom = (obj: any): obj is Classroom =>

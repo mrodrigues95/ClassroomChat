@@ -6,7 +6,7 @@ import {
   RegistrationError,
   FormError,
   LoginError,
-} from '../../../shared/constants/validation';
+} from './constants/validation';
 
 type Props = {
   label: string;

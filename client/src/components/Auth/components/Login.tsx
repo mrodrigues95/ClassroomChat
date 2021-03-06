@@ -1,15 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Form, { FormValues } from './../ui/forms/Form';
-import FormInput from '../ui/forms/FormInput';
-import AuthHeader from './components/AuthHeader';
-import Button from './../ui/Button';
-import Carousel from './components/Carousel';
-import { ChevronIcon, MailIcon, LockIcon } from '../../shared/assets/icons';
-import { CollaborationIllustration } from '../../shared/assets/illustrations';
-import { AuthContext } from '../../shared/hooks/auth/useAuth';
-import { LoginError } from '../../shared/constants/validation';
-import Spinner from '../ui/Spinner';
+import Form, { FormValues } from './../../ui/forms/Form';
+import FormInput from '../../ui/forms/FormInput';
+import AuthHeader from './../components/AuthHeader';
+import Button from './../../ui/Button';
+import Carousel from './../components/Carousel';
+import { ChevronIcon, MailIcon, LockIcon } from '../../../shared/assets/icons';
+import { CollaborationIllustration } from '../../../shared/assets/illustrations';
+import { AuthContext } from '../../../shared/hooks/auth/useAuth';
+import { LoginError } from '../../ui/forms/constants/validation';
+import Spinner from '../../ui/Spinner';
 
 const Login = () => {
   const navigate = useNavigate();

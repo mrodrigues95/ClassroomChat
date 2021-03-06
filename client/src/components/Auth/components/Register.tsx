@@ -1,18 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Form, { FormValues } from '../ui/forms/Form';
-import FormInput from '../ui/forms/FormInput';
-import AuthHeader from './components/AuthHeader';
-import Button from '../ui/Button';
-import { MailIcon, LockIcon, IdentityIcon } from '../../shared/assets/icons';
-import Carousel from './components/Carousel';
-import { MessagingIllustration } from '../../shared/assets/illustrations';
-import { AuthContext } from '../../shared/hooks/auth/useAuth';
-import Spinner from './../ui/Spinner';
+import Form, { FormValues } from '../../ui/forms/Form';
+import FormInput from '../../ui/forms/FormInput';
+import AuthHeader from './../components/AuthHeader';
+import Button from '../../ui/Button';
+import { MailIcon, LockIcon, IdentityIcon } from '../../../shared/assets/icons';
+import Carousel from './../components/Carousel';
+import { MessagingIllustration } from '../../../shared/assets/illustrations';
+import { AuthContext } from '../../../shared/hooks/auth/useAuth';
+import Spinner from './../../ui/Spinner';
 import {
   RegistrationError,
   FormError,
-} from '../../shared/constants/validation';
+} from '../../ui/forms/constants/validation';
 
 type ApiRegistrationErrors = {
   Name?: string[];

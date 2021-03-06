@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import ProfileLayout from './ProfileLayout';
+import ProfileLayout from './components/ProfileLayout';
 
 const Profile = () => {
   return (

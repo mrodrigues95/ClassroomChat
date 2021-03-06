@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuAction } from '../classrooms/ClassroomMenu';
+import { MenuAction } from '../../Sidebar/components/classrooms_menu/ClassroomMenu';
 import { LogoutIcon, PlusCircleIcon } from '../../../shared/assets/icons';
 
 const buildClassroomMenuActions = (): MenuAction[] => {
