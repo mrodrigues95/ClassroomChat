@@ -7,6 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,6 +64,7 @@ namespace Application.Auth {
             var userDto = new UserDto {
                 Name = user.Name,
                 Email = user.Email,
+                ImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto).Url
             };
 
             var userAndTokenDto = new UserAndTokenDto {

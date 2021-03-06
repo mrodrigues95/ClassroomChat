@@ -2,7 +2,6 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import MessageContainer from '../ui/messages/MessageContainer';
-import Sidebar from './../Sidebar/index';
 import DiscussionContainer from './components/DiscussionContainer';
 import useQueryDiscussion from '../../data/queries/useQueryDiscussion';
 import useQueryDiscussionMessages from '../../data/queries/useQueryDiscussionMessages';
@@ -34,21 +33,9 @@ const Discussion = () => {
     start,
     hubState,
     invoke,
-    receivedHubMessages,
   } = useDiscussionHub(discussionId, {
     enabled: false,
   });
-
-  // Everytime a new message is received while connected to the hub,
-  // update the state.
-  useEffect(() => {
-    // Receved hub messages will be empty on initial connect. Once new
-    // messages are sent after the user has connected, this will update.
-    if (receivedHubMessages.length) {
-      const lastMessage = [...receivedHubMessages].pop();
-      setMessages((messages) => [...messages, lastMessage!]);
-    }
-  }, [receivedHubMessages]);
 
   useEffect(() => {
     if (discussionQuery.isSuccess && messagesQuery.isSuccess) {
@@ -104,7 +91,6 @@ const Discussion = () => {
     <DiscussionContext.Provider
       value={{ handleNewDiscussionMessage, disableNewMessages }}
     >
-      <Sidebar />
       <DiscussionContainer discussionQuery={discussionQuery}>
         <MessageContainer
           messages={messages}
@@ -113,7 +99,7 @@ const Discussion = () => {
           allowReconnect={allowReconnect}
           reconnect={handleManualReconnect}
         />
-      </DiscussionContainer>      
+      </DiscussionContainer>
     </DiscussionContext.Provider>
   );
 };

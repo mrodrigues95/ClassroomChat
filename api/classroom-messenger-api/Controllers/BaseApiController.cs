@@ -1,4 +1,5 @@
 ﻿using Application.Common;
+using classroom_messenger_api.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,18 @@ namespace classroom_messenger_api.Controllers {
         protected ActionResult HandleResult<T>(Result<T> result) {
             if (result == null) return NotFound();
             if (result.IsSuccess && result.Value != null) return Ok(result.Value);
+            if (result.IsSuccess && result.Value == null) return NotFound();
+            if (result.IsUnauthorized) return Unauthorized(result.Error);
+            return BadRequest(result.Error);
+        }
+
+        protected ActionResult HandlePagedResult<T>(Result<PagedList<T>> result) {
+            if (result == null) return NotFound();
+            if (result.IsSuccess && result.Value != null) {
+                Response.AddPaginationHeader(result.Value.CurrentPage, result.Value.PageSize,
+                    result.Value.TotalCount, result.Value.TotalPages);
+                return Ok(result.Value);
+            }
             if (result.IsSuccess && result.Value == null) return NotFound();
             if (result.IsUnauthorized) return Unauthorized(result.Error);
             return BadRequest(result.Error);

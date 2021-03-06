@@ -1,8 +1,8 @@
-import { useMemo, useEffect, useCallback, useState } from 'react';
+import { useMemo, useEffect, useCallback } from 'react';
 import useHub from './useHub';
 import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
-import { Message } from '../types/api';
 import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';
+import { useQueryClient } from 'react-query';
 
 enum DiscussionHubEvent {
   CONNECTION_SUCCESS = 'ConnectionSuccess',
@@ -12,17 +12,21 @@ enum DiscussionHubEvent {
 }
 
 const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
-  const [receivedHubMessages, setReceivedHubMessages] = useState<Message[]>([]);
+  const queryClient = useQueryClient();
 
   // TODO: Do something with these responses or just remove them.
   const onConnectionSuccess = (message: HubResponse) => console.log(message);
   const onJoinDiscussion = (message: HubResponse) => console.log(message);
   const onLeaveDiscussion = (message: HubResponse) => console.log(message);
 
-  const onReceiveMessage = useCallback((message: HubResponse) => {
-    const incomingMessage = message as Message;
-    setReceivedHubMessages((messages) => [...messages, incomingMessage]);
-  }, []);
+  const onReceiveMessage = useCallback(
+    (message: HubResponse) => {
+      if (message) {
+        queryClient.invalidateQueries(['discussionMessages', discussionId]);
+      }
+    },
+    [discussionId, queryClient]
+  );
 
   const discussionEventMap: HubActionEventMap = useMemo(() => {
     const map = new Map() as HubActionEventMap;
@@ -72,7 +76,6 @@ const useDiscussionHub = (discussionId: string, opts?: HubOptions) => {
     reconnect,
     start,
     invoke,
-    receivedHubMessages,
   };
 };
 

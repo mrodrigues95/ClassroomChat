@@ -33,6 +33,7 @@ const useAuth = () => {
 
   const refreshToken = useCallback(async () => {
     try {
+      setWaitingForToken(true);
       const {
         data: { user, ...rest },
       } = await axios.get<UserAndTokenResponse>('auth/refresh');

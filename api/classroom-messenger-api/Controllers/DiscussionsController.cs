@@ -1,4 +1,5 @@
-﻿using Application.Discussions.Commands;
+﻿using Application.Common;
+using Application.Discussions.Commands;
 using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Discussions.Queries.GetDiscussionMessagesList;
 using Microsoft.AspNetCore.Authorization;
@@ -29,8 +30,8 @@ namespace classroom_messenger_api.Controllers {
         /// GET api/discussions/{id}/messages
         /// </summary>
         [HttpGet("{id}/messages")]
-        public async Task<IActionResult> GetAllMessages([FromRoute] Guid id) {
-            return HandleResult(await Mediator.Send(new GetDiscussionMessagesListQuery { DiscussionId = id }));
+        public async Task<IActionResult> GetAllMessages([FromRoute] Guid id, [FromQuery] PagingParams param) {
+            return HandlePagedResult(await Mediator.Send(new GetDiscussionMessagesListQuery { DiscussionId = id, Params = param }));
         }
     }
 }

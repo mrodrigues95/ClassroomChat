@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Application.Common.Dtos {
     public class DiscussionMessageDto {
@@ -8,9 +7,5 @@ namespace Application.Common.Dtos {
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedByImageUrl { get; set; }
-    }
-
-    public class DiscussionMessagesListDto {
-        public ICollection<DiscussionMessageDto> Messages { get; set; }
     }
 }

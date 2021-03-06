@@ -1,6 +1,6 @@
 import { Message } from '../types/api';
 
-export type HubResponse = string | Message;
+export type HubResponse = string | Message | null;
 
 export type HubOptions = {
   enabled?: boolean;
