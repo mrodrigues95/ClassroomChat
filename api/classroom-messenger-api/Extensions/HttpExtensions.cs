@@ -14,5 +14,15 @@ namespace classroom_messenger_api.Extensions {
             response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader));
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
+
+        public static void AddPaginationHeader(this HttpResponse response, string previousCursor,
+            string nextCursor) {
+            var paginationHeader = new {
+                previousCursor,
+                nextCursor
+            };
+            response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader));
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+        }
     }
 }

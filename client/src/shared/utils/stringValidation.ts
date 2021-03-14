@@ -1,11 +1,12 @@
 /**
- * Checks for an empty string.
+ * Checks for an empty or undefined string.
  * @param {string} value The string to be validated.
  * @return {boolean} The result of validating the string.
  */
 export const isEmpty = (value: string) => {
   if (!value) return true;
   if (value.trim() === '') return true;
+  if (value.trim().length === 0) return true;
   return false;
 };
 

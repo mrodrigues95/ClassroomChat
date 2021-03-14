@@ -8,6 +8,7 @@ import Message from './Message';
 import Error from './../Error';
 import * as types from '../../../shared/types/api';
 import Button from './../Button';
+import InfiniteScrolling from './../InfiniteScrolling';
 
 type GroupedMessagesMap = Map<string, types.Message[]>;
 
@@ -15,6 +16,8 @@ type Props = {
   messages: types.Message[] | null;
   loading: boolean;
   error: boolean;
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
   allowReconnect: boolean;
   reconnect: () => Promise<boolean>;
 };
@@ -23,10 +26,13 @@ const MessageContainer = ({
   messages,
   loading,
   error,
+  fetchNextPage,
+  hasNextPage = false,
   allowReconnect,
   reconnect,
 }: Props) => {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const [isReconnecting, setIsReconnecting] = useState(false);
 
   useEffect(() => {
@@ -73,7 +79,10 @@ const MessageContainer = ({
 
   return (
     <>
-      <div className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md">
+      <div
+        ref={rootRef}
+        className="flex flex-col absolute inset-0 border border-transparent sm:shadow-container sm:rounded-md"
+      >
         <div className="h-full px-4 py-2 overflow-y-auto">
           {loading ? (
             <div className="flex h-full items-center justify-center">
@@ -85,6 +94,11 @@ const MessageContainer = ({
             <>
               {groupedMessages && groupedMessages.size > 0 ? (
                 <>
+                  <InfiniteScrolling
+                    rootRef={rootRef}
+                    onIntersect={fetchNextPage}
+                    enabled={hasNextPage}
+                  />
                   {[...groupedMessages].map(([date, messages]) => (
                     <React.Fragment key={date}>
                       <MessageDivider key={date} date={date} />

@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,13 +28,23 @@ namespace Application.Discussions.Queries.GetDiscussionMessagesList {
                 .SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
             if (user is null) return Result<PagedList<DiscussionMessageDto>>.Failure("Unable to find user.", true);
 
-            var query = _context.Messages                
-                .Where(x => x.Discussion.Id == request.DiscussionId)
-                .OrderBy(d => d.CreatedAt)
-                .ProjectTo<DiscussionMessageDto>(_mapper.ConfigurationProvider)
-                .AsQueryable();
+            IQueryable<DiscussionMessageDto> query;
+            if (request.Params.Cursor is null) {
+                query = _context.Messages
+                    .Where(x => x.Discussion.Id == request.DiscussionId)
+                    .OrderByDescending(d => d.SequentialId)
+                    .ProjectTo<DiscussionMessageDto>(_mapper.ConfigurationProvider)
+                    .AsQueryable();
+            } else {
+                query = _context.Messages
+                    .Where(x => x.Discussion.Id == request.DiscussionId &&
+                        x.SequentialId <= Convert.ToInt32(request.Params.Cursor))
+                    .OrderByDescending(d => d.SequentialId)
+                    .ProjectTo<DiscussionMessageDto>(_mapper.ConfigurationProvider)
+                    .AsQueryable();
+            }
 
-            var messages = await PagedList<DiscussionMessageDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize);
+            var messages = await PagedList<DiscussionMessageDto>.CreateCursorAsync(query, request.Params.Cursor, request.Params.Size, "Cursor");
             return Result<PagedList<DiscussionMessageDto>>.Success(messages);
         }
     }

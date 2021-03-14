@@ -37,11 +37,6 @@ export type Message = {
   createdByImageUrl: string;
 };
 
-export type DiscussionMessages = {
-  discussionId?: number;
-  messages: Message[];
-};
-
 export type Photo = {
   id: string;
   url: string;

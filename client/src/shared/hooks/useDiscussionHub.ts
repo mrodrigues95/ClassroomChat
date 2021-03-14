@@ -1,8 +1,12 @@
 import { useMemo, useEffect, useCallback } from 'react';
 import useHub from './useHub';
-import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
 import { HubActionEventMap, HubOptions, HubResponse } from '../types/hub';
 import { useQueryClient } from 'react-query';
+
+export type PostDiscussionMessageRequest = {
+  discussionId: number | string;
+  body: string;
+};
 
 enum DiscussionHubEvent {
   CONNECTION_SUCCESS = 'ConnectionSuccess',

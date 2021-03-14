@@ -5,7 +5,7 @@ import MessageContainer from '../ui/messages/MessageContainer';
 import DiscussionContainer from './components/DiscussionContainer';
 import useQueryDiscussion from '../../data/queries/useQueryDiscussion';
 import useQueryDiscussionMessages from '../../data/queries/useQueryDiscussionMessages';
-import { PostDiscussionMessageRequest } from '../../data/mutations/useMutationCreateDiscussionMessage';
+import { PostDiscussionMessageRequest } from '../../shared/hooks/useDiscussionHub';
 import { Message } from '../../shared/types/api';
 import useDiscussionHub from './../../shared/hooks/useDiscussionHub';
 
@@ -28,18 +28,19 @@ const Discussion = () => {
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [disableNewMessages, setDisableNewMessages] = useState(false);
   const [allowReconnect, setAllowReconnect] = useState(false);
-  const {
-    reconnect,
-    start,
-    hubState,
-    invoke,
-  } = useDiscussionHub(discussionId, {
-    enabled: false,
-  });
+  const { reconnect, start, hubState, invoke } = useDiscussionHub(
+    discussionId,
+    {
+      enabled: false,
+    }
+  );
 
   useEffect(() => {
     if (discussionQuery.isSuccess && messagesQuery.isSuccess) {
-      setMessages(messagesQuery.data.messages);
+      const data = messagesQuery.data.pages
+        .flatMap((page) => page.data as Message[])
+        .reverse();
+      setMessages(data);
       setReady(true);
     }
   }, [discussionQuery, messagesQuery]);
@@ -96,6 +97,8 @@ const Discussion = () => {
           messages={messages}
           loading={messagesQuery.isLoading}
           error={messagesQuery.isError}
+          fetchNextPage={messagesQuery.fetchNextPage}
+          hasNextPage={messagesQuery.hasNextPage ?? false}
           allowReconnect={allowReconnect}
           reconnect={handleManualReconnect}
         />

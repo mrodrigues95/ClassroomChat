@@ -23,9 +23,16 @@ namespace classroom_messenger_api.Controllers {
         protected ActionResult HandlePagedResult<T>(Result<PagedList<T>> result) {
             if (result == null) return NotFound();
             if (result.IsSuccess && result.Value != null) {
-                Response.AddPaginationHeader(result.Value.CurrentPage, result.Value.PageSize,
-                    result.Value.TotalCount, result.Value.TotalPages);
-                return Ok(result.Value);
+                if (result.Value.IsOffsetLimitPagination) {
+                    Response.AddPaginationHeader(result.Value.OffsetLimitAttributes.CurrentPage,
+                        result.Value.OffsetLimitAttributes.PageSize, result.Value.OffsetLimitAttributes.TotalCount,
+                        result.Value.OffsetLimitAttributes.TotalPages);
+                    return Ok(result.Value);
+                } else if (result.Value.IsCursorBasedPagination) {
+                    Response.AddPaginationHeader(result.Value.CursorAttributes.PreviousCursor,
+                        result.Value.CursorAttributes.NextCursor);
+                    return Ok(result.Value);
+                }
             }
             if (result.IsSuccess && result.Value == null) return NotFound();
             if (result.IsUnauthorized) return Unauthorized(result.Error);
