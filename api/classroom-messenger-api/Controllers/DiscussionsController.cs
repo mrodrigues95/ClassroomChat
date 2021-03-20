@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Common.Paging;
 using Application.Discussions.Commands;
 using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Discussions.Queries.GetDiscussionMessagesList;

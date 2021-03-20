@@ -97,6 +97,7 @@ const Discussion = () => {
           messages={messages}
           loading={messagesQuery.isLoading}
           error={messagesQuery.isError}
+          isFetchingNextPage={messagesQuery.isFetchingNextPage}
           fetchNextPage={messagesQuery.fetchNextPage}
           hasNextPage={messagesQuery.hasNextPage ?? false}
           allowReconnect={allowReconnect}

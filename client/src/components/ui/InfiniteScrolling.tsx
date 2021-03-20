@@ -3,10 +3,12 @@ import useIntersectionObserver from '../../shared/hooks/useIntersectionObserver'
 
 type Props = {
   onIntersect: () => void;
+  isFetching: boolean;
+  enabled: boolean;
   rootRef?: MutableRefObject<HTMLElement | null>;
-  enabled?: boolean;
 };
 
+// TODO: Create skeleton component to use as a loading indicator.
 const InfiniteScrolling = ({
   rootRef,
   onIntersect,

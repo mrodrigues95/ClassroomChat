@@ -16,6 +16,7 @@ type Props = {
   messages: types.Message[] | null;
   loading: boolean;
   error: boolean;
+  isFetchingNextPage: boolean;
   fetchNextPage: () => void;
   hasNextPage: boolean;
   allowReconnect: boolean;
@@ -27,11 +28,12 @@ const MessageContainer = ({
   loading,
   error,
   fetchNextPage,
+  isFetchingNextPage = false,
   hasNextPage = false,
   allowReconnect,
   reconnect,
 }: Props) => {
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLSpanElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const [isReconnecting, setIsReconnecting] = useState(false);
 
@@ -97,6 +99,7 @@ const MessageContainer = ({
                   <InfiniteScrolling
                     rootRef={rootRef}
                     onIntersect={fetchNextPage}
+                    isFetching={isFetchingNextPage}
                     enabled={hasNextPage}
                   />
                   {[...groupedMessages].map(([date, messages]) => (
@@ -123,7 +126,7 @@ const MessageContainer = ({
               )}
             </>
           )}
-          <div ref={bottomRef} aria-hidden="true" />
+          <span ref={bottomRef} aria-hidden="true" />
         </div>
         <MessageBox />
       </div>

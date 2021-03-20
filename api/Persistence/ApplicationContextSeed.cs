@@ -6,6 +6,7 @@ using Domain.Entities;
 using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Helpers;
 
 namespace Persistence {
     public class ApplicationContextSeed {
@@ -33,6 +34,11 @@ namespace Persistence {
 
                 if (!await context.ApplicationUserClassrooms.AnyAsync()) {
                     await context.ApplicationUserClassrooms.AddRangeAsync(GetPreConfiguredApplicationUserClassrooms(context));
+                    await context.SaveChangesAsync();
+                }
+
+                if (!await context.Messages.AnyAsync()) {
+                    await context.Messages.AddRangeAsync(GetPreConfiguredDiscussionMessages(context));
                     await context.SaveChangesAsync();
                 }
             } catch (Exception ex) {
@@ -94,12 +100,24 @@ namespace Persistence {
                 };
             }
 
+            static IEnumerable<Message> GetPreConfiguredDiscussionMessages(ApplicationContext context) {
+                var messages = new List<Message>();
+                for (int i = 0; i < 200; ++i) {
+                    messages.Add(new Message(GetDiscussion(context, 0), GetApplicationUser(context, 0), RandomParagraphGenerator.AddContentParagraphs(1, 1, 5, 1, 20)));
+                }
+                return messages;
+            }
+
             static ApplicationUser GetApplicationUser(ApplicationContext context, int skip) {
                 return context.ApplicationUsers.OrderBy(x => x.Id).Skip(skip).First();
             }
 
             static Classroom GetClassroom(ApplicationContext context, int skip) {
                 return context.Classrooms.OrderBy(x => x.Id).Skip(skip).First();
+            }
+
+            static Discussion GetDiscussion(ApplicationContext context, int skip) {
+                return context.Discussions.OrderBy(x => x.Id).Skip(skip).First();
             }
         }
     }

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.Common {
+namespace Application.Common.Paging {
     public class PagedList<T> : List<T> {
         public PagedList(List<T> items, int count, int pageNumber, int pageSize) {
             OffsetLimitAttributes = new OffsetLimitHelper() {
                 CurrentPage = pageNumber,
-                TotalPages = (int) Math.Ceiling(count / (double) pageSize),
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
                 PageSize = pageSize,
                 TotalCount = count
             };
@@ -52,8 +52,9 @@ namespace Application.Common {
         /// <param name="source">The base queryable to apply pagination to.</param>
         /// <param name="cursor">The cursor for the next page.</param>
         /// <param name="pageSize">The number of items to retrieve.</param>
-        /// <param name="filterOn">The name of the column you are filtering on.</param>
-        public static async Task<PagedList<T>> CreateCursorAsync(IQueryable<T> source, string cursor, 
+        /// <param name="filterOn">The name of the column you are filtering on. 
+        /// This column should be auto-incremented most of the time.</param>
+        public static async Task<PagedList<T>> CreateCursorAsync(IQueryable<T> source, string cursor,
             int pageSize, string filterOn) {
             var items = await source.Take(pageSize + 1).ToListAsync();
             var isFirstPage = cursor is null;
@@ -86,6 +87,6 @@ namespace Application.Common {
                 throw new Exception("Unable to find column while attempting to retrieve the next cursor. " +
                     "Please check that the column name matches the exact property name on the object.");
             }
-        } 
+        }
     }
 }

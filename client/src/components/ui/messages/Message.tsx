@@ -28,16 +28,20 @@ const Message = ({ message, isLastMessage = false }: Props) => {
         isLastMessage && 'pb-2'
       )}
     >
-      <Avatar
-        url={message.createdByImageUrl ?? getRandomAvatar()}
-        imgClassName="h-5 w-5"
-      />
-      <div className="flex-1 ml-2">
-        <div>
-          <span className="font-bold">{message.createdBy}</span>
-          <span className="ml-2 text-xs text-gray-500">{formattedDate}</span>
+      <div className="flex flex-1">
+        <Avatar
+          url={message.createdByImageUrl ?? getRandomAvatar()}
+          imgClassName="h-5 w-5"
+        />
+        <div className="flex flex-col w-full ml-2">
+          <div>
+            <span className="font-bold">{message.createdBy}</span>
+            <span className="ml-2 text-xs text-gray-500">{formattedDate}</span>
+          </div>
+          <p className="font-semibold text-sm w-full break-all">
+            {message.body}
+          </p>
         </div>
-        <p className="font-semibold text-sm">{message.body}</p>
       </div>
     </div>
   );

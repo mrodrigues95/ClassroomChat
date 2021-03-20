@@ -64,7 +64,7 @@ namespace Application.Auth {
             var userDto = new UserDto {
                 Name = user.Name,
                 Email = user.Email,
-                ImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto).Url
+                ImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto)?.Url
             };
 
             var userAndTokenDto = new UserAndTokenDto {
