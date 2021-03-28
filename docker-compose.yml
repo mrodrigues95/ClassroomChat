@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: 'cc-postgres'
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data/'
+    environment:
+      - POSTGRES_DB=ClassroomChat
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pgserver
+
+  backend:
+    container_name: 'cc-backend'
+    image: ${DOCKER_REGISTRY-}backend
+    ports:
+      - '5103:80'
+      - '443'
+    build:
+      context: .
+      dockerfile: api/classroom-messenger-api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - PORT=80
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${APPDATA}\.aspnet\https:/root/.aspnet/https/
+    depends_on:
+      - db
+
+  frontend:
+    container_name: 'cc-frontend'
+    command: npm start
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    volumes:
+      - './client:/app/frontend:delegated'
+    working_dir: /app/frontend
+    ports:
+      - '3000:3000'
+    environment:
+      CHOKIDAR_USEPOLLING: 'true'
+    depends_on:
+      - backend
+
+volumes:
+  pgdata: {}

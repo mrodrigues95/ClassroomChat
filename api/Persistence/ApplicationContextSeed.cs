@@ -103,7 +103,7 @@ namespace Persistence {
             static IEnumerable<Message> GetPreConfiguredDiscussionMessages(ApplicationContext context) {
                 var messages = new List<Message>();
                 for (int i = 0; i < 200; ++i) {
-                    messages.Add(new Message(GetDiscussion(context, 0), GetApplicationUser(context, 0), RandomParagraphGenerator.AddContentParagraphs(1, 1, 5, 1, 20)));
+                    messages.Add(new Message(GetDiscussion(context, 0), GetApplicationUser(context, 0), RandomMessageGenerator.Generate(1, 1, 5, 1, 20)));
                 }
                 return messages;
             }

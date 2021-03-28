@@ -27,7 +27,6 @@ namespace classroom_messenger_api {
                     logger.LogError(ex, "An error occured while seeding the database.");
                 }
             }
-
             host.Run();
         }
 
