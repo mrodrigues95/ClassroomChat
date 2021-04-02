@@ -16,12 +16,12 @@ services:
   backend:
     container_name: 'cc-backend'
     image: ${DOCKER_REGISTRY-}backend
-    ports:
-      - '5103:80'
-      - '443'
     build:
       context: .
       dockerfile: api/classroom-messenger-api/Dockerfile
+    ports:
+      - '5103:80'
+      - '443'
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
@@ -33,16 +33,17 @@ services:
       - db
 
   frontend:
-    container_name: 'cc-frontend'
-    command: npm start
+    container_name: 'cc-frontend'    
     build:
       context: .
       dockerfile: client/Dockerfile
-    volumes:
-      - './client:/app/frontend:delegated'
-    working_dir: /app/frontend
     ports:
       - '3000:3000'
+    volumes:
+      - './client:/app/frontend:rw'
+      - '/app/frontend/node_modules'
+    working_dir: /app/frontend
+    command: npm start
     environment:
       CHOKIDAR_USEPOLLING: 'true'
     depends_on:

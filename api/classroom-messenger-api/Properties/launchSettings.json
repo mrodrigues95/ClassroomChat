@@ -13,22 +13,16 @@
       "commandName": "IISExpress",
       "launchUrl": "api/user",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
       }
     },
     "classroom_messenger_api": {
       "commandName": "Project",
       "launchUrl": "api/user",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/user",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   }
 }
