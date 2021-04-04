@@ -1,7 +1,6 @@
 ﻿using Application.Auth;
 using Application.Common;
 using Application.Common.Interfaces;
-using AutoMapper;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
