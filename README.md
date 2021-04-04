@@ -14,7 +14,7 @@ Classroom.Chat allows for direct communication between students and teachers so 
 - Private messaging
 
 ## Getting Started
-Make sure you have [installed](https://docs.docker.com/desktop/) and configured docker in your local environment. After that, you will be able to run the commands below in the root directory of this repo.
+Make sure you have [installed](https://docs.docker.com/desktop/) and [configured](#configuring-docker) docker in your local environment. After that, you will be able to run the commands below in the root directory of this repo.
 
 ```sh
 git clone https://github.com/mrodrigues95/ClassroomChat.git
@@ -31,7 +31,7 @@ api: http://localhost:8080
 web: http://localhost:3000
 ```
 
-
+<a id="configuring-docker"></a>
 ## Configuring Docker and .NET Environment Variables
 First, ensure you have the [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) installed.
 
@@ -48,7 +48,6 @@ It doesn't matter what you enter as the secret, just as long as you set them in 
 
 ### .NET HTTPS Dev Certificates
 ```sh
-cd ../.. (back into the root dir of this repo)
 dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\API.pfx -p <enter_secret_used_from_above>
 dotnet dev-certs https --trust
 ```
