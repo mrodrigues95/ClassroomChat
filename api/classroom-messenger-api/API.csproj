@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>classroom_messenger_api</RootNamespace>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>da8d0bd5-755f-4cd3-9686-8e6b7cfd1a05</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
