@@ -14,15 +14,46 @@ Classroom.Chat allows for direct communication between students and teachers so 
 - Private messaging
 
 ## Getting Started
-
-### Installation
+Make sure you have [installed](https://docs.docker.com/desktop/) and configured docker in your local environment. After that, you will be able to run the commands below in the root directory of this repo.
 
 ```sh
 git clone https://github.com/mrodrigues95/ClassroomChat.git
 ```
 ```sh
-npm install
+docker-compose build
 ```
+```sh
+docker-compose up
+```
+Application URLs can be accessed as shown below:
+```sh
+api: http://localhost:8080
+web: http://localhost:3000
+```
+
+
+## Configuring Docker and .NET Environment Variables
+First, ensure you have the [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) installed.
+
+### .NET User Secrets
+Open up a terminal and run the following commands:
+```sh
+cd api/classroom-messenger-api
+dotnet user-secrets init
+dotnet user-secrets set "TokenKey" "<enter_random_secret_here>"
+dotnet user-secrets set "Kestrel:Certificates:Development:Password" "<enter_random_secret_here>"
+```
+It doesn't matter what you enter as the secret, just as long as you set them in your environment as shown above.
+> **IMPORTANT:** Take note of the secret you entered for Kestrel:Certificates:Development:Password, as you will need it when we set the dev certificates.
+
+### .NET HTTPS Dev Certificates
+```sh
+cd ../.. (back into the root dir of this repo)
+dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\API.pfx -p <enter_secret_used_from_above>
+dotnet dev-certs https --trust
+```
+As mentioned earlier, enter the secret you used when setting the kestrel env variables for the dev certificate.
+Once the certs have been set up, your local environment will be ready to go.
 
 ## Author: Marcus Rodrigues
 - Website: https://mrodrigues.me/

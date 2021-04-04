@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY client/package*.json ./
 
 # Install frontend dependencies
-RUN npm install
+RUN yarn install

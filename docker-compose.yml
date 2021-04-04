@@ -3,11 +3,11 @@ version: '3.8'
 services:
   db:
     container_name: 'cc-postgres'
-    image: 'postgres:latest'
+    image: postgres:latest
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
-      - 'pgdata:/var/lib/postgresql/data/'
+      - pgdata:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=ClassroomChat
       - POSTGRES_USER=postgres
@@ -22,12 +22,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - DOTNET_RUNNING_IN_CONTAINER=true
     volumes:
       - ./api:/app/backend:rw
       - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
       - ${APPDATA}\.aspnet\https:/root/.aspnet/https/
     working_dir: /app/backend
-    command: bash -c "dotnet restore && dotnet watch --project classroom-messenger-api run --no-restore --no-launch-profile"
+    command: bash -c "dotnet restore && dotnet watch --project classroom-messenger-api run --no-launch-profile"
     depends_on:
       - db
 
