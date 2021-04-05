@@ -33,7 +33,7 @@ services:
       - db
 
   frontend:
-    container_name: 'cc-frontend'    
+    container_name: 'cc-frontend'
     build:
       context: .
       dockerfile: client/Dockerfile
@@ -45,7 +45,7 @@ services:
       - ./client:/app/frontend:rw
       - /app/frontend/node_modules
     working_dir: /app/frontend
-    command: npm start
+    command: yarn start
     depends_on:
       - backend
 

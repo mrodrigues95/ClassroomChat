@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes } from 'react';
 import FormItem from './FormItem';
-import { useFormContext, ValidationRules } from 'react-hook-form';
+import { useFormContext, RegisterOptions } from 'react-hook-form';
 import getElementError from '../utils/getElementError';
 import {
   RegistrationError,
@@ -12,7 +12,7 @@ type Props = {
   label: string;
   altLabel?: string;
   error?: LoginError | FormError | RegistrationError;
-  validation?: ValidationRules;
+  validation?: RegisterOptions;
   children?: React.ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 

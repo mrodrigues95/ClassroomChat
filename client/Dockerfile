@@ -1,4 +1,4 @@
-FROM node:13.13.0-alpine
+FROM node:14.16.0-alpine
 EXPOSE 3000
 
 ## Copy frontend files

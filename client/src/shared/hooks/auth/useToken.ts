@@ -75,7 +75,7 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
         return response;
       },
       (error) => {
-        if (error.response.status === 401 && jwt.current) {
+        if (error?.response?.status === 401 && jwt.current) {
           clearToken();
           onTokenInvalid();
         }
