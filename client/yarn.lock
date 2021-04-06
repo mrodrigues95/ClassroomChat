@@ -1249,10 +1249,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@headlessui/react@^0.3.1-d519f7d":
-  version "0.3.1-d519f7d"
-  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-0.3.1-d519f7d.tgz#64f28267448d3ea9443ee19a6c4a5b315468b5cf"
-  integrity sha512-OeAucMKAf48JqMYbajxmp1sOCvU8KhfjbLO+nj6lehOnW+MAI3p8JZ9Q8BBkBIiEJUBsCdGTrKu+YdrcD4VFeg==
+"@headlessui/react@^0.3.2-5ff5225":
+  version "0.3.2-5ff5225"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-0.3.2-5ff5225.tgz#a6425ec84cd60c62bac7c779c7df9d20e2ffc74e"
+  integrity sha512-1Ra0pzoLqG5a8TNdlezEmufXPy7cqYiMVcaOYyovp4ZzLUGN90IOXWYmI/xtmdZAi2dFUk+ldh7nUjwQ9oA/rQ==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"

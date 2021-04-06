@@ -3,8 +3,8 @@ EXPOSE 3000
 
 ## Copy frontend files
 WORKDIR /app/frontend
-COPY package*.json ./
-COPY client/package*.json ./
+COPY client/package.json ./
+COPY client/yarn.lock ./
 
 # Install frontend dependencies
 RUN yarn install
