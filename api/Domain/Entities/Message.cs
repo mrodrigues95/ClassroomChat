@@ -5,7 +5,7 @@ namespace Domain.Entities {
         public Guid Id { get; set; }
         public int CursorId { get; set; }
         public string Body { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public virtual ApplicationUser CreatedBy { get; set; }
         public virtual Discussion Discussion { get; set; }
 

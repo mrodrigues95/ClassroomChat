@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { differenceInDays, format, formatDistanceToNow } from 'date-fns';
+import { differenceInDays, format, formatDistance } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import clsx from 'clsx';
 import * as types from '../../../shared/types/api';
 import Avatar from '../Avatar';
@@ -12,13 +13,16 @@ type Props = {
 
 const Message = ({ message, isLastMessage = false }: Props) => {
   const formattedDate = useMemo(() => {
-    const date = new Date(message.createdAt);
-    if (differenceInDays(new Date(), date) === 0) {
-      return formatDistanceToNow(date, { addSuffix: true });
-    } else if (differenceInDays(new Date(), date) === 1) {
-      return `Yesterday at ${format(new Date(date), 'p')}`;
+    const currentDate = utcToZonedTime(new Date(), 'UTC');
+    const messageDate = new Date(message.createdAt);
+    console.log(currentDate)
+    console.log(messageDate)
+    if (differenceInDays(currentDate, messageDate) === 0) {
+      return formatDistance(messageDate, currentDate, { addSuffix: true });
+    } else if (differenceInDays(currentDate, messageDate) === 1) {
+      return `Yesterday at ${format(messageDate, 'p')}`;
     }
-    return format(new Date(date), 'MMM d, yyyy');
+    return format(messageDate, 'MMM d, yyyy');
   }, [message]);
 
   return (

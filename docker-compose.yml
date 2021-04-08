@@ -16,7 +16,6 @@ services:
   backend:
     container_name: 'cc-backend'
     image: mcr.microsoft.com/dotnet/sdk:5.0
-    build: .
     ports:
       - 8080:80
     environment:

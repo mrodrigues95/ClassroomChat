@@ -40,10 +40,10 @@ const Discussion = () => {
       const data = messagesQuery.data.pages
         .flatMap((page) => page.data as Message[])
         .reverse();
-      setMessages(data);
+      setMessages([...data]);
       setReady(true);
     }
-  }, [discussionQuery, messagesQuery]);
+  }, [discussionQuery.isSuccess, messagesQuery.isSuccess, messagesQuery.data]);
 
   useEffect(() => {
     if (ready) start();

@@ -32,7 +32,7 @@ export type Classrooms = {
 export type Message = {
   id: number;
   body: string;
-  createdAt: Date;
+  createdAt: string;
   createdBy: string;
   createdByImageUrl: string;
 };

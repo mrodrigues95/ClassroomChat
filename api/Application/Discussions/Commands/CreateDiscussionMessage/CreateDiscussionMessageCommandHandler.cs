@@ -37,7 +37,6 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
             discussion.Messages.Add(message);
 
             var success = await _context.SaveChangesAsync() > 0;
-
             if (!success) Result<DiscussionMessageDto>.Failure("There was a problem saving changes.");
 
             return new DiscussionMessageDto {
@@ -45,7 +44,7 @@ namespace Application.Discussions.Commands.CreateDiscussionMessage {
                 Body = message.Body,
                 CreatedAt = message.CreatedAt,
                 CreatedBy = user.Name,
-                CreatedByImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto).Url,
+                CreatedByImageUrl = user.Photos.FirstOrDefault(x => x.IsCurrentUserPhoto)?.Url,
             };
         }
     }
