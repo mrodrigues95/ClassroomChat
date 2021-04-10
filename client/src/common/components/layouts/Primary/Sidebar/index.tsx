@@ -4,8 +4,8 @@ import {
   HomeIcon,
   MessagesIcon,
   ClassroomsIcon,
-  CalenderIcon,
-} from '../../../../assets/icons';
+  CalendarIcon,
+} from '../../../../assets';
 import ProfileInfo from './ProfileInfo';
 import VerticalNav, { VerticalNavItem } from '../../../ui/VerticalNav';
 import ActivityFeed from './ActivityFeed';
@@ -67,7 +67,7 @@ const Sidebar = () => {
             />
             <VerticalNavItem
               to="/calender"
-              icon={<CalenderIcon className="mx-auto xl:mr-3 xl:ml-0" />}
+              icon={<CalendarIcon className="mx-auto xl:mr-3 xl:ml-0" />}
               label="Calender"
               aria-label="Go to calender"
             />

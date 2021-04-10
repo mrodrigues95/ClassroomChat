@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { VoidIllustration } from '../common/assets/illustrations';
+import { VoidIllustration } from '../common/assets';
 
 const FourOhFour = () => {
   return (

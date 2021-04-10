@@ -10,8 +10,12 @@ import {
   Spinner,
 } from '../common/components';
 import { Carousel, AuthHeader, AuthContext } from '../modules';
-import { IdentityIcon, MailIcon, LockIcon } from '../common/assets/icons';
-import { MessagingIllustration } from '../common/assets/illustrations';
+import {
+  IdentityIcon,
+  MailIcon,
+  LockIcon,
+  MessagingIllustration,
+} from '../common/assets';
 
 type ApiRegistrationErrors = {
   Name?: string[];

@@ -8,7 +8,7 @@ import {
   NotificationsIcon,
   LockIcon,
   ColourSwatchIcon,
-} from '../common/assets/icons';
+} from '../common/assets';
 import {
   useQueryUser,
   useQueryPrefetchUser,
@@ -60,7 +60,7 @@ const Profile = () => {
                     icon={<ColourSwatchIcon className="w-6 h-6 text-white" />}
                     colour="black"
                     title="Appearance"
-                  description="Choose how Classroom Chat looks to you."
+                    description="Choose how Classroom Chat looks to you."
                   />
                 </div>
               </article>

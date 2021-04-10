@@ -1,5 +1,10 @@
-import { Avatar, Button, Badge, BadgeVariants } from '../../../common/components';
-import { DotsVerticalIcon } from '../../../common/assets/icons';
+import {
+  Avatar,
+  Button,
+  Badge,
+  BadgeVariants,
+} from '../../../common/components';
+import { DotsVerticalIcon } from '../../../common/assets';
 import { getRandomAvatar } from '../../../common/utils/getRandomAvatar';
 
 const DiscussionMembers = () => {

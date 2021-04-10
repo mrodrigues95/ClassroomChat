@@ -13,7 +13,7 @@ import {
 import { User } from '../../../common/types';
 import { getRandomAvatar } from '../../../common/utils/getRandomAvatar';
 import useMutationUpdateUserPhoto from '../mutations/useMutationUpdateUserPhoto';
-import { PlusCircleIcon } from '../../../common/assets/icons';
+import { PlusCircleIcon } from '../../../common/assets';
 
 const ProfileHeader = ({ user }: { user?: User }) => {
   const [isOpen, setIsOpen] = useState(false);

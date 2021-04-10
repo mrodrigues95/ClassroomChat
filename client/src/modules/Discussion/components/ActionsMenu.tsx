@@ -1,8 +1,8 @@
 import {
   AttachmentsIcon,
-  CalenderIcon,
+  CalendarIcon,
   SettingsIcon,
-} from '../../../common/assets/icons';
+} from '../../../common/assets';
 import { Button, Tooltip } from '../../../common/components';
 
 const ActionsMenu = () => {
@@ -16,7 +16,7 @@ const ActionsMenu = () => {
             aria-describedby="cc-tooltip"
             defaultPadding={false}
           >
-            <CalenderIcon className="h-8 w-8" />
+            <CalendarIcon className="h-8 w-8" />
           </Button>
         </Tooltip>
         <Tooltip message="Attachments" placement="top-center">

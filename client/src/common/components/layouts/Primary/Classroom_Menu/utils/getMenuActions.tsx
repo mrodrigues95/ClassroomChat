@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuAction } from '..';
-import { LogoutIcon, PlusCircleIcon } from '../../../../../assets/icons';
+import { LogoutIcon, PlusCircleIcon } from '../../../../../assets';
 
 const buildClassroomMenuActions = (): MenuAction[] => {
   return [

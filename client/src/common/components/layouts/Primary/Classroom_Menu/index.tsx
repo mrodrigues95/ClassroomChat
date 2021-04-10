@@ -8,11 +8,10 @@ import getStateReducer from './utils/getStateReducer';
 import getMenuActions from './utils/getMenuActions';
 import useQueryClassrooms from '../../../../queries/useQueryClassrooms';
 import { Spinner } from '../../../ui';
-import { ErrorIcon } from '../../../../assets/icons';
-import { isClassroom, isDiscussion } from '../../../../typeguards';
+import { ErrorIcon } from '../../../../assets';
 import ClassroomMenuItems from './ClassroomMenuItems';
 import ClassroomMenuItem, { MenuItemVariant } from './ClassroomMenuItem';
-import { isMenuAction } from '../../../../typeguards';
+import { isMenuAction, isClassroom, isDiscussion } from '../../../../typeguards';
 
 const ClassroomMenuHeader = ({ title }: { title: string }) => {
   return <li className="px-4 py-2 text-sm font-bold border-b mb-2">{title}</li>;

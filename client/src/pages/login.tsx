@@ -9,8 +9,12 @@ import {
   Spinner,
   LoginError,
 } from '../common/components';
-import { ChevronIcon, MailIcon, LockIcon } from '../common/assets/icons';
-import { CollaborationIllustration } from '../common/assets/illustrations';
+import {
+  ChevronIcon,
+  MailIcon,
+  LockIcon,
+  CollaborationIllustration,
+} from '../common/assets';
 import { AuthHeader, AuthContext, Carousel } from '../modules';
 
 const Login = () => {
