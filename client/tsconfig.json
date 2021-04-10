@@ -15,8 +15,8 @@
     "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "preserve"
   },
-  "include": ["src", "@types"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

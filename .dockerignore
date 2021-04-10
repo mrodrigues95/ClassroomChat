@@ -1,5 +1,6 @@
 .dockerignore
 .gitignore
+.next
 **/node_modules
 **/bin
 **/obj

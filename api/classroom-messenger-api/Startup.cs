@@ -68,7 +68,7 @@ namespace classroom_messenger_api {
             if (env.IsDevelopment()) {
                 //app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();

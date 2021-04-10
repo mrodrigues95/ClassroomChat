@@ -1,11 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  future: {
-    // removeDeprecatedGapUtilities: true,
-    // purgeLayersByDefault: true,
-  },
-  purge: ['./src/**/*.html', './src/**/*.ts', './src/**/*.tsx'],
+  purge: ['./src/**/*.ts', './src/**/*.tsx'],
   darkMode: false,
   theme: {
     extend: {
@@ -24,12 +20,12 @@ module.exports = {
         '84': '21rem',
         '96': '24rem',
       },
+      fontFamily: {
+        sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
+      },
       inset: {
         '-2': '-2px',
         full: '100%',
-      },
-      fontFamily: {
-        sans: ['Quicksand', ...defaultTheme.fontFamily.sans],
       },
       boxShadow: {
         container: '0px 4px 30px 0px rgba(0,0,0,0.06)',
