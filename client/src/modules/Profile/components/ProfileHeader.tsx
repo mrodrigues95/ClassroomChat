@@ -9,11 +9,11 @@ import {
   Spinner,
   Avatar,
   FilePicker,
-} from '../../common/components';
-import { User } from '../../common/types';
-import { getRandomAvatar } from '../../common/utils/getRandomAvatar';
-import useMutationUpdateUserPhoto from './mutations/useMutationUpdateUserPhoto';
-import { PlusCircleIcon } from '../../common/assets/icons';
+} from '../../../common/components';
+import { User } from '../../../common/types';
+import { getRandomAvatar } from '../../../common/utils/getRandomAvatar';
+import useMutationUpdateUserPhoto from '../mutations/useMutationUpdateUserPhoto';
+import { PlusCircleIcon } from '../../../common/assets/icons';
 
 const ProfileHeader = ({ user }: { user?: User }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,8 +100,8 @@ const ProfileHeader = ({ user }: { user?: User }) => {
         <div className="relative">
           <Avatar
             url={user?.imageUrl ?? getRandomAvatar()}
-            className="inline-flex items-center justify-center w-full"
-            imgClassName="h-16 w-16 sm:h-20 sm:w-20 md:w-32 md:h-32 lg:h-48 lg:w-48"
+            containerClassName="inline-flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 md:w-32 md:h-32 lg:h-48 lg:w-48"
+            isRounded
           />
           <FilePicker onFileSelected={handlePhotoSelected}>
             <FilePicker.Button

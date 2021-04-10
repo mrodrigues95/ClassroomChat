@@ -17,8 +17,8 @@ const ProfileInfo = () => {
         <>
           <Avatar
             url={data?.imageUrl ?? getRandomAvatar()}
-            className="xl:mr-3"
-            imgClassName="h-12 w-12"
+            containerClassName="xl:mr-3 h-12 w-12"
+            isRounded
           />
           <div className="hidden w-full xl:flex items-center justify-between">
             <div className="flex flex-col">

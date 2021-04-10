@@ -1,4 +1,4 @@
-import { NavigationButton } from '../../common/components';
+import { NavigationButton } from '../../../common/components';
 
 type Props = {
   title: string;

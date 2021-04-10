@@ -11,7 +11,7 @@ type ItemProps = {
 const ActivityFeedItem = ({ avatarUrl, message }: ItemProps) => {
   return (
     <div className="flex items-center text-gray-700">
-      <Avatar url={avatarUrl} className="mr-3" />
+      <Avatar url={avatarUrl} containerClassName="mr-3" />
       {message}
     </div>
   );

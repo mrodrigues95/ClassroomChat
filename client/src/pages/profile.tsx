@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { QueryClient } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
-import { AuthContext, ProfileHeader, ProfileItemCard } from '../modules';
+import { ProfileHeader, ProfileItemCard } from '../modules';
 import { Container, Spinner, Error } from '../common/components';
 import {
   ProfileIcon,
@@ -13,7 +13,6 @@ import {
   useQueryUser,
   useQueryPrefetchUser,
 } from '../common/queries/useQueryUser';
-import { useContext } from 'react';
 
 const Profile = () => {
   const { data: user, isLoading, isError } = useQueryUser();

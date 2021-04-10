@@ -1,2 +1,2 @@
-export { default as ProfileHeader } from './ProfileHeader';
-export { default as ProfileItemCard } from './ProfileItemCard';
+export { default as ProfileHeader } from './components/ProfileHeader';
+export { default as ProfileItemCard } from './components/ProfileItemCard';

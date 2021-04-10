@@ -1,8 +1,8 @@
 import { QueryObserverResult } from 'react-query';
-import { Container, Spinner, Error } from '../../common/components';
+import { Container, Spinner, Error } from '../../../common/components';
 import ActionsMenu from './ActionsMenu';
 import DiscussionMembers from './DiscussionMembers';
-import { Discussion } from '../../common/types';
+import { Discussion } from '../../../common/types';
 
 type Props = {
   discussionQuery: QueryObserverResult<Discussion, unknown>;

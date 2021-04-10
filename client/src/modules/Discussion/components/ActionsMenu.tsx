@@ -2,8 +2,8 @@ import {
   AttachmentsIcon,
   CalenderIcon,
   SettingsIcon,
-} from '../../common/assets/icons';
-import { Button, Tooltip } from '../../common/components/';
+} from '../../../common/assets/icons';
+import { Button, Tooltip } from '../../../common/components';
 
 const ActionsMenu = () => {
   return (

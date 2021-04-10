@@ -15,8 +15,8 @@ const Message = ({ message, isLastMessage = false }: Props) => {
   const formattedDate = useMemo(() => {
     const currentDate = utcToZonedTime(new Date(), 'UTC');
     const messageDate = new Date(message.createdAt);
-    console.log(currentDate)
-    console.log(messageDate)
+    console.log(currentDate);
+    console.log(messageDate);
     if (differenceInDays(currentDate, messageDate) === 0) {
       return formatDistance(messageDate, currentDate, { addSuffix: true });
     } else if (differenceInDays(currentDate, messageDate) === 1) {
@@ -35,7 +35,8 @@ const Message = ({ message, isLastMessage = false }: Props) => {
       <div className="flex flex-1">
         <Avatar
           url={message.createdByImageUrl ?? getRandomAvatar()}
-          imgClassName="h-5 w-5"
+          containerClassName="h-5 w-5"
+          isRounded
         />
         <div className="flex flex-col w-full ml-2">
           <div>
