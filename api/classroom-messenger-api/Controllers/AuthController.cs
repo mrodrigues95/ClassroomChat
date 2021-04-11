@@ -18,9 +18,9 @@ namespace classroom_messenger_api.Controllers {
         }
 
         /// <summary>
-        /// GET api/auth/logout
+        /// POST api/auth/logout
         /// </summary>
-        [HttpGet("logout")]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout() {
             return HandleResult(await Mediator.Send(new LogoutUserQuery()));
         }

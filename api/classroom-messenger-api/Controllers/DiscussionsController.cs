@@ -2,7 +2,6 @@
 using Application.Discussions.Commands;
 using Application.Discussions.Queries.GetDiscussionDetail;
 using Application.Discussions.Queries.GetDiscussionMessagesList;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ namespace classroom_messenger_api.Controllers {
         /// <summary>
         /// GET api/discussions/{id}
         /// </summary>
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id) {
             return HandleResult(await Mediator.Send(new GetDiscussionDetailQuery { Id = id }));

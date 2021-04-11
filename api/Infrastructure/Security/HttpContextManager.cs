@@ -25,19 +25,19 @@ namespace Infrastructure.Security {
         }
 
         public string GetHttpCookieRefreshToken() {
-            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("cc_refresh_token", out var refreshToken)) {
+            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("CC_REFRESH_TOKEN", out var refreshToken)) {
                 return null;
             }
             return refreshToken;
         }
 
         public void SetHttpCookieRefreshToken(RefreshToken refreshToken) {
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("cc_refresh_token", refreshToken.Token,
-                new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("CC_REFRESH_TOKEN", refreshToken.Token,
+                new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true });
         }
 
         public void DeleteHttpCookieRefreshToken() {
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("cc_refresh_token");
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("CC_REFRESH_TOKEN");
         }
     }
 }

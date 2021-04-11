@@ -15,9 +15,10 @@ namespace classroom_messenger_api.Extensions {
     public static class IdentityServiceExtensions {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services,
             IConfiguration config) {
-            services.AddIdentityCore<ApplicationUser>()
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationContext>()
-                .AddSignInManager<SignInManager<ApplicationUser>>();
+                .AddSignInManager<SignInManager<ApplicationUser>>()
+                .AddDefaultTokenProviders();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
