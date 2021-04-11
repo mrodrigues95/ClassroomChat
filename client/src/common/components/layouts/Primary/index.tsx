@@ -1,15 +1,14 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../../../../modules';
+import { useAuth } from '../../../../modules';
 import Sidebar from './Sidebar';
 
 const Primary = ({ children }: { children: any }) => {
-  const auth = useContext(AuthContext);
+  const { hasUser } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex flex-1">
         <>
-          {auth?.hasUser && <Sidebar />}
+          {hasUser && <Sidebar />}
           {children}
         </>
       </div>

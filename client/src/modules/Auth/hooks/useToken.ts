@@ -4,6 +4,7 @@ import { configure } from 'axios-hooks';
 import cookie from 'js-cookie';
 import useTokenExpiration from './useTokenExpiration';
 import { User } from '../../../common/types';
+import { AuthEvent } from './useAuth';
 
 export const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL!,
@@ -39,12 +40,10 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
   }, []);
 
   const clearToken = useCallback(
-    (shouldClearRefreshTokenCookie: boolean = true) => {
+    (shouldClearUserCookie: boolean = true) => {
       // This can be false if we are coming from a different tab.
-      // In that case, we do not want to clear the refresh token cookie.
-      if (shouldClearRefreshTokenCookie) {
-        cookie.remove('refresh_token', { domain: 'localhost' });
-      }
+      // In that case, we do not want to clear the user cookie.
+      if (shouldClearUserCookie) cookie.remove(Object.keys(AuthEvent)[2]);
       jwt.current = '';
       clearAutomaticTokenRefresh();
     },

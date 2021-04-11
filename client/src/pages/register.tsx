@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Form,
@@ -9,7 +9,7 @@ import {
   Button,
   Spinner,
 } from '../common/components';
-import { Carousel, AuthHeader, AuthContext } from '../modules';
+import { Carousel, AuthHeader, useAuth } from '../modules';
 import {
   IdentityIcon,
   MailIcon,
@@ -25,7 +25,7 @@ type ApiRegistrationErrors = {
 
 const Register = () => {
   const router = useRouter();
-  const { register } = useContext(AuthContext)!;
+  const { register } = useAuth();
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [apiErrors, setApiErrors] = useState<ApiRegistrationErrors>({});
 

@@ -3,7 +3,6 @@ import {
   useEffect,
   useCallback,
   useMemo,
-  useContext,
   useRef,
   MutableRefObject,
 } from 'react';
@@ -17,7 +16,7 @@ import {
 } from '@microsoft/signalr';
 import { HubActionEventMap, HubOptions, HubState } from '../types/hub';
 import useMounted from './useMounted';
-import { AuthContext } from '../../modules';
+import { useAuth } from '../../modules';
 
 type Hub = {
   hub: MutableRefObject<HubConnection | null>;
@@ -31,7 +30,7 @@ const useHub = (
   actionEventMap: HubActionEventMap,
   opts?: HubOptions
 ): Hub => {
-  const { jwt } = useContext(AuthContext)!;
+  const { jwt } = useAuth();
   const hub = useRef<HubConnection | null>(null);
   const [hubState, setHubState] = useState<HubState>(
     getHubConnectionState(HubConnectionState.Connecting)

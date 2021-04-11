@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -15,11 +15,11 @@ import {
   LockIcon,
   CollaborationIllustration,
 } from '../common/assets';
-import { AuthHeader, AuthContext, Carousel } from '../modules';
+import { AuthHeader, useAuth, Carousel } from '../modules';
 
 const Login = () => {
   const router = useRouter();
-  const { login } = useContext(AuthContext)!;
+  const { login } = useAuth();
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [onLoginFailed, setOnLoginFailed] = useState(false);
 

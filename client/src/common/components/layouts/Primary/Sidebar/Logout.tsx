@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '../../../ui';
-import { AuthContext } from '../../../../../modules';
+import { useAuth } from '../../../../../modules';
 
 const Logout = () => {
   const router = useRouter();
-  const { logout } = useContext(AuthContext)!;
+  const { logout } = useAuth();
 
   const handleOnLogout = async () => {
     await logout();
