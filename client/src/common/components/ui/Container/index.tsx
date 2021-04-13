@@ -31,7 +31,7 @@ const ContainerHeader = ({ title, children }: Props) => {
           <Search placeholder="Search" />
           <Button
             variant="primary"
-            className="rounded-full p-2 sm:p-3 sm:ml-3"
+            className="rounded-full p-2 border-none sm:p-3 sm:ml-3"
             aria-label="View notifications"
           >
             <NotificationsIcon className="w-4 h-4 sm:w-5 sm:h-5" />

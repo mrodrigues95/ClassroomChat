@@ -28,8 +28,8 @@ const Search = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
       )}
       <input
         className={clsx(
-          'hidden sm:inline-flex w-3/5 pr-12 pl-4 h-12 border outline-none tracking-wide border-gray-300 rounded-2xl font-semibold text-black text-sm items-center transition-all ease-in-out duration-300 focus:shadow-outline',
-          focused && 'w-full'
+          'hidden sm:inline-flex pr-12 pl-4 h-12 border outline-none tracking-wide border-gray-300 rounded-2xl font-semibold text-black text-sm items-center transition-all ease-in-out duration-300 focus:ring',
+          focused ? 'w-full' : 'w-3/6'
         )}
         aria-hidden={!isSmall}
         aria-label="Search"

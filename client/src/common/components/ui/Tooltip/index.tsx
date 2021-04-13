@@ -44,7 +44,7 @@ const Tooltip = ({ message, placement, delay, children }: Props) => {
           <div
             id="cc-tooltip"
             role="tooltip"
-            className="flex items-center justify-center px-2 py-1 font-medium whitespace-no-wrap bg-black text-white text-xs rounded-md"
+            className="flex items-center justify-center px-2 py-1 font-medium whitespace-nowrap bg-black text-white text-xs rounded-md"
             {...layerProps}
           >
             {message}

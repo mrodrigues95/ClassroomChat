@@ -1,10 +1,8 @@
 import { useCallback, useRef, useEffect } from 'react';
 import Axios, { AxiosRequestConfig } from 'axios';
 import { configure } from 'axios-hooks';
-import cookie from 'js-cookie';
 import useTokenExpiration from './useTokenExpiration';
 import { User } from '../../../common/types';
-import { AuthEvent } from './useAuth';
 
 export const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL!,
@@ -41,9 +39,10 @@ const useToken = (onTokenInvalid: Function, onRefreshRequired: Function) => {
 
   const clearToken = useCallback(
     (shouldClearUserCookie: boolean = true) => {
+      // TODO: This should call logout() instead.
       // This can be false if we are coming from a different tab.
       // In that case, we do not want to clear the user cookie.
-      if (shouldClearUserCookie) cookie.remove(Object.keys(AuthEvent)[2]);
+      if (shouldClearUserCookie) console.log('TODO');
       jwt.current = '';
       clearAutomaticTokenRefresh();
     },

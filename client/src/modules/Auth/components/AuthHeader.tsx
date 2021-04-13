@@ -13,7 +13,6 @@ const AuthHeader = ({ title, description }: Props) => {
           aria-label="Go back"
           className="hidden md:inline-flex"
           size="large"
-          border
         />
         <h1 className="flex-1 text-center self-start font-bold text-2xl md:text-3xl">
           {title}

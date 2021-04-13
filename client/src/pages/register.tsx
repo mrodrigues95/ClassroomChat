@@ -109,7 +109,7 @@ const Register = () => {
             </FormInput>
             <div className="absolute bottom-0 inset-x-0">
               <Button
-                className="font-bold rounded-xl md:text-xl"
+                className="font-bold rounded-2xl md:text-xl"
                 type="submit"
                 disabled={waitingForResponse}
                 fullWidth

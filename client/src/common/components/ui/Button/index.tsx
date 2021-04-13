@@ -9,7 +9,7 @@ const VARIANTS = {
     disabled: 'opacity-50',
   },
   default: {
-    base: 'border border-transparent text-white bg-primary',
+    base: 'border border-transparent text-white bg-primary-default',
     active:
       'focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
     disabled: 'opacity-50',
@@ -36,7 +36,7 @@ const Button = ({
     <button
       type="button"
       className={clsx(
-        'relative inline-flex items-center justify-center rounded-md transition duration-150 ease-in-out focus:outline-none',
+        'relative inline-flex items-center justify-center rounded-2xl transition duration-150 ease-in-out focus:outline-none',
         variantStyles.base,
         props.disabled && 'cursor-not-allowed',
         props.disabled ? variantStyles.disabled : variantStyles.active,

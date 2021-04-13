@@ -101,10 +101,10 @@ const Login = () => {
                   )}
                 </Button>
               </div>
-              <Link href="/auth/register">
+              <Link href="/register">
                 <a
-                  className="relative inline-flex items-center justify-center w-full p-4 rounded-xl font-bold focus:outline-none transition duration-150 ease-in-out
-                  border border-gray-300 bg-white text-black hover:bg-gray-100 hover:border-gray-400 active:bg-gray-200 active:border-gray-500 md:text-xl"
+                  className="relative inline-flex items-center justify-center w-full p-4 rounded-2xl font-bold focus:outline-none transition duration-150 ease-in-out
+                  border border-gray-300 bg-white text-black hover:bg-gray-100 active:bg-gray-200 md:text-xl"
                 >
                   <span className="absolute right-0 inset-y-0 flex items-center pr-3">
                     <ChevronIcon className="h-5 w-5 transform rotate-180" />

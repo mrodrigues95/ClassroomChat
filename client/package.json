@@ -34,21 +34,24 @@
     "react-textarea-autosize": "^8.3.0"
   },
   "devDependencies": {
+    "@tailwindcss/jit": "^0.1.18",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "autoprefixer": "^10.2.5",
+    "eslint": "^7.24.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "postcss": "^8.2.9",
     "resize-observer-polyfill": "^1.5.1",
-    "tailwindcss": "^1.9.3",
+    "tailwindcss": "^2.1.1",
     "typescript": "~4.0.5"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

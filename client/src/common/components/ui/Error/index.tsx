@@ -20,7 +20,7 @@ const Error = ({ message, altMessage, showAction = true }: Props) => {
       </div>
       {showAction && (
         <Link href="/home">
-          <a className="inline-flex justify-center items-center p-3 bg-primary text-white rounded-md font-semibold cursor-pointer transition duration-150 ease-out sm:w-48 focus:outline-none focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark">
+          <a className="inline-flex justify-center items-center p-3 bg-primary-default text-white rounded-md font-semibold cursor-pointer transition duration-150 ease-out sm:w-48 focus:outline-none focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark">
             Go home
           </a>
         </Link>

@@ -6,7 +6,7 @@ const get = async () => {
   return await axios.get<User>('user').then((res) => res.data);
 };
 
-const useQueryPrefetchUser = async (queryClient: QueryClient) => {
+const prefetchUser = async (queryClient: QueryClient) => {
   await queryClient.prefetchQuery<User, Error>('user', get);
 };
 
@@ -14,4 +14,4 @@ const useQueryUser = () => {
   return useQuery<User, Error>('user', get);
 };
 
-export { useQueryPrefetchUser, useQueryUser };
+export { prefetchUser, useQueryUser };

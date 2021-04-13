@@ -6,14 +6,12 @@ import {
   useEffect,
   useState,
 } from 'react';
-import cookie from 'js-cookie';
 import { UserBase } from '../../../common/types';
 import useToken, { axios, UserAndTokenResponse } from './useToken';
 
-export const AuthEvent = {
+const AuthEvent = {
   LOGIN: 'login',
   LOGOUT: 'logout',
-  HAS_USER: 'yes',
 } as const;
 
 const AuthContext = createContext(
@@ -30,9 +28,8 @@ const AuthContext = createContext(
 export const AuthProvider = ({ children }: any) => {
   const [hasUser, setHasUser] = useState(false);
   const [waitingForToken, setWaitingForToken] = useState(false);
-  const hasUserCookie = Object.keys(AuthEvent)[2];
 
-  const onTokenInvalid = () => setHasUser(false);
+  const onTokenInvalid = useCallback(() => setHasUser(false), []);
 
   const refreshToken = useCallback(async () => {
     try {
@@ -59,7 +56,7 @@ export const AuthProvider = ({ children }: any) => {
   );
 
   useEffect(() => {
-    if (cookie.get(hasUserCookie)) refreshToken();
+    refreshToken();
   }, [refreshToken]);
 
   useEffect(() => {
@@ -86,10 +83,6 @@ export const AuthProvider = ({ children }: any) => {
           password,
         });
 
-        cookie.set(hasUserCookie, AuthEvent.HAS_USER, {
-          sameSite: 'strict',
-          secure: true,
-        });
         setHasUser(true);
         setToken(rest);
 
@@ -101,7 +94,7 @@ export const AuthProvider = ({ children }: any) => {
         clearToken();
       }
     },
-    [setToken]
+    [setToken, clearToken]
   );
 
   const logout = useCallback(async () => {
@@ -127,10 +120,6 @@ export const AuthProvider = ({ children }: any) => {
           userToRegister
         );
 
-        cookie.set(AuthEvent.HAS_USER, 'yes', {
-          sameSite: 'strict',
-          secure: true,
-        });
         setHasUser(true);
         setToken(rest);
 
@@ -142,7 +131,7 @@ export const AuthProvider = ({ children }: any) => {
         clearToken();
       }
     },
-    [setToken]
+    [setToken, clearToken]
   );
 
   return (
@@ -161,4 +150,12 @@ export const AuthProvider = ({ children }: any) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error(
+      'Bad implementation. useAuth must be used inside AuthProvider.'
+    );
+  }
+  return context;
+};

@@ -9,10 +9,7 @@ import {
   LockIcon,
   ColourSwatchIcon,
 } from '../common/assets';
-import {
-  useQueryUser,
-  useQueryPrefetchUser,
-} from '../common/queries/useQueryUser';
+import { useQueryUser, prefetchUser } from '../common/queries/useQueryUser';
 
 const Profile = () => {
   const { data: user, isLoading, isError } = useQueryUser();
@@ -74,7 +71,7 @@ const Profile = () => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const queryClient = new QueryClient();
-  await useQueryPrefetchUser(queryClient);
+  await prefetchUser(queryClient);
 
   return {
     props: {

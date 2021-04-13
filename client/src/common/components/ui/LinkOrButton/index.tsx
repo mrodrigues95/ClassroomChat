@@ -7,7 +7,7 @@ const VARIANTS = {
     base:
       'w-full flex items-center p-3 rounded-xl font-semibold cursor-pointer focus:outline-none transition duration-150 ease-out',
     selected:
-      'bg-primary text-white focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
+      'bg-primary-default text-white focus:bg-primary-light hover:bg-primary-light active:bg-primary-dark',
     other:
       'text-gray-700 focus:bg-gray-200 focus:text-gray-900 hover:bg-gray-200 hover:text-gray-900 active:bg-gray-300',
   },

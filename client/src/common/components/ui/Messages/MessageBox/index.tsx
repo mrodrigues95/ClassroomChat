@@ -50,7 +50,7 @@ const MessageBox = () => {
       <div
         className={clsx(
           'flex items-center justify-between h-full p-3 border rounded-md transition ease-in-out duration-150',
-          focused ? 'border-transparent shadow-outline' : 'border-gray-300',
+          focused ? 'border-transparent ring' : 'border-gray-300',
           disableNewMessages
             ? 'bg-gray-100 pointer-events-none border-none'
             : 'pointer-events-auto bg-white border'
@@ -85,7 +85,7 @@ const MessageBox = () => {
           </button>
           <button
             type="button"
-            className="ml-4 p-2 rounded-full bg-primary shadow-lg text-white focus:outline-none hover:bg-primary-light active:bg-primary-dark"
+            className="ml-4 p-2 rounded-full bg-primary-default shadow-lg text-white focus:outline-none hover:bg-primary-light active:bg-primary-dark"
             aria-label="Send message"
             onClick={() => handleNewMessage()}
           >

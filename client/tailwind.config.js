@@ -33,15 +33,11 @@ module.exports = {
       colors: {
         primary: {
           default: '#0D2488',
-          light: '#1431AF',
-          dark: '#061553',
+          light: '#122c9d',
+          dark: '#0a1c6c',
         },
       },
     },
-  },
-  variants: {
-    backgroundColor: ['responsive', 'hover', 'focus', 'active'],
-    divideWidth: ['responsive'],
   },
   plugins: [],
 };
